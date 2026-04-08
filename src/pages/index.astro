@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/ProjectCard.astro';
+import ButtonBorderRing from '../components/ButtonBorderRing.astro';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .filter((p) => p.data.published !== false)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="alanlong.design"
+  description="I'm part of the design team at hyd.agency, before I led the design and development of virtual event platforms at Cheerful Twentyfirst."
+  bodyClass="home"
+>
+  <main>
+    <div class="left">
+      <div>
+        <div class="profile-header">
+          <div class="profile-photo-wrap">
+            <div class="profile-photo">
+              <img
+                draggable="false"
+                alt="Headshot of Alan Long"
+                src="https://res.cloudinary.com/ajalong/image/upload/c_fill,h_92,w_92,dpr_2.0,f_auto,q_auto:best/alan.design/headshot-edited.jpg"
+              />
+            </div>
+          </div>
+          <div class="profile-info">
+            <div class="display-name">
+              <h2>Alan Long</h2>
+            </div>
+            <p>UI/UX design</p>
+          </div>
+        </div>
+        <section>
+          <div class="about">
+            <p>
+              For the last year I've been travelling the world. Perviously I was a part of <a href="https://interbrand.com/" target="_blank">Interbrand’s</a> design team and lead design and development at <a href="https://cheerfultwentyfirst.com/" target="_blank">Cheerful Twentyfirst</a>.
+            </p>
+          </div>
+        </section>
+      </div>
+      <section class="cta" aria-label="Contact">
+        <div class="cta-stack">
+          <a
+            class="cta__link"
+            href="https://linkedin.com/in/alanalberglong"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ButtonBorderRing />
+            <div>
+              <img src="/linkedin.svg" alt="" aria-hidden="true" />
+              <span>LinkedIn</span>
+            </div>
+          </a>
+          <a class="cta__link" href="https://dribbble.com/alalo" target="_blank" rel="noopener noreferrer">
+            <ButtonBorderRing />
+            <div>
+              <img src="/dribbble.svg" alt="" aria-hidden="true" />
+              <span>Dribbble</span>
+            </div>
+          </a>
+          <a class="cta__link" href="mailto:alan@ajalong.com" target="_blank" rel="noopener noreferrer">
+            <ButtonBorderRing />
+            <div>
+              <img src="/mail.svg" alt="" aria-hidden="true" />
+              <span>Email me</span>
+            </div>
+          </a>
+          <a class="cta__link" href="mailto:alan@ajalong.com" target="_blank" rel="noopener noreferrer">
+            <ButtonBorderRing />
+            <div>
+              <img src="/resume.svg" alt="" aria-hidden="true" />
+              <span>My resume</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
+    <div class="right" id="work">
+      {
+        projects.map((project) => (
+          <ProjectCard
+            href={`/project/${project.slug}`}
+            thumbnailSrc={project.data.thumbnailImage}
+            thumbnailAlt={`${project.data.title} thumbnail`}
+            projectTitle={project.data.title}
+            client={project.data.client}
+            summary={project.data.summary}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

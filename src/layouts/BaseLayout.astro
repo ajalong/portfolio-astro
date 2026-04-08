@@ -1,0 +1,107 @@
+---
+import '../styles/global.scss';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  url?: string;
+  bodyClass?: string;
+}
+
+const { title, description, url, bodyClass } = Astro.props as Props;
+
+const site = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
+const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Alan Long" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
+    <meta name="msapplication-TileColor" content="#222222" />
+    <meta name="theme-color" content="#222222" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:description" content={description} />
+
+    <ClientRouter />
+    <script is:inline type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "w8iouo87v0");
+    </script>
+  </head>
+  <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
+      <defs>
+        <linearGradient
+          id="btn-border-ring-iridescent"
+          gradientUnits="objectBoundingBox"
+          x1="0"
+          y1="1"
+          x2="1"
+          y2="0"
+        >
+          <stop offset="0%" stop-color="#f6f7f8" />
+          <stop offset="11%" stop-color="#ebe7f3" />
+          <stop offset="22%" stop-color="#ddd2ea" />
+          <stop offset="33%" stop-color="#e2c8d8" />
+          <stop offset="44%" stop-color="#d4c0c8" />
+          <stop offset="55%" stop-color="#a894a8" />
+          <stop offset="66%" stop-color="#8f7488" />
+          <stop offset="77%" stop-color="#9b86ac" />
+          <stop offset="88%" stop-color="#e2e0ee" />
+          <stop offset="100%" stop-color="#f6f7f8" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <slot />
+    <script>
+      import { initButtonBorderRings } from '../scripts/border-ring';
+
+      document.addEventListener('astro:after-swap', () => {
+        document.body.classList.remove('initial-load');
+
+        document.querySelectorAll<HTMLVideoElement>('video').forEach((v) => {
+          const src = v.getAttribute('src');
+          if (src) {
+            v.src = src;
+          }
+        });
+      });
+
+      document.addEventListener('astro:page-load', () => {
+        initButtonBorderRings();
+
+        document.querySelectorAll<HTMLImageElement>(
+          '.media-full img, .media-half img, .media-thirds img, .media-four img, .media-five img, .thumbnail img'
+        ).forEach((img) => {
+          if (img.complete) {
+            img.classList.add('is-loaded');
+          } else {
+            img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+          }
+        });
+
+        document.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach((v) => {
+          v.play().catch(() => {});
+        });
+      });
+    </script>
+  </body>
+</html>
+

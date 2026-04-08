@@ -11,6 +11,8 @@ interface Props {
 
 const { title, description, url, bodyClass } = Astro.props as Props;
 
+const siteName = 'Alan Long';
+const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
 const site = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
 const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 ---
@@ -19,7 +21,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Alan Long" />
 

@@ -273,10 +273,24 @@ export function initPageMeshCanvas(): void {
 
   let lastPaint = 0;
 
-  const cssDims = () => ({
-    cssW: window.innerWidth * INSET,
-    cssH: window.innerHeight * INSET,
-  });
+  const readCssInset = (name: string): number => {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return parseFloat(raw) || 0;
+  };
+
+  /** Match `.page-mesh-canvas` CSS size: 112% viewport + safe-area so bitmap isn’t stretched */
+  const cssDims = () => {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const sat = readCssInset('--sat');
+    const sab = readCssInset('--sab');
+    const sal = readCssInset('--sal');
+    const sar = readCssInset('--sar');
+    return {
+      cssW: vw * INSET + sal + sar,
+      cssH: vh * INSET + sat + sab,
+    };
+  };
 
   const doPaint = (now: number) => {
     const { cssW, cssH } = cssDims();

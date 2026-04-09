@@ -19,7 +19,10 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
@@ -31,7 +34,8 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
     <meta name="msapplication-TileColor" content="#222222" />
-    <meta name="theme-color" content="#222222" />
+    <!-- Harmonizes iOS Safari toolbar / tab chrome with the mesh (not the old dark #222) -->
+    <meta name="theme-color" content="#ebe7f2" />
 
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />

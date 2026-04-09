@@ -508,6 +508,10 @@ p {
  */
 body.project-page .page_container > header {
   margin-bottom: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 40px;
+  }
 }
 
 body.project-page .page_container article > * {

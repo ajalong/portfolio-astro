@@ -55,6 +55,7 @@ const icon = (name: string) => `/${name}?v=${iconV}`;
     </script>
   </head>
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
+    <canvas id="page-mesh-canvas" class="page-mesh-canvas" aria-hidden="true"></canvas>
     <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
       <defs>
         <linearGradient
@@ -81,6 +82,7 @@ const icon = (name: string) => `/${name}?v=${iconV}`;
     <slot />
     <script>
       import { initButtonBorderRings } from '../scripts/border-ring';
+      import { initPageMeshCanvas } from '../scripts/page-mesh-canvas';
 
       document.addEventListener('astro:after-swap', () => {
         document.body.classList.remove('initial-load');
@@ -94,6 +96,7 @@ const icon = (name: string) => `/${name}?v=${iconV}`;
       });
 
       document.addEventListener('astro:page-load', () => {
+        initPageMeshCanvas();
         initButtonBorderRings();
 
         document.querySelectorAll<HTMLImageElement>(

@@ -32,6 +32,8 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://www.clarity.ms" />
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />

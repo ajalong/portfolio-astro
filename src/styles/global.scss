@@ -27,6 +27,9 @@ $pill-radius: 200px;
   font-stretch: normal;
 }
 
+// Grayscale noise tile — dithers soft mesh gradients (reduces 8-bit banding, esp. Safari)
+$bg-mesh-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
 :root {
   --type-size: 14px;
   --line-height: 1.6;
@@ -222,6 +225,25 @@ html::before {
     bg-page-mesh-enter 1.6s cubic-bezier(0.22, 1, 0.36, 1) both,
     bg-page-mesh-breathe 28s ease-in-out infinite alternate,
     bg-page-mesh-drift 38s ease-in-out infinite alternate;
+  /* Promote compositing — can smooth gradient rasterization in WebKit */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Noise sits above the mesh, below page content (body is z-index: 1) */
+html::after {
+  content: '';
+  position: fixed;
+  inset: -6%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: soft-light;
+  background-image: $bg-mesh-noise;
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  transform: translateZ(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

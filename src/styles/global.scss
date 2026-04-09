@@ -109,8 +109,10 @@ body.initial-load {
 /*
  * Safari paints `position: fixed` above in-flow siblings unless those siblings form a stack.
  * Keep every body child except the mesh above the canvas (inline `position` on svg still wins).
+ * Exclude `.project-nav-btn`: it must stay `position: fixed` + high z-index; overriding with
+ * `position: relative` here broke hit-testing and :hover for the full 64×64 control.
  */
-body > :not(.page-mesh-canvas) {
+body > :not(.page-mesh-canvas):not(.project-nav-btn) {
   position: relative;
   z-index: 1;
 }
@@ -876,6 +878,9 @@ figure.media-full > :first-child {
   transform: translateX(-50%);
   cursor: pointer;
   outline: none;
+  /* Entire pill is the hit target (icon is smaller; flex center leaves correct hover/click area) */
+  isolation: isolate;
+  touch-action: manipulation;
   @include pill-button-interaction;
   -webkit-tap-highlight-color: transparent;
 

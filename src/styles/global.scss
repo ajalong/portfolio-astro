@@ -880,13 +880,6 @@ figure.media-full > :first-child {
   }
 }
 
-/* Project pages: lock all inline figures (full / multi-column rows) to 4:3 */
-body.project-page .page_container article figure.media-full > :is(img, video) {
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  height: auto;
-}
-
 /* Project pages: fixed home control — matches homepage CTA pills */
 .project-nav-btn {
   position: fixed;

@@ -106,6 +106,15 @@ body.initial-load {
   pointer-events: none;
 }
 
+/*
+ * Safari paints `position: fixed` above in-flow siblings unless those siblings form a stack.
+ * Keep every body child except the mesh above the canvas (inline `position` on svg still wins).
+ */
+body > :not(.page-mesh-canvas) {
+  position: relative;
+  z-index: 1;
+}
+
 @property --button-rim-angle {
   syntax: '<angle>';
   initial-value: 360deg;

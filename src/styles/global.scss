@@ -502,6 +502,7 @@ p {
 /*
  * Project case studies — vertical rhythm (only ProjectLayout uses .page_container article)
  * - 80px: profile header → main content; after media when next block isn’t prose/headings
+ * - Mobile (≤800px): 24px margin above figure rows (was 80px)
  * - After media → text/headings: 80px minus caption optical offset (27.2px)
  * - 24px: default stack (paragraphs, lists, adjacent media)
  * - 16px: heading → following block
@@ -538,6 +539,10 @@ body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) + * {
 
 body.project-page .page_container article > * + :is(.media-full, .media-half, .media-thirds, .media-four, .media-five) {
   margin-top: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 24px;
+  }
 }
 
 body.project-page
@@ -546,6 +551,10 @@ body.project-page
   > :is(h1, h2, h3, h4, h5, h6)
   + :is(.media-full, .media-half, .media-thirds, .media-four, .media-five) {
   margin-top: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 24px;
+  }
 }
 
 body.project-page .page_container article > :is(.media-full, .media-half, .media-thirds, .media-four, .media-five)

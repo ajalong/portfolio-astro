@@ -15,6 +15,9 @@ const siteName = 'Alan Long';
 const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
 const site = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
 const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
+/** Bust favicon cache (browsers cache tab icons very aggressively). Bump when icons change. */
+const iconV = '3';
+const icon = (name: string) => `/${name}?v=${iconV}`;
 ---
 <html lang="en">
   <head>
@@ -25,13 +28,15 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <meta name="description" content={description} />
     <meta name="author" content="Alan Long" />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#BA5C26" />
+    <!-- ICO + PNG first: Safari and some browsers ignore or mishandle SVG tab icons -->
+    <link rel="icon" href={icon('favicon.ico')} sizes="any" />
+    <link rel="shortcut icon" href={icon('favicon.ico')} />
+    <link rel="icon" type="image/png" sizes="32x32" href={icon('favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={icon('favicon-16x16.png')} />
+    <link rel="icon" href={icon('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="180x180" href={icon('apple-touch-icon.png')} />
+    <link rel="manifest" href={`/site.webmanifest?v=${iconV}`} />
+    <link rel="mask-icon" href={icon('safari-pinned-tab.svg')} color="#BA5C26" />
     <meta name="msapplication-TileColor" content="#BA5C26" />
     <meta name="theme-color" content="#BA5C26" />
 

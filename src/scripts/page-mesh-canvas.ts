@@ -1,18 +1,24 @@
 /**
- * Full-viewport mesh backdrop drawn to canvas (supersampled) to reduce visible
- * gradient banding vs CSS-only radials. Mirrors global.scss mesh layers.
+ * Full-viewport mesh backdrop on canvas. Tuned for low overhead: throttled repaints,
+ * capped resolution, tab visibility pause, single paint for reduced motion.
  */
 
 const CANVAS_ID = 'page-mesh-canvas';
-const INSET = 1.12; // ~CSS inset -6% each axis → 112% viewport
-const SUPERSAMPLE = 2; // internal pixel scale (on top of DPR)
+const INSET = 1.12;
+
+/** Bitmap supersample: 1× devicePixelRatio only (2× was killing GPU fill rate) */
+const SUPERSAMPLE = 1;
+const MAX_DPR = 2;
+/** Long edge cap (px) — 4K+ viewports still get a reasonable buffer size */
+const MAX_BITMAP_EDGE = 2200;
+/** ~30fps during enter; ~5fps after (breathe/drift are multi-second cycles) */
+const MIN_FRAME_MS_ENTER = 1000 / 28;
+const MIN_FRAME_MS_IDLE = 200;
 
 type Vec2 = [number, number];
 
 interface RadialDef {
-  /** ellipse radii as % of layer tile width / height (CSS semantics) */
   ellipsePct: Vec2;
-  /** gradient center within tile, 0–1 */
   anchor: Vec2;
   stops: { pos: number; h: number; s: number; l: number; a: number }[];
 }
@@ -72,7 +78,6 @@ const LAYERS: RadialDef[] = [
   },
 ];
 
-/** background-size % pairs per layer — breathe “from” */
 const SIZE_FROM: Vec2[] = [
   [130, 120],
   [115, 105],
@@ -89,7 +94,6 @@ const SIZE_TO: Vec2[] = [
   [240, 142],
 ];
 
-/** Rest / drift “from” positions (% for background-position) */
 const POS_REST: Vec2[] = [
   [100, 100],
   [0, 92],
@@ -106,7 +110,6 @@ const POS_DRIFT_TO: Vec2[] = [
   [50, 98],
 ];
 
-/** Enter animation: start positions */
 const POS_ENTER_START: Vec2[] = [
   [100, 160],
   [0, 152],
@@ -136,7 +139,6 @@ function hsla(h: number, s: number, l: number, a: number): string {
 }
 
 function easeEnter(t: number): number {
-  // cubic-bezier(0.22, 1, 0.36, 1) — close enough for backdrop
   return 1 - (1 - t) ** 3;
 }
 
@@ -144,7 +146,6 @@ function easeInOut(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 }
 
-/** CSS `animation: … alternate` — ping-pong 0→1 over period with ease-in-out */
 function alternatePhase(elapsed: number, periodMs: number): number {
   const u = ((elapsed / periodMs) % 2 + 2) % 2;
   const seg = u < 1 ? u : 2 - u;
@@ -235,6 +236,27 @@ function paint(
 let rafId = 0;
 let resizeObs: ResizeObserver | null = null;
 let onOrient: (() => void) | null = null;
+let onVisibility: (() => void) | null = null;
+
+function applyBitmapSize(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  cssW: number,
+  cssH: number
+): void {
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR) * SUPERSAMPLE;
+  let bufW = Math.max(1, Math.floor(cssW * dpr));
+  let bufH = Math.max(1, Math.floor(cssH * dpr));
+  const longEdge = Math.max(bufW, bufH);
+  if (longEdge > MAX_BITMAP_EDGE) {
+    const r = MAX_BITMAP_EDGE / longEdge;
+    bufW = Math.max(1, Math.floor(bufW * r));
+    bufH = Math.max(1, Math.floor(bufH * r));
+  }
+  canvas.width = bufW;
+  canvas.height = bufH;
+  ctx.setTransform(bufW / cssW, 0, 0, bufH / cssH, 0, 0);
+}
 
 export function initPageMeshCanvas(): void {
   destroyPageMeshCanvas();
@@ -242,50 +264,96 @@ export function initPageMeshCanvas(): void {
   const canvas = document.getElementById(CANVAS_ID) as HTMLCanvasElement | null;
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const t0 = performance.now();
   const enterDuration = 1600;
 
-  const resize = () => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const cssW = vw * INSET;
-    const cssH = vh * INSET;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-    const scale = dpr * SUPERSAMPLE;
-    canvas.width = Math.max(1, Math.floor(cssW * scale));
-    canvas.height = Math.max(1, Math.floor(cssH * scale));
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
-  };
+  let lastPaint = 0;
 
-  const frame = (now: number) => {
+  const cssDims = () => ({
+    cssW: window.innerWidth * INSET,
+    cssH: window.innerHeight * INSET,
+  });
+
+  const doPaint = (now: number) => {
+    const { cssW, cssH } = cssDims();
     const elapsed = now - t0;
     const enterT = reducedMotion ? 1 : Math.min(1, elapsed / enterDuration);
-    const cssW = window.innerWidth * INSET;
-    const cssH = window.innerHeight * INSET;
     paint(ctx, cssW, cssH, elapsed, enterT, reducedMotion);
-    rafId = requestAnimationFrame(frame);
   };
 
-  cancelAnimationFrame(rafId);
-  resize();
-  rafId = requestAnimationFrame(frame);
+  const resize = () => {
+    const { cssW, cssH } = cssDims();
+    applyBitmapSize(canvas, ctx, cssW, cssH);
+    lastPaint = 0;
+    doPaint(performance.now());
+  };
+
+  if (reducedMotion) {
+    resizeObs = new ResizeObserver(() => resize());
+    resizeObs.observe(document.documentElement);
+    onOrient = () => resize();
+    window.addEventListener('orientationchange', onOrient, { passive: true });
+    resize();
+    return;
+  }
+
+  const loop = (now: number) => {
+    rafId = 0;
+    if (document.visibilityState === 'hidden') return;
+
+    const elapsed = now - t0;
+    const enterT = Math.min(1, elapsed / enterDuration);
+    const minGap = enterT < 1 ? MIN_FRAME_MS_ENTER : MIN_FRAME_MS_IDLE;
+
+    if (now - lastPaint < minGap) {
+      rafId = requestAnimationFrame(loop);
+      return;
+    }
+    lastPaint = now;
+    doPaint(now);
+    rafId = requestAnimationFrame(loop);
+  };
+
+  const startLoop = () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(loop);
+  };
+
+  onVisibility = () => {
+    if (document.visibilityState === 'hidden') {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    } else {
+      lastPaint = 0;
+      startLoop();
+    }
+  };
+  document.addEventListener('visibilitychange', onVisibility);
 
   resizeObs = new ResizeObserver(() => resize());
   resizeObs.observe(document.documentElement);
   onOrient = () => resize();
   window.addEventListener('orientationchange', onOrient, { passive: true });
+
+  resize();
+  startLoop();
 }
 
 export function destroyPageMeshCanvas(): void {
   cancelAnimationFrame(rafId);
+  rafId = 0;
   resizeObs?.disconnect();
   resizeObs = null;
   if (onOrient) {
     window.removeEventListener('orientationchange', onOrient);
     onOrient = null;
+  }
+  if (onVisibility) {
+    document.removeEventListener('visibilitychange', onVisibility);
+    onVisibility = null;
   }
 }

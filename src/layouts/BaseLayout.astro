@@ -16,7 +16,7 @@ const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
 const site = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
 const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 /** Bust favicon cache (browsers cache tab icons very aggressively). Bump when icons change. */
-const iconV = '3';
+const iconV = '4';
 const icon = (name: string) => `/${name}?v=${iconV}`;
 ---
 <html lang="en">

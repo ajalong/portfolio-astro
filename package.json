@@ -6,8 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "generate:favicon": "node scripts/generate-favicon.mjs"
+    "astro": "astro"
   },
   "dependencies": {
     "astro": "^5.17.1",
@@ -15,7 +14,6 @@
     "three": "^0.183.2"
   },
   "devDependencies": {
-    "sass": "^1.97.3",
-    "sharp": "^0.34.5"
+    "sass": "^1.97.3"
   }
 }

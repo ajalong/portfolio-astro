@@ -18,6 +18,15 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 ---
 <html lang="en">
   <head>
+    <!-- Safari only: static mesh (see `.safari-mesh-fallback` in global.scss). iOS Chrome has “Safari” in UA too — exclude Chromium family. -->
+    <script is:inline>
+      (function () {
+        var ua = navigator.userAgent;
+        if (!/safari/i.test(ua)) return;
+        if (/chrom(e|ium)|crios|fxios|edg\/|opr\/|opr\s|android.*wv/i.test(ua)) return;
+        document.documentElement.classList.add('safari-mesh-fallback');
+      })();
+    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -52,7 +61,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     </script>
   </head>
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
-    <canvas id="page-mesh-canvas" class="page-mesh-canvas" aria-hidden="true"></canvas>
     <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
       <defs>
         <linearGradient
@@ -79,7 +87,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <slot />
     <script>
       import { initButtonBorderRings } from '../scripts/border-ring';
-      import { initPageMeshCanvas } from '../scripts/page-mesh-canvas';
 
       document.addEventListener('astro:after-swap', () => {
         document.body.classList.remove('initial-load');
@@ -93,7 +100,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       });
 
       document.addEventListener('astro:page-load', () => {
-        initPageMeshCanvas();
         initButtonBorderRings();
 
         document.querySelectorAll<HTMLImageElement>(

@@ -317,67 +317,39 @@ $rim-inner-wash:
   }
 }
 
-/* Body copy links + footer “Back to…” — grey underline + iridescent zip on hover */
+/* Body copy links + footer “Back to…” — grey underline + iridescent zip on hover.
+   Inline + box-decoration-break: clone so underlines repeat on each wrapped line (not one bar at the bottom). */
 @mixin link-underline-zip {
   color: var(--grey1);
   text-decoration: none;
-  position: relative;
-  display: inline-block;
+  display: inline;
   max-width: 100%;
   padding-bottom: 0.12em;
-  overflow: hidden;
-  vertical-align: bottom;
+  vertical-align: baseline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  /* Per-line underline via background strip (clone paints one per fragment) */
+  background-image: linear-gradient(var(--grey1), var(--grey1));
+  background-position: 0 100%;
+  background-size: 100% var(--button-rim-width);
+  background-repeat: no-repeat;
   transition:
     background-color 0.12s ease,
-    outline-offset 0.12s ease;
+    outline-offset 0.12s ease,
+    background-image 0.2s ease,
+    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 
   &:active {
     background-color: var(--secondaryBorderColor);
     border-radius: 2px;
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: var(--button-rim-width);
-    background: var(--grey1);
-    opacity: 1;
-    transition: opacity 0.25s ease 0.4s;
-  }
-
-  &:hover::before,
-  &:focus-visible::before {
-    opacity: 0;
-    transition: opacity 0.1s ease;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    z-index: 1;
-    width: 200%;
-    height: var(--button-rim-width);
-    background: var(--zip-hover-gradient);
-    transform: translateX(0);
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.25s ease 0.4s;
-  }
-
-  &:hover::after,
-  &:focus-visible::after {
-    transform: translateX(-50%);
-    opacity: 1;
-    transition:
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.18s ease;
+  &:hover,
+  &:focus-visible {
+    background-image: var(--zip-hover-gradient);
+    background-size: 200% var(--button-rim-width);
+    background-position: 100% 100%;
   }
 
   &:focus-visible {
@@ -388,24 +360,18 @@ $rim-inner-wash:
   }
 
   @media (prefers-reduced-motion: reduce) {
-    overflow: visible;
+    background-image: linear-gradient(var(--grey1), var(--grey1));
+    background-size: 100% var(--button-rim-width);
+    background-position: 0 100%;
+    transition:
+      background-color 0.12s ease,
+      outline-offset 0.12s ease;
 
-    &::before {
-      display: none;
-    }
-
-    &::after {
-      width: 100%;
-      height: var(--button-rim-width);
-      background: var(--grey1);
-      opacity: 1;
-      transform: none !important;
-      transition: none;
-    }
-
-    &:hover::after,
-    &:focus-visible::after {
-      transform: none !important;
+    &:hover,
+    &:focus-visible {
+      background-image: linear-gradient(var(--grey1), var(--grey1));
+      background-size: 100% var(--button-rim-width);
+      background-position: 0 100%;
     }
   }
 }

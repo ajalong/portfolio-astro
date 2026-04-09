@@ -913,7 +913,7 @@ body.project-page a.project-nav-btn.project-nav-btn--deferred.project-nav-btn--f
   padding: $page-gutter-y 48px 0;
 
   @media screen and (max-width: 800px) {
-    padding: $page-gutter-y 14px 0;
+    padding: 88px 14px 0;
   }
 }
 
@@ -1057,7 +1057,7 @@ body main {
   }
 
   body.home main {
-    margin: 60px 0;
+    margin: 88px 0 60px;
   }
 }
 

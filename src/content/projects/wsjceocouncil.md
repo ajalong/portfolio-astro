@@ -22,7 +22,7 @@ Being the sole UX and UI designer, my role was client facing. I used co-design t
 
 ![Welcome — Landing page designed to guide attendees to key features, with an emphasis on the stream itself.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/welcome_apstqd.mp4)
 
-![Welcome wireframe — Items are placed just above the fold to encourage users to scroll in an organic manner.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-welcome_wireframe.png)
+![Welcome wireframe — Items are placed just above the fold to encourage users to scroll in an organic manner.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-landing_wireframe.png)
 
 For this event the user group was truly unique and therefore a lot of time was spent in understanding their needs and how to appeal to them. 'Less but better' was my North Star during the design process. These attendees did not have the time or patience to find what they wanted. I crafted simple user journeys that streamlined the process of gaining critical information and engaging in activities core to the experience.
 

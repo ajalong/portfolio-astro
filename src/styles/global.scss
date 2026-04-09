@@ -40,8 +40,13 @@ $pill-radius: 200px;
   --buttonBorder: #eaeaea;
   --button-rim-width: 1.4px;
   --secondaryBorderColor: #f2f2f2;
+  /*
+   * Safari’s own chrome is ~this grey, not #fff — keep in sync with theme-color in BaseLayout.
+   * A few px at the document top blend into the toolbar; the stack below still reads as pure white.
+   */
+  --browser-chrome-hairline: #ebebeb;
   /* Link underline zip: iridescent band (purple → magenta → red-orange), same layout as former grey wipe */
-  /* Readable in JS for canvas sizing (page-mesh-canvas.ts) */
+  /* Safe-area: mesh + document bg bleed past layout into notch / home indicator (viewport-fit=cover) */
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
@@ -64,38 +69,80 @@ $pill-radius: 200px;
 html {
   position: relative;
   isolation: isolate;
-  background-color: var(--backgroundColor);
+  color-scheme: only light;
+  /* Canvas below the top stack; hairline + theme-color handle the chrome seam */
+  background-color: #fff;
   min-height: 100%;
   min-height: 100dvh;
+  min-height: -webkit-fill-available;
   /*
-   * iOS Safari samples the *document* background for rubber-band overscroll and UI chrome tinting.
-   * The animated mesh is canvas-only; this fixed gradient approximates it so those regions match.
+   * Corner / document washes live here (no SVG filter) so they always composite reliably.
+   * Mesh + grain stay on ::before only.
    */
   background-image:
+    linear-gradient(
+      180deg,
+      var(--browser-chrome-hairline) 0%,
+      #fff max(28px, env(safe-area-inset-top, 0px)),
+      rgba(255, 255, 255, 0.97) calc(max(28px, env(safe-area-inset-top, 0px)) + min(4vh, 44px)),
+      rgba(255, 255, 255, 0.92) calc(max(28px, env(safe-area-inset-top, 0px)) + min(8vh, 80px)),
+      rgba(255, 255, 255, 0.68) calc(max(28px, env(safe-area-inset-top, 0px)) + min(14vh, 148px)),
+      rgba(255, 255, 255, 0.35) min(22vh, 220px),
+      rgba(255, 255, 255, 0.14) min(28vh, 300px),
+      rgba(255, 255, 255, 0) min(36vh, 340px)
+    ),
     radial-gradient(
       ellipse 130% 100% at 100% 100%,
-      hsl(268 32% 86% / 0.5) 0%,
-      hsl(288 20% 92% / 0.2) 45%,
-      transparent 72%
+      hsl(268 38% 85% / 0.56) 0%,
+      hsl(274 34% 87% / 0.47) 14%,
+      hsl(280 30% 89% / 0.38) 28%,
+      hsl(284 28% 90% / 0.32) 34%,
+      hsl(288 26% 91% / 0.26) 40%,
+      hsl(291 23% 93% / 0.19) 48%,
+      hsl(294 20% 94% / 0.12) 56%,
+      hsl(296 18% 95% / 0.08) 62%,
+      hsl(298 16% 96% / 0.04) 68%,
+      transparent 76%
     ),
     radial-gradient(
       ellipse 115% 95% at 0% 100%,
-      hsl(24 40% 88% / 0.42) 0%,
-      hsl(18 28% 92% / 0.18) 50%,
-      transparent 72%
+      hsl(24 46% 87% / 0.48) 0%,
+      hsl(22 41% 88.5% / 0.41) 16%,
+      hsl(20 36% 90% / 0.34) 32%,
+      hsl(19 33% 91% / 0.28) 38%,
+      hsl(18 30% 92% / 0.22) 44%,
+      hsl(17 27% 93% / 0.16) 51%,
+      hsl(16 24% 94% / 0.1) 58%,
+      hsl(15 21% 95% / 0.06) 64%,
+      hsl(14 18% 96% / 0.03) 70%,
+      transparent 78%
     ),
     radial-gradient(
       ellipse 100% 85% at 100% 0%,
-      hsl(28 32% 91% / 0.28) 0%,
-      transparent 65%
+      hsl(28 38% 90% / 0.34) 0%,
+      hsl(27 34% 91.5% / 0.26) 19%,
+      hsl(26 30% 93% / 0.18) 38%,
+      hsl(25 26% 94% / 0.12) 46%,
+      hsl(24 22% 95% / 0.07) 54%,
+      transparent 72%
     ),
     radial-gradient(
       ellipse 110% 90% at 50% 0%,
-      hsl(252 18% 92% / 0.2) 0%,
-      transparent 68%
+      hsl(252 24% 91% / 0.26) 0%,
+      hsl(253 21% 92.5% / 0.2) 20%,
+      hsl(254 18% 94% / 0.14) 40%,
+      hsl(255 16% 95% / 0.09) 49%,
+      hsl(256 14% 96% / 0.04) 58%,
+      transparent 74%
     );
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 901px) {
+  html {
+    background-attachment: fixed;
+  }
 }
 
 @keyframes page-fade-in {
@@ -129,25 +176,602 @@ body.initial-load {
   animation: page-fade-in 0.4s ease-in-out both;
 }
 
-/* Page mesh: drawn in JS (see page-mesh-canvas.ts) — supersampled canvas for smoother ramps */
-.page-mesh-canvas {
+/* Page backdrop mesh — bleeds past viewport with safe-area so it runs under status/home regions */
+@keyframes bg-page-mesh-breathe {
+  from {
+    background-size:
+      126% 116%,
+      111% 102%,
+      106% 97%,
+      116% 97%,
+      214% 126%;
+  }
+
+  to {
+    background-size:
+      152% 138%,
+      132% 122%,
+      126% 116%,
+      140% 119%,
+      248% 146%;
+  }
+}
+
+/* Opacity only — drift also animates background-position; two animations on one property fight. */
+@keyframes bg-page-mesh-enter {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bg-page-mesh-drift {
+  from {
+    background-position:
+      100% 100%,
+      0% 92%,
+      94% 0%,
+      50% 0%,
+      50% 106%;
+  }
+
+  to {
+    background-position:
+      86% 90%,
+      14% 100%,
+      100% 14%,
+      42% 2%,
+      50% 94%;
+  }
+}
+
+html::before {
+  content: '';
   position: fixed;
-  left: calc(-6vw - var(--sal));
-  top: calc(-6vh - var(--sat));
   z-index: 0;
-  display: block;
-  width: calc(112vw + var(--sal) + var(--sar));
-  height: calc(112vh + var(--sat) + var(--sab));
   pointer-events: none;
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  bottom: calc(-6vh - env(safe-area-inset-bottom, 0px));
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  width: auto;
+  height: auto;
+  /* Breaks up 8-bit banding without darkening the gradient (displacement map, not noise overlay) */
+  filter: url(#page-mesh-grain);
+  /* Don’t combine clip-path with SVG filters here — WebKit often clips the filtered output to nothing. */
+  /* Extra stops shorten each blend segment (less 8-bit banding); overall look stays soft */
+  background-image:
+    radial-gradient(
+      ellipse 130% 115% at 100% 100%,
+      hsl(268 42% 76% / 0.8) 0%,
+      hsl(271 40% 77.5% / 0.71) 9%,
+      hsl(274 38% 79% / 0.62) 12%,
+      hsl(276 36% 80% / 0.58) 15%,
+      hsl(278 34% 81% / 0.54) 18%,
+      hsl(280 32% 82% / 0.48) 21%,
+      hsl(283 30% 83% / 0.42) 27%,
+      hsl(288 28% 85% / 0.34) 34%,
+      hsl(290 25% 86% / 0.27) 39%,
+      hsl(292 22% 87% / 0.2) 44%,
+      hsl(295 18% 89% / 0.14) 50%,
+      hsl(296 17% 89.5% / 0.105) 57%,
+      hsl(298 15% 90% / 0.07) 62%,
+      transparent 71%
+    ),
+    radial-gradient(
+      ellipse 110% 100% at 0% 100%,
+      hsl(22 54% 78% / 0.7) 0%,
+      hsl(22 51% 79% / 0.64) 6%,
+      hsl(22 48% 80% / 0.58) 12%,
+      hsl(21 46% 81% / 0.53) 17%,
+      hsl(20 44% 82% / 0.48) 22%,
+      hsl(19 41% 83% / 0.43) 27%,
+      hsl(18 38% 84% / 0.38) 32%,
+      hsl(17 36% 85% / 0.33) 36%,
+      hsl(16 34% 86% / 0.28) 40%,
+      hsl(15 31% 87% / 0.23) 44%,
+      hsl(14 28% 88% / 0.18) 48%,
+      hsl(13 25% 89% / 0.145) 52%,
+      hsl(12 22% 90% / 0.11) 56%,
+      hsl(11 20% 91% / 0.075) 60%,
+      hsl(10 18% 92% / 0.04) 64%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 105% 95% at 100% 0%,
+      hsl(28 44% 81% / 0.46) 0%,
+      hsl(27 41% 82% / 0.4) 11%,
+      hsl(26 38% 83% / 0.34) 18%,
+      hsl(24 36% 84% / 0.3) 23%,
+      hsl(22 34% 85% / 0.26) 28%,
+      hsl(20 31% 86% / 0.21) 33%,
+      hsl(18 28% 87% / 0.16) 38%,
+      hsl(17 26% 88% / 0.135) 43%,
+      hsl(16 24% 89% / 0.11) 48%,
+      hsl(15 22% 90% / 0.075) 53%,
+      hsl(14 20% 91% / 0.04) 58%,
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse 115% 95% at 30% -6%,
+      hsl(248 28% 85% / 0.36) 0%,
+      hsl(249 26% 86% / 0.31) 13%,
+      hsl(250 24% 87% / 0.26) 22%,
+      hsl(251 23% 88% / 0.22) 28%,
+      hsl(252 22% 89% / 0.18) 34%,
+      hsl(253 20% 89.5% / 0.14) 39%,
+      hsl(254 18% 90% / 0.1) 44%,
+      hsl(255 17% 91% / 0.08) 48%,
+      hsl(256 16% 92% / 0.06) 52%,
+      hsl(257 15% 92.5% / 0.045) 57%,
+      hsl(258 14% 93% / 0.03) 62%,
+      transparent 69%
+    ),
+    radial-gradient(
+      ellipse 220% 120% at 50% 110%,
+      hsl(258 24% 82% / 0.36) 0%,
+      hsl(257 24% 82.5% / 0.31) 13%,
+      hsl(256 24% 83% / 0.26) 18%,
+      hsl(44 24% 84% / 0.22) 23%,
+      hsl(32 24% 85% / 0.18) 28%,
+      hsl(30 22% 86% / 0.14) 33%,
+      hsl(28 20% 87% / 0.1) 38%,
+      hsl(256 17% 88.5% / 0.09) 43%,
+      hsl(256 14% 90% / 0.08) 48%,
+      hsl(258 13% 91% / 0.055) 54%,
+      hsl(260 12% 92% / 0.03) 60%,
+      transparent 71%
+    );
+  background-repeat: no-repeat;
+  background-position:
+    100% 100%,
+    0% 92%,
+    94% 0%,
+    50% 0%,
+    50% 106%;
+  background-size:
+    138% 126%,
+    120% 110%,
+    116% 104%,
+    128% 106%,
+    230% 136%;
+  animation:
+    bg-page-mesh-enter 1.45s cubic-bezier(0.22, 1, 0.36, 1) both,
+    bg-page-mesh-breathe 12s ease-in-out infinite alternate,
+    bg-page-mesh-drift 15s ease-in-out infinite alternate;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html::before {
+    animation: none;
+    background-size:
+      138% 126%,
+      120% 110%,
+      116% 104%,
+      128% 106%,
+      230% 136%;
+    background-position:
+      96% 97%,
+      4% 96%,
+      97% 4%,
+      48% 3%,
+      50% 102%;
+  }
+}
+
+/* Chrome hairline → white, then softens into ::before mesh (same safe-area origin as mesh) */
+html::after {
+  content: '';
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  width: auto;
+  height: min(42vh, 400px);
+  background: linear-gradient(
+    180deg,
+    var(--browser-chrome-hairline) 0%,
+    #fff max(28px, env(safe-area-inset-top, 0px)),
+    rgba(255, 255, 255, 0.97) calc(max(28px, env(safe-area-inset-top, 0px)) + min(5vh, 60px)),
+    rgba(255, 255, 255, 0.94) calc(max(28px, env(safe-area-inset-top, 0px)) + min(10vh, 120px)),
+    rgba(255, 255, 255, 0.72) 38%,
+    rgba(255, 255, 255, 0.45) 58%,
+    rgba(255, 255, 255, 0.18) 78%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateZ(0);
 }
 
 /*
- * Safari paints `position: fixed` above in-flow siblings unless those siblings form a stack.
- * Keep every body child except the mesh above the canvas (inline `position` on svg still wins).
- * Exclude `.project-nav-btn`: it must stay `position: fixed` + high z-index; overriding with
- * `position: relative` here broke hit-testing and :hover for the full 64×64 control.
+ * BaseLayout adds `safari-mesh-fallback` on real Safari only. Same mesh as `html::before` resting
+ * frame (multi-stop ramps help WebKit banding).
  */
-body > :not(.page-mesh-canvas):not(.project-nav-btn) {
+html.safari-mesh-fallback::before {
+  animation: none !important;
+  opacity: 1;
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  bottom: calc(-6vh - env(safe-area-inset-bottom, 0px));
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  background-image:
+    radial-gradient(
+      ellipse 130% 115% at 100% 100%,
+      hsl(268 42% 76% / 0.8) 0%,
+      hsl(271 40% 77.5% / 0.71) 9%,
+      hsl(274 38% 79% / 0.62) 12%,
+      hsl(276 36% 80% / 0.58) 15%,
+      hsl(278 34% 81% / 0.54) 18%,
+      hsl(280 32% 82% / 0.48) 21%,
+      hsl(283 30% 83% / 0.42) 27%,
+      hsl(288 28% 85% / 0.34) 34%,
+      hsl(290 25% 86% / 0.27) 39%,
+      hsl(292 22% 87% / 0.2) 44%,
+      hsl(295 18% 89% / 0.14) 50%,
+      hsl(296 17% 89.5% / 0.105) 57%,
+      hsl(298 15% 90% / 0.07) 62%,
+      transparent 71%
+    ),
+    radial-gradient(
+      ellipse 110% 100% at 0% 100%,
+      hsl(22 54% 78% / 0.7) 0%,
+      hsl(22 51% 79% / 0.64) 6%,
+      hsl(22 48% 80% / 0.58) 12%,
+      hsl(21 46% 81% / 0.53) 17%,
+      hsl(20 44% 82% / 0.48) 22%,
+      hsl(19 41% 83% / 0.43) 27%,
+      hsl(18 38% 84% / 0.38) 32%,
+      hsl(17 36% 85% / 0.33) 36%,
+      hsl(16 34% 86% / 0.28) 40%,
+      hsl(15 31% 87% / 0.23) 44%,
+      hsl(14 28% 88% / 0.18) 48%,
+      hsl(13 25% 89% / 0.145) 52%,
+      hsl(12 22% 90% / 0.11) 56%,
+      hsl(11 20% 91% / 0.075) 60%,
+      hsl(10 18% 92% / 0.04) 64%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 105% 95% at 100% 0%,
+      hsl(28 44% 81% / 0.46) 0%,
+      hsl(27 41% 82% / 0.4) 11%,
+      hsl(26 38% 83% / 0.34) 18%,
+      hsl(24 36% 84% / 0.3) 23%,
+      hsl(22 34% 85% / 0.26) 28%,
+      hsl(20 31% 86% / 0.21) 33%,
+      hsl(18 28% 87% / 0.16) 38%,
+      hsl(17 26% 88% / 0.135) 43%,
+      hsl(16 24% 89% / 0.11) 48%,
+      hsl(15 22% 90% / 0.075) 53%,
+      hsl(14 20% 91% / 0.04) 58%,
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse 115% 95% at 30% -6%,
+      hsl(248 28% 85% / 0.36) 0%,
+      hsl(249 26% 86% / 0.31) 13%,
+      hsl(250 24% 87% / 0.26) 22%,
+      hsl(251 23% 88% / 0.22) 28%,
+      hsl(252 22% 89% / 0.18) 34%,
+      hsl(253 20% 89.5% / 0.14) 39%,
+      hsl(254 18% 90% / 0.1) 44%,
+      hsl(255 17% 91% / 0.08) 48%,
+      hsl(256 16% 92% / 0.06) 52%,
+      hsl(257 15% 92.5% / 0.045) 57%,
+      hsl(258 14% 93% / 0.03) 62%,
+      transparent 69%
+    ),
+    radial-gradient(
+      ellipse 220% 120% at 50% 110%,
+      hsl(258 24% 82% / 0.36) 0%,
+      hsl(257 24% 82.5% / 0.31) 13%,
+      hsl(256 24% 83% / 0.26) 18%,
+      hsl(44 24% 84% / 0.22) 23%,
+      hsl(32 24% 85% / 0.18) 28%,
+      hsl(30 22% 86% / 0.14) 33%,
+      hsl(28 20% 87% / 0.1) 38%,
+      hsl(256 17% 88.5% / 0.09) 43%,
+      hsl(256 14% 90% / 0.08) 48%,
+      hsl(258 13% 91% / 0.055) 54%,
+      hsl(260 12% 92% / 0.03) 60%,
+      transparent 71%
+    );
+  background-repeat: no-repeat;
+  background-position:
+    100% 100%,
+    0% 92%,
+    94% 0%,
+    50% 0%,
+    50% 106%;
+  background-size:
+    138% 126%,
+    120% 110%,
+    116% 104%,
+    128% 106%,
+    230% 136%;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* OKLCH interpolation between stops (progressive enhancement over sRGB blending). */
+@supports (color: oklch(1 0 0)) {
+  html {
+    background-image:
+      linear-gradient(
+        in oklch,
+        180deg,
+        var(--browser-chrome-hairline) 0%,
+        #fff max(28px, env(safe-area-inset-top, 0px)),
+        rgba(255, 255, 255, 0.97) calc(max(28px, env(safe-area-inset-top, 0px)) + min(4vh, 44px)),
+        rgba(255, 255, 255, 0.92) calc(max(28px, env(safe-area-inset-top, 0px)) + min(8vh, 80px)),
+        rgba(255, 255, 255, 0.68) calc(max(28px, env(safe-area-inset-top, 0px)) + min(14vh, 148px)),
+        rgba(255, 255, 255, 0.35) min(22vh, 220px),
+        rgba(255, 255, 255, 0.14) min(28vh, 300px),
+        rgba(255, 255, 255, 0) min(36vh, 340px)
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 130% 100% at 100% 100%,
+        hsl(268 38% 85% / 0.56) 0%,
+        hsl(274 34% 87% / 0.47) 14%,
+        hsl(280 30% 89% / 0.38) 28%,
+        hsl(284 28% 90% / 0.32) 34%,
+        hsl(288 26% 91% / 0.26) 40%,
+        hsl(291 23% 93% / 0.19) 48%,
+        hsl(294 20% 94% / 0.12) 56%,
+        hsl(296 18% 95% / 0.08) 62%,
+        hsl(298 16% 96% / 0.04) 68%,
+        transparent 76%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 0% 100%,
+        hsl(24 46% 87% / 0.48) 0%,
+        hsl(22 41% 88.5% / 0.41) 16%,
+        hsl(20 36% 90% / 0.34) 32%,
+        hsl(19 33% 91% / 0.28) 38%,
+        hsl(18 30% 92% / 0.22) 44%,
+        hsl(17 27% 93% / 0.16) 51%,
+        hsl(16 24% 94% / 0.1) 58%,
+        hsl(15 21% 95% / 0.06) 64%,
+        hsl(14 18% 96% / 0.03) 70%,
+        transparent 78%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 100% 85% at 100% 0%,
+        hsl(28 38% 90% / 0.34) 0%,
+        hsl(27 34% 91.5% / 0.26) 19%,
+        hsl(26 30% 93% / 0.18) 38%,
+        hsl(25 26% 94% / 0.12) 46%,
+        hsl(24 22% 95% / 0.07) 54%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 90% at 50% 0%,
+        hsl(252 24% 91% / 0.26) 0%,
+        hsl(253 21% 92.5% / 0.2) 20%,
+        hsl(254 18% 94% / 0.14) 40%,
+        hsl(255 16% 95% / 0.09) 49%,
+        hsl(256 14% 96% / 0.04) 58%,
+        transparent 74%
+      );
+  }
+
+  html::after {
+    background: linear-gradient(
+      in oklch,
+      180deg,
+      var(--browser-chrome-hairline) 0%,
+      #fff max(28px, env(safe-area-inset-top, 0px)),
+      rgba(255, 255, 255, 0.97) calc(max(28px, env(safe-area-inset-top, 0px)) + min(5vh, 60px)),
+      rgba(255, 255, 255, 0.94) calc(max(28px, env(safe-area-inset-top, 0px)) + min(10vh, 120px)),
+      rgba(255, 255, 255, 0.72) 38%,
+      rgba(255, 255, 255, 0.45) 58%,
+      rgba(255, 255, 255, 0.18) 78%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  html::before {
+    background-image:
+      radial-gradient(
+        in oklch,
+        ellipse 130% 115% at 100% 100%,
+        hsl(268 42% 76% / 0.8) 0%,
+        hsl(271 40% 77.5% / 0.71) 9%,
+        hsl(274 38% 79% / 0.62) 12%,
+        hsl(276 36% 80% / 0.58) 15%,
+        hsl(278 34% 81% / 0.54) 18%,
+        hsl(280 32% 82% / 0.48) 21%,
+        hsl(283 30% 83% / 0.42) 27%,
+        hsl(288 28% 85% / 0.34) 34%,
+        hsl(290 25% 86% / 0.27) 39%,
+        hsl(292 22% 87% / 0.2) 44%,
+        hsl(295 18% 89% / 0.14) 50%,
+        hsl(296 17% 89.5% / 0.105) 57%,
+        hsl(298 15% 90% / 0.07) 62%,
+        transparent 71%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 100% at 0% 100%,
+        hsl(22 54% 78% / 0.7) 0%,
+        hsl(22 51% 79% / 0.64) 6%,
+        hsl(22 48% 80% / 0.58) 12%,
+        hsl(21 46% 81% / 0.53) 17%,
+        hsl(20 44% 82% / 0.48) 22%,
+        hsl(19 41% 83% / 0.43) 27%,
+        hsl(18 38% 84% / 0.38) 32%,
+        hsl(17 36% 85% / 0.33) 36%,
+        hsl(16 34% 86% / 0.28) 40%,
+        hsl(15 31% 87% / 0.23) 44%,
+        hsl(14 28% 88% / 0.18) 48%,
+        hsl(13 25% 89% / 0.145) 52%,
+        hsl(12 22% 90% / 0.11) 56%,
+        hsl(11 20% 91% / 0.075) 60%,
+        hsl(10 18% 92% / 0.04) 64%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 105% 95% at 100% 0%,
+        hsl(28 44% 81% / 0.46) 0%,
+        hsl(27 41% 82% / 0.4) 11%,
+        hsl(26 38% 83% / 0.34) 18%,
+        hsl(24 36% 84% / 0.3) 23%,
+        hsl(22 34% 85% / 0.26) 28%,
+        hsl(20 31% 86% / 0.21) 33%,
+        hsl(18 28% 87% / 0.16) 38%,
+        hsl(17 26% 88% / 0.135) 43%,
+        hsl(16 24% 89% / 0.11) 48%,
+        hsl(15 22% 90% / 0.075) 53%,
+        hsl(14 20% 91% / 0.04) 58%,
+        transparent 66%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 30% -6%,
+        hsl(248 28% 85% / 0.36) 0%,
+        hsl(249 26% 86% / 0.31) 13%,
+        hsl(250 24% 87% / 0.26) 22%,
+        hsl(251 23% 88% / 0.22) 28%,
+        hsl(252 22% 89% / 0.18) 34%,
+        hsl(253 20% 89.5% / 0.14) 39%,
+        hsl(254 18% 90% / 0.1) 44%,
+        hsl(255 17% 91% / 0.08) 48%,
+        hsl(256 16% 92% / 0.06) 52%,
+        hsl(257 15% 92.5% / 0.045) 57%,
+        hsl(258 14% 93% / 0.03) 62%,
+        transparent 69%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 220% 120% at 50% 110%,
+        hsl(258 24% 82% / 0.36) 0%,
+        hsl(257 24% 82.5% / 0.31) 13%,
+        hsl(256 24% 83% / 0.26) 18%,
+        hsl(44 24% 84% / 0.22) 23%,
+        hsl(32 24% 85% / 0.18) 28%,
+        hsl(30 22% 86% / 0.14) 33%,
+        hsl(28 20% 87% / 0.1) 38%,
+        hsl(256 17% 88.5% / 0.09) 43%,
+        hsl(256 14% 90% / 0.08) 48%,
+        hsl(258 13% 91% / 0.055) 54%,
+        hsl(260 12% 92% / 0.03) 60%,
+        transparent 71%
+      );
+  }
+
+  html.safari-mesh-fallback::before {
+    background-image:
+      radial-gradient(
+        in oklch,
+        ellipse 130% 115% at 100% 100%,
+        hsl(268 42% 76% / 0.8) 0%,
+        hsl(271 40% 77.5% / 0.71) 9%,
+        hsl(274 38% 79% / 0.62) 12%,
+        hsl(276 36% 80% / 0.58) 15%,
+        hsl(278 34% 81% / 0.54) 18%,
+        hsl(280 32% 82% / 0.48) 21%,
+        hsl(283 30% 83% / 0.42) 27%,
+        hsl(288 28% 85% / 0.34) 34%,
+        hsl(290 25% 86% / 0.27) 39%,
+        hsl(292 22% 87% / 0.2) 44%,
+        hsl(295 18% 89% / 0.14) 50%,
+        hsl(296 17% 89.5% / 0.105) 57%,
+        hsl(298 15% 90% / 0.07) 62%,
+        transparent 71%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 100% at 0% 100%,
+        hsl(22 54% 78% / 0.7) 0%,
+        hsl(22 51% 79% / 0.64) 6%,
+        hsl(22 48% 80% / 0.58) 12%,
+        hsl(21 46% 81% / 0.53) 17%,
+        hsl(20 44% 82% / 0.48) 22%,
+        hsl(19 41% 83% / 0.43) 27%,
+        hsl(18 38% 84% / 0.38) 32%,
+        hsl(17 36% 85% / 0.33) 36%,
+        hsl(16 34% 86% / 0.28) 40%,
+        hsl(15 31% 87% / 0.23) 44%,
+        hsl(14 28% 88% / 0.18) 48%,
+        hsl(13 25% 89% / 0.145) 52%,
+        hsl(12 22% 90% / 0.11) 56%,
+        hsl(11 20% 91% / 0.075) 60%,
+        hsl(10 18% 92% / 0.04) 64%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 105% 95% at 100% 0%,
+        hsl(28 44% 81% / 0.46) 0%,
+        hsl(27 41% 82% / 0.4) 11%,
+        hsl(26 38% 83% / 0.34) 18%,
+        hsl(24 36% 84% / 0.3) 23%,
+        hsl(22 34% 85% / 0.26) 28%,
+        hsl(20 31% 86% / 0.21) 33%,
+        hsl(18 28% 87% / 0.16) 38%,
+        hsl(17 26% 88% / 0.135) 43%,
+        hsl(16 24% 89% / 0.11) 48%,
+        hsl(15 22% 90% / 0.075) 53%,
+        hsl(14 20% 91% / 0.04) 58%,
+        transparent 66%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 30% -6%,
+        hsl(248 28% 85% / 0.36) 0%,
+        hsl(249 26% 86% / 0.31) 13%,
+        hsl(250 24% 87% / 0.26) 22%,
+        hsl(251 23% 88% / 0.22) 28%,
+        hsl(252 22% 89% / 0.18) 34%,
+        hsl(253 20% 89.5% / 0.14) 39%,
+        hsl(254 18% 90% / 0.1) 44%,
+        hsl(255 17% 91% / 0.08) 48%,
+        hsl(256 16% 92% / 0.06) 52%,
+        hsl(257 15% 92.5% / 0.045) 57%,
+        hsl(258 14% 93% / 0.03) 62%,
+        transparent 69%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 220% 120% at 50% 110%,
+        hsl(258 24% 82% / 0.36) 0%,
+        hsl(257 24% 82.5% / 0.31) 13%,
+        hsl(256 24% 83% / 0.26) 18%,
+        hsl(44 24% 84% / 0.22) 23%,
+        hsl(32 24% 85% / 0.18) 28%,
+        hsl(30 22% 86% / 0.14) 33%,
+        hsl(28 20% 87% / 0.1) 38%,
+        hsl(256 17% 88.5% / 0.09) 43%,
+        hsl(256 14% 90% / 0.08) 48%,
+        hsl(258 13% 91% / 0.055) 54%,
+        hsl(260 12% 92% / 0.03) 60%,
+        transparent 71%
+      );
+  }
+}
+
+/*
+ * WebKit: stack page UI above the backdrop (::before mesh + ::after top fade). Exclude
+ * `.project-nav-btn` (fixed home control).
+ */
+body > :not(.project-nav-btn) {
   position: relative;
   z-index: 1;
 }
@@ -443,6 +1067,10 @@ section {
 body.home section {
   margin-top: 60px;
   margin-bottom: 0;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
 }
 
 h2,
@@ -503,16 +1131,16 @@ p {
 /*
  * Project case studies — vertical rhythm (only ProjectLayout uses .page_container article)
  * - 80px: profile header → main content; after media when next block isn’t prose/headings
- * - Mobile (≤800px): 24px margin above figure rows (was 80px)
- * - After media → text/headings: 80px minus caption optical offset (27.2px); mobile 24px
- * - 24px: default stack (paragraphs, lists, adjacent media)
- * - 16px: heading → following block
+ * - Mobile (≤800px): 40px figure / section breaks (was 80px)
+ * - After media → text/headings: 80px minus caption optical offset (27.2px); mobile 40px
+ * - 24px: default stack; mobile 32px
+ * - 16px: heading → following block; mobile 24px
  */
 body.project-page .page_container > header {
   margin-bottom: $rhythm-section;
 
   @media screen and (max-width: 800px) {
-    margin-bottom: 40px;
+    margin-bottom: 56px;
   }
 }
 
@@ -532,17 +1160,25 @@ body.project-page .page_container article :is(.media-half, .media-thirds, .media
 
 body.project-page .page_container article > * + * {
   margin-top: $rhythm-stack;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 32px;
+  }
 }
 
 body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) + * {
   margin-top: 16px;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 24px;
+  }
 }
 
 body.project-page .page_container article > * + :is(.media-full, .media-half, .media-thirds, .media-four, .media-five) {
   margin-top: $rhythm-section;
 
   @media screen and (max-width: 800px) {
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 
@@ -554,13 +1190,17 @@ body.project-page
   margin-top: $rhythm-section;
 
   @media screen and (max-width: 800px) {
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 
 body.project-page .page_container article > :is(.media-full, .media-half, .media-thirds, .media-four, .media-five)
   + :is(.media-full, .media-half, .media-thirds, .media-four, .media-five) {
   margin-top: $rhythm-stack;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
 }
 
 body.project-page
@@ -571,7 +1211,7 @@ body.project-page
   margin-top: calc($rhythm-section - 27.2px);
 
   @media screen and (max-width: 800px) {
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 
@@ -579,7 +1219,7 @@ body.project-page .page_container article > :is(.media-full, .media-half, .media
   margin-top: $rhythm-section;
 
   @media screen and (max-width: 800px) {
-    margin-top: 24px;
+    margin-top: 40px;
   }
 }
 
@@ -935,7 +1575,7 @@ body.project-page a.project-nav-btn.project-nav-btn--deferred.project-nav-btn--f
   padding: $page-gutter-y 48px 0;
 
   @media screen and (max-width: 800px) {
-    padding: 88px 14px 0;
+    padding: 104px 14px 0;
   }
 }
 
@@ -1079,7 +1719,7 @@ body main {
   }
 
   body.home main {
-    margin: 88px 0 60px;
+    margin: 80px 0 60px;
   }
 }
 
@@ -1104,7 +1744,7 @@ body main {
     position: static;
     width: 100%;
     height: fit-content;
-    margin-bottom: 60px;
+    margin-bottom: 56px;
     padding-top: 0;
     padding-bottom: 0;
   }
@@ -1145,6 +1785,8 @@ body main {
     left: 0;
     padding-top: 0;
     padding-bottom: 0;
+    /* Match horizontal page gutter (body.home padding) */
+    gap: 14px;
   }
 }
 
@@ -1192,6 +1834,13 @@ body main {
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
+
+  /* Home project grid: taller than 16:9 on small screens so cards don’t feel squat */
+  body.home & {
+    @media screen and (max-width: 800px) {
+      aspect-ratio: 4 / 3;
+    }
+  }
 }
 
 .thumbnail img {

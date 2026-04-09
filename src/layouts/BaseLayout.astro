@@ -43,8 +43,9 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
     <meta name="msapplication-TileColor" content="#222222" />
-    <!-- Harmonizes iOS Safari toolbar / tab chrome with the mesh (not the old dark #222) -->
-    <meta name="theme-color" content="#ebe7f2" />
+    <!-- Same hex as --browser-chrome-hairline (global.scss): Safari’s toolbar isn’t #fff; this tints UI to meet the page -->
+    <meta name="theme-color" content="#ebebeb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#ebebeb" />
 
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
@@ -61,8 +62,26 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     </script>
   </head>
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
-    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute">
+    <svg
+      width="1"
+      height="1"
+      aria-hidden="true"
+      focusable="false"
+      style="position: fixed; left: -9999px; top: 0; overflow: hidden"
+    >
       <defs>
+        <!-- Grain via displacement (no feBlend — it was re-compositing SourceGraphic and killing dither). -->
+        <!-- Region 0/0/1/1 = full bbox (objectBoundingBox). Keep scale modest — large values + clip-path can blank WebKit. -->
+        <filter id="page-mesh-grain" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.88"
+            numOctaves="3"
+            stitchTiles="stitch"
+            result="grain"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="grain" scale="52" xChannelSelector="R" />
+        </filter>
         <linearGradient
           id="btn-border-ring-iridescent"
           gradientUnits="objectBoundingBox"

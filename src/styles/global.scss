@@ -250,23 +250,21 @@ html::before {
     bg-page-mesh-enter 1.6s cubic-bezier(0.22, 1, 0.36, 1) both,
     bg-page-mesh-breathe 28s ease-in-out infinite alternate,
     bg-page-mesh-drift 38s ease-in-out infinite alternate;
-  /* Micro-blur masks residual stepping after rasterization (keep scale to hide edge falloff) */
-  filter: blur(0.85px);
-  -webkit-filter: blur(0.85px);
-  transform: translateZ(0) scale(1.04);
+  /* No blur here: blurring alpha-heavy radials mixes them into the page grey and kills the mesh */
+  transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
-/* Dual noise: fine + coarse; sits above mesh, below page content (body is z-index: 1) */
+/* Dual noise dithers banding; soft-light keeps color vs overlay, which flattened the mesh */
 html::after {
   content: '';
   position: fixed;
   inset: -6%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.14;
-  mix-blend-mode: overlay;
+  opacity: 0.1;
+  mix-blend-mode: soft-light;
   background-image: $bg-mesh-noise-fine, $bg-mesh-noise;
   background-repeat: repeat, repeat;
   background-size: 72px 72px, 200px 200px;

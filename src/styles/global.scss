@@ -862,6 +862,9 @@ figure.media-full > :first-child {
 .project-nav-btn {
   position: fixed;
   top: 24px;
+  @media screen and (max-width: 800px) {
+    top: 12px;
+  }
   left: 50%;
   z-index: 100;
   display: inline-flex;

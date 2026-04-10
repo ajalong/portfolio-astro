@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { PROJECT_THUMBNAIL_ALTS } from '../../data/projectThumbnailAlts';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 
 type ProjectEntry = CollectionEntry<'projects'>;
@@ -34,6 +35,8 @@ const pivot =
         title: nextProject.data.title,
         snippet: nextProject.data.summary,
         thumbnailSrc: nextProject.data.thumbnailImage,
+        thumbnailAlt:
+          PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? `Next project: ${nextProject.data.title}`,
       }
     : undefined;
 
@@ -43,6 +46,7 @@ const { Content } = await project.render();
   title={title}
   client={client}
   description={metaDescription}
+  team={project.data.team}
   {pivot}
 >
   <article>

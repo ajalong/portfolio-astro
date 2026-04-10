@@ -23,12 +23,12 @@ To enable adoption across the business, a group of representatives from across G
 <section class="media-half">
   <div>
 
-![Examples of general components built within the design system](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_general_components.mp4)
+![Grid of general UI components, for example a toggle switch, in light and dark mode from the design system. — Paired light- and dark-theme tiles: toggles, inputs, lists, tabs, and tokens in a grid.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_general_components.mp4)
 
   </div>
   <div>
 
-![GSK Podcasts created using components from the design system](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
+![A GSK podcast iOS app built from design system components in light and dark mode — Handheld frame showing the episode list and player chrome switching between light and dark UI.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
 
   </div>
 </section>

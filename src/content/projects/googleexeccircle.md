@@ -12,7 +12,7 @@ order: 4
 
 Google Exec Circle was a weekly webinar series launched as a response to the COVID-19 pandemic, produced by Cheerful Twentyfirst. It ran throughout the first half of 2021 and brought together some of Google UK's key business partners.
 
-![Welcome page with animation](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/google/exec-welcome_cqegak.mp4)
+![Animation showing the Welcome page (landing page) of the site — Full-bleed hero, headline, primary CTA and content blocks animating into view.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/google/exec-welcome_cqegak.mp4)
 
 <section class="media-half">
   <div>
@@ -27,7 +27,7 @@ Google Exec Circle was a weekly webinar series launched as a response to the COV
   </div>
 </section>
 
-The events were a collaboration with [Stanford's Graduate School of Business](https://www.gsb.stanford.edu/), whose pre‑eminent academics lead the sessions. I designed and led the front‑end development of the platform at the centre of this event series.
+The events were a collaboration with [Stanford's Graduate School of Business](https://www.gsb.stanford.edu/), whose pre‑eminent academics led the sessions. I designed and led the front‑end development of the platform at the centre of this event series.
 
 The platform needed to:
 

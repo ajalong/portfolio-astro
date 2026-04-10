@@ -18,7 +18,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 ---
 <html lang="en">
   <head>
-    <!-- Safari only: static mesh (see `.safari-mesh-fallback` in global.scss). iOS Chrome has “Safari” in UA too — exclude Chromium family. -->
+    <!-- Safari only: mesh without SVG filter (see `.safari-mesh-fallback` in global.scss). iOS Chrome has “Safari” in UA too — exclude Chromium family. -->
     <script is:inline>
       (function () {
         var ua = navigator.userAgent;

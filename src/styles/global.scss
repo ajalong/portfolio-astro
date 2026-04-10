@@ -176,62 +176,7 @@ body.initial-load {
   animation: page-fade-in 0.4s ease-in-out both;
 }
 
-/* Page backdrop mesh — bleeds past viewport with safe-area so it runs under status/home regions */
-@keyframes bg-page-mesh-breathe {
-  from {
-    background-size:
-      126% 116%,
-      111% 102%,
-      106% 97%,
-      116% 97%,
-      214% 126%;
-  }
-
-  to {
-    background-size:
-      152% 138%,
-      132% 122%,
-      126% 116%,
-      140% 119%,
-      248% 146%;
-  }
-}
-
-/* Opacity only — drift also animates background-position; two animations on one property fight. */
-@keyframes bg-page-mesh-enter {
-  0% {
-    opacity: 0;
-  }
-
-  40% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes bg-page-mesh-drift {
-  from {
-    background-position:
-      100% 100%,
-      0% 92%,
-      94% 0%,
-      50% 0%,
-      50% 106%;
-  }
-
-  to {
-    background-position:
-      86% 90%,
-      14% 100%,
-      100% 14%,
-      42% 2%,
-      50% 94%;
-  }
-}
-
+/* Page backdrop mesh — layered radials + SVG displacement grain (static resting frame; no motion). */
 html::before {
   content: '';
   position: fixed;
@@ -331,42 +276,22 @@ html::before {
     );
   background-repeat: no-repeat;
   background-position:
-    100% 100%,
-    0% 92%,
-    94% 0%,
-    50% 0%,
-    50% 106%;
+    96% 97%,
+    4% 96%,
+    97% 4%,
+    48% 3%,
+    50% 102%;
   background-size:
     138% 126%,
     120% 110%,
     116% 104%,
     128% 106%,
     230% 136%;
-  animation:
-    bg-page-mesh-enter 1.45s cubic-bezier(0.22, 1, 0.36, 1) both,
-    bg-page-mesh-breathe 12s ease-in-out infinite alternate,
-    bg-page-mesh-drift 15s ease-in-out infinite alternate;
+  animation: none;
+  opacity: 1;
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html::before {
-    animation: none;
-    background-size:
-      138% 126%,
-      120% 110%,
-      116% 104%,
-      128% 106%,
-      230% 136%;
-    background-position:
-      96% 97%,
-      4% 96%,
-      97% 4%,
-      48% 3%,
-      50% 102%;
-  }
 }
 
 /* Chrome hairline → white, then softens into ::before mesh (same safe-area origin as mesh) */
@@ -395,11 +320,12 @@ html::after {
 }
 
 /*
- * BaseLayout adds `safari-mesh-fallback` on real Safari only. Same mesh as `html::before` resting
- * frame (multi-stop ramps help WebKit banding).
+ * BaseLayout adds `safari-mesh-fallback` on real Safari only. Same mesh + stops as `html::before`
+ * but no SVG filter (WebKit + displacement often blanks); multi-stop ramps help banding.
  */
 html.safari-mesh-fallback::before {
   animation: none !important;
+  filter: none !important;
   opacity: 1;
   top: calc(-6vh - env(safe-area-inset-top, 0px));
   right: calc(-6vw - env(safe-area-inset-right, 0px));
@@ -489,11 +415,11 @@ html.safari-mesh-fallback::before {
     );
   background-repeat: no-repeat;
   background-position:
-    100% 100%,
-    0% 92%,
-    94% 0%,
-    50% 0%,
-    50% 106%;
+    96% 97%,
+    4% 96%,
+    97% 4%,
+    48% 3%,
+    50% 102%;
   background-size:
     138% 126%,
     120% 110%,
@@ -674,6 +600,21 @@ html.safari-mesh-fallback::before {
         hsl(260 12% 92% / 0.03) 60%,
         transparent 71%
       );
+    animation: none;
+    background-repeat: no-repeat;
+    background-size:
+      138% 126%,
+      120% 110%,
+      116% 104%,
+      128% 106%,
+      230% 136%;
+    background-position:
+      96% 97%,
+      4% 96%,
+      97% 4%,
+      48% 3%,
+      50% 102%;
+    opacity: 1;
   }
 
   html.safari-mesh-fallback::before {
@@ -764,6 +705,22 @@ html.safari-mesh-fallback::before {
         hsl(260 12% 92% / 0.03) 60%,
         transparent 71%
       );
+    background-repeat: no-repeat;
+    background-position:
+      96% 97%,
+      4% 96%,
+      97% 4%,
+      48% 3%,
+      50% 102%;
+    background-size:
+      138% 126%,
+      120% 110%,
+      116% 104%,
+      128% 106%,
+      230% 136%;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 
@@ -921,7 +878,6 @@ $rim-inner-wash:
     z-index: 1;
   }
 
-  &:hover,
   &:focus-visible,
   &:active {
     color: var(--grey1);
@@ -938,6 +894,20 @@ $rim-inner-wash:
   &:active {
     --rim-fill: var(--buttonBackgroundActive);
     background: var(--buttonBackgroundActive);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--grey1);
+      outline: none;
+      border-color: transparent;
+      background: var(--buttonBackground);
+
+      &::before,
+      &::after {
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -969,18 +939,22 @@ $rim-inner-wash:
     border-radius: 2px;
   }
 
-  &:hover,
   &:focus-visible {
     background-image: var(--zip-hover-gradient);
     background-size: 200% var(--button-rim-width);
     background-position: 100% 100%;
-  }
-
-  &:focus-visible {
     outline: 2px solid var(--grey1);
     outline-offset: 3px;
     border-radius: 2px;
     background-color: var(--secondaryBorderColor);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-image: var(--zip-hover-gradient);
+      background-size: 200% var(--button-rim-width);
+      background-position: 100% 100%;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -991,11 +965,18 @@ $rim-inner-wash:
       background-color 0.12s ease,
       outline-offset 0.12s ease;
 
-    &:hover,
     &:focus-visible {
       background-image: linear-gradient(var(--grey1), var(--grey1));
       background-size: 100% var(--button-rim-width);
       background-position: 0 100%;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-image: linear-gradient(var(--grey1), var(--grey1));
+        background-size: 100% var(--button-rim-width);
+        background-position: 0 100%;
+      }
     }
   }
 }
@@ -1372,6 +1353,12 @@ header {
     }
   }
 
+  /* Inline brand icons (e.g. LinkedIn [in] logo) use currentColor — no brightness filter */
+  svg.cta__icon-svg {
+    flex-shrink: 0;
+    display: block;
+  }
+
   div {
     display: flex;
     align-items: center;
@@ -1381,7 +1368,8 @@ header {
     margin: 0;
   }
 
-  img {
+  img,
+  svg.cta__icon-svg {
     height: 20px;
     width: 20px;
     padding: 0;
@@ -1423,16 +1411,24 @@ header {
         display: none;
       }
 
-      img {
+      img,
+      svg.cta__icon-svg {
         display: none;
       }
 
-      &:hover,
       &:focus-visible,
       &:active {
         color: var(--grey1);
         background: none;
         border: none;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          color: var(--grey1);
+          background: none;
+          border: none;
+        }
       }
     }
   }
@@ -1636,11 +1632,19 @@ body:not(.project-page) .page_container article section {
     z-index: 1;
   }
 
-  &:hover,
   &:focus-within {
     &::before,
     &::after {
       opacity: 1;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      &::before,
+      &::after {
+        opacity: 1;
+      }
     }
   }
 }
@@ -1817,9 +1821,14 @@ body main {
   pointer-events: none;
 }
 
-.item:hover .item-meta,
 .item:focus-visible .item-meta {
   opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover .item-meta {
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1871,13 +1880,22 @@ body main {
   );
 }
 
-.item:hover .thumbnail::after,
 .item:focus-visible .thumbnail::after {
   background: linear-gradient(
     to right,
     rgb(0 0 0 / 0.7) 0%,
     rgb(0 0 0 / 0.1) 100%
   );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover .thumbnail::after {
+    background: linear-gradient(
+      to right,
+      rgb(0 0 0 / 0.7) 0%,
+      rgb(0 0 0 / 0.1) 100%
+    );
+  }
 }
 
 .thumbnail-caption {

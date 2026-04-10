@@ -1,0 +1,111 @@
+---
+interface TeamMember {
+  name: string;
+  role: string;
+  headshot: string;
+  description?: string;
+}
+
+interface Props {
+  team: TeamMember[];
+}
+
+const { team } = Astro.props as Props;
+const lead = team[0];
+const rest = team.slice(1);
+const panelId = 'project-team-panel';
+const backdropId = 'project-team-backdrop';
+---
+
+<div class="project-team-toolbar">
+  <button
+    type="button"
+    class="project-team-trigger"
+    aria-expanded="false"
+    aria-controls={panelId}
+    data-project-team-open
+  >
+    See everyone’s role
+  </button>
+</div>
+
+<div
+  id={backdropId}
+  class="project-team-backdrop"
+  hidden
+  data-project-team-backdrop
+  aria-hidden="true"
+></div>
+
+<div
+  id={panelId}
+  class="project-team-panel"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="project-team-panel-title"
+  hidden
+  data-project-team-panel
+>
+  <div class="project-team-panel__chrome">
+    <h2 id="project-team-panel-title" class="project-team-panel__title">Who worked on this</h2>
+    <button
+      type="button"
+      class="project-team-panel__close"
+      aria-label="Close panel"
+      data-project-team-close
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="project-team-panel__scroll">
+    <section class="project-team-lead" aria-label={`${lead.name}, lead`}>
+      <div class="project-team-lead__row">
+        <div class="project-team-avatar project-team-avatar--lead">
+          <img src={lead.headshot} alt="" width="72" height="72" loading="lazy" decoding="async" />
+        </div>
+        <div class="project-team-lead__meta">
+          <p class="project-team-name">{lead.name}</p>
+          <p class="project-team-role">{lead.role}</p>
+        </div>
+      </div>
+      {
+        lead.description && (
+          <div class="project-team-lead__bio">{lead.description}</div>
+        )
+      }
+    </section>
+
+    {
+      rest.length > 0 && (
+        <ul class="project-team-list" aria-label="Additional team members">
+          {rest.map((member) => (
+            <li class="project-team-list__item">
+              <div class="project-team-avatar">
+                <img
+                  src={member.headshot}
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="project-team-list__meta">
+                <p class="project-team-name">{member.name}</p>
+                <p class="project-team-role">{member.role}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</div>
+
+<script>
+  import { initProjectTeamPanel } from '../scripts/project-team-panel';
+
+  document.addEventListener('astro:page-load', () => {
+    initProjectTeamPanel();
+  });
+</script>

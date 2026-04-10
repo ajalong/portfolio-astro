@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import ProjectTeamPanel from '../components/ProjectTeamPanel.astro';
 import ProjectNavbar from '../components/ProjectNavbar.astro';
 
 interface PivotProps {
@@ -7,6 +8,14 @@ interface PivotProps {
   title: string;
   snippet: string;
   thumbnailSrc?: string;
+  thumbnailAlt?: string;
+}
+
+interface TeamMember {
+  name: string;
+  role: string;
+  headshot: string;
+  description?: string;
 }
 
 interface Props {
@@ -15,9 +24,11 @@ interface Props {
   description: string;
   url?: string;
   pivot?: PivotProps;
+  team?: TeamMember[];
 }
 
-const { title, client, description, url, pivot } = Astro.props as Props;
+const { title, client, description, url, pivot, team } = Astro.props as Props;
+const showTeamPanel = team && team.length > 0;
 ---
 <BaseLayout {title} description={description} url={url} bodyClass="project-page">
   <ProjectNavbar internalEntryOnly />
@@ -33,6 +44,7 @@ const { title, client, description, url, pivot } = Astro.props as Props;
       </div>
     </header>
     <main>
+      {showTeamPanel && <ProjectTeamPanel team={team} />}
       <slot />
     </main>
     <footer id="page-permalink-footer">
@@ -44,7 +56,7 @@ const { title, client, description, url, pivot } = Astro.props as Props;
                 <div class="pages-attachment">
                   {pivot.thumbnailSrc && (
                     <div class="pages-thumbnail">
-                      <img src={pivot.thumbnailSrc} />
+                      <img src={pivot.thumbnailSrc} alt={pivot.thumbnailAlt ?? ''} />
                     </div>
                   )}
                   <div class="page-info">

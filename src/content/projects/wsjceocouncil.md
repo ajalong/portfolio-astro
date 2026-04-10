@@ -28,11 +28,9 @@ For this event the user group was truly unique and therefore a lot of time was s
 
 ![Lobby — A collection of features not directly linked to live stream. Networking was emphasised.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
-![Lobby — I create a micro design system during the design phase of a project. This helps me code the UIs efficiently.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-lobby_wireframe.png)
+![Lobby — I created a micro design system during the design phase of a project. This helps me code the UIs efficiently.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-lobby_wireframe.png)
 
 The client emphasised how important networking was to their guests. To drive engagement I created a unique animation that featured the attendees' headshots, a live counter of users online, coupled with an assertive call to action.
-
-Google and Stanford are thrilled with these results and preparation for next year's Exec Circle has already begun.
 
 > "A huge thank you for the delivery of yesterday — we are getting endless thanks, high-fives and praise from all parties — internal and external."
 >

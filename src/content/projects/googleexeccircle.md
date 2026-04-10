@@ -27,14 +27,14 @@ Google Exec Circle was a weekly webinar series launched as a response to the COV
   </div>
 </section>
 
-The events were a collaboration with [Stanford's Graduate School of Business](https://www.gsb.stanford.edu/), whose pre‑eminent academics lead the sessions. I designed and led the front‑end development of the platform at the centre of this events series.
+The events were a collaboration with [Stanford's Graduate School of Business](https://www.gsb.stanford.edu/), whose pre‑eminent academics lead the sessions. I designed and led the front‑end development of the platform at the centre of this event series.
 
 The platform needed to:
 
 - Facilitate the formation and strengthening of this network of business leaders and academics.
-- Support the events with pre event content to drive engagement and post event content to kept the conversation going.
+- Support the events with pre-event content to drive engagement and post-event content to keep the conversation going.
 
-![Menu varients](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_menu_16-9_syspyu.png)
+![Menu variants](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_menu_16-9_syspyu.png)
 
 <section class="media-half">
   <div>

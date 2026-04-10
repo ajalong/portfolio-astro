@@ -11,7 +11,7 @@ published: false
 
 ## Responding to a crisis
 
-The Open Ventilator System Initiative (OVSI) was started at the University of Cambridge in response to the Coronavirus pandemic. In a matter of weeks a team of engineers designed a sophisticated ventilator that costs under $1000 and is simple to build from parts that can be sourced anywhere in the world. I created a visual Identity and a website for them; you can see it at [ovsi.org](https://ovsi.org/)
+The Open Ventilator System Initiative (OVSI) was started at the University of Cambridge in response to the Coronavirus pandemic. In a matter of weeks a team of engineers designed a sophisticated ventilator that costs under $1000 and is simple to build from parts that can be sourced anywhere in the world. I created a visual identity and a website for them; you can see it at [ovsi.org](https://ovsi.org/)
 
 ![](/content/writing/ovsi-1.png)
 ![](/content/writing/ovsi-2.png)
@@ -20,7 +20,7 @@ The Open Ventilator System Initiative (OVSI) was started at the University of Ca
 
 ### Keeping up with a pandemic
 
-The primary aim of the site was to help attract potential manufactures worldwide. The team needed to show what they had done to a less technical audience, whilst conveying the sophistication of the ventilator. The site aims to cater to both audiences by giving anyone an overview of the project, whilst providing technical details to clinicians evaluating the design. The engineers were entirely focused on moving the design to manufacturing so I worked very hard to stay out of their way and get as much done as I could, on my own. It was stressed the credibility was critical, so the design is clean and simple, letting the outstanding engineering speak for itself.
+The primary aim of the site was to help attract potential manufacturers worldwide. The team needed to show what they had done to a less technical audience, whilst conveying the sophistication of the ventilator. The site aims to cater to both audiences by giving anyone an overview of the project, whilst providing technical details to clinicians evaluating the design. The engineers were entirely focused on moving the design to manufacturing so I worked very hard to stay out of their way and get as much done as I could, on my own. It was stressed that credibility was critical, so the design is clean and simple, letting the outstanding engineering speak for itself.
 
 ![](/content/writing/ovsi-5.jpg)
 ![](/content/writing/ovsi-6.jpg)

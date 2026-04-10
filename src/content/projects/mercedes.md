@@ -28,6 +28,6 @@ Concurrently I consulted with Mercedes-Benz's UX team regarding extending their 
 
 Finalised designs were delivered to Mercedes-Benz in Autumn 2024 which featured overhauled user journeys targeted at specific user personas, a new onboarding experience, and expanded forms of data visualisation, manipulation and exporting.
 
-Mercedes-Benz are currently implementing these design and further work is will commence based on the user reaction of the overhauled platform.
+Mercedes-Benz are currently implementing these designs and further work will commence based on user reactions to the overhauled platform.
 
 ![Login – Text explains who and what this platform is for](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-login.png)

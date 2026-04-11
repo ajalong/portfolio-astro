@@ -20,17 +20,17 @@ After a few months it became clear we were late to the party, with competitors e
 
 ### Incentivising the smart option
 
-Being designed for first time investors, Mercury teaches and incentives sensible investment behaviour. First, users are introduced to the key concepts behind investment. Further guidence is offered incrementally, so users aren't overwhelmed by jargon. Capital is at risk so the app encourages the user to develop a diversified portfolio and puts limits on how much can be spent and lost.
+Being designed for first time investors, Mercury teaches and incentivises sensible investment behaviour. First, users are introduced to the key concepts behind investment. Further guidance is offered incrementally, so users aren't overwhelmed by jargon. Capital is at risk so the app encourages the user to develop a diversified portfolio and puts limits on how much can be spent and lost.
 
 ![Learn — Educational content aimed at first time investors. Ethically and for user retention sake, it is important users have a degree of success on the platform.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/mercury/Mercury-learn3d_obhmjw.jpg)
 
-Lesson don't have to be learnt the hard way. Mercury takes advange of its medium, making the learning process interactive and playful. Dry subjects central to the market are made interesting by putting them in the context of historical events, providing context and adding a narrative to what would be otherwise esoteric. As an extra incentive, completing educational material rewards the user with further cosmetic customation for their avatar.
+Lessons don't have to be learnt the hard way. Mercury takes advantage of its medium, making the learning process interactive and playful. Dry subjects central to the market are made interesting by putting them in the context of historical events, providing context and adding a narrative to what would be otherwise esoteric. As an extra incentive, completing educational material rewards the user with further cosmetic customisation for their avatar.
 
 ### Confidence through context
 
-Mercury features curated briefings on stocks, pulling in information about a company's history, leadership, key competitors and the industry they operate within. This briefing is designed to replicate the work of an investment analyist, empowering users to invest wisely.
+Mercury features curated briefings on stocks, pulling in information about a company's history, leadership, key competitors and the industry they operate within. This briefing is designed to replicate the work of an investment analyst, empowering users to invest wisely.
 
-![Stock Profile — We aimed to do half the work for the user by pulling in relevent information so user would not have to do research outside of the platform](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/mercury/Mercury-stock3d_c5semy.png)
+![Stock Profile — We aimed to do half the work for the user by pulling in relevant information so users would not have to do research outside of the platform](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/mercury/Mercury-stock3d_c5semy.png)
 ![Stock Profile (scrolled)](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/mercury/Mercury-stockScrolled3d_jnbmlg.jpg)
 
 ### Creating a community

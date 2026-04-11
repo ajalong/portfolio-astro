@@ -6,17 +6,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "generate:mesh-bg": "node scripts/render-mesh-webp.mjs"
+    "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1",
-    "gsap": "^3.14.2",
-    "three": "^0.183.2"
+    "astro": "^5.17.1"
   },
   "devDependencies": {
     "playwright": "^1.50.1",
-    "sass": "^1.97.3",
-    "sharp": "^0.34.5"
+    "sass": "^1.97.3"
   }
 }

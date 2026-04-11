@@ -1,0 +1,246 @@
+// Project page container, article vertical rhythm, and footer.
+// Also handles body:not(.project-page) figure spacing.
+@use "tokens" as *;
+@use "rim" as *;
+
+.page_container {
+  padding: $page-gutter-y 48px 0;
+
+  @media screen and (max-width: 800px) {
+    padding: 104px 14px 0;
+  }
+}
+
+body.project-page .page_container article section {
+  margin: 0;
+}
+
+body:not(.project-page) .page_container article section {
+  margin: 32px 0;
+}
+
+/*
+ * Project case studies — vertical rhythm
+ * - $rhythm-section (80px): profile header → main; after media when next block isn't prose
+ * - Mobile (≤800px): 40px figure / section breaks
+ * - After media → text/headings: 80px minus caption optical offset (27.2px)
+ * - $rhythm-stack (24px): default stack; mobile 32px
+ * - 16px: heading → following block; mobile 24px
+ */
+body.project-page .page_container > header {
+  margin-bottom: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 56px;
+  }
+}
+
+body.project-page .page_container article > * {
+  margin-block: 0;
+}
+
+body.project-page .page_container article .media-full {
+  margin-bottom: 0;
+}
+
+body.project-page .page_container article :is(.media-full, .media-half) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+body.project-page .page_container article > * + * {
+  margin-top: $rhythm-stack;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 32px;
+  }
+}
+
+body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) + * {
+  margin-top: 16px;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 24px;
+  }
+}
+
+body.project-page .page_container article > * + :is(.media-full, .media-half) {
+  margin-top: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
+}
+
+body.project-page
+  .page_container
+  article
+  > :is(h1, h2, h3, h4, h5, h6)
+  + :is(.media-full, .media-half) {
+  margin-top: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
+}
+
+body.project-page .page_container article > :is(.media-full, .media-half)
+  + :is(.media-full, .media-half) {
+  margin-top: $rhythm-stack;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
+}
+
+body.project-page
+  .page_container
+  article
+  > :is(.media-full, .media-half)
+  + :is(p, ul, ol, blockquote, h1, h2, h3, h4, h5, h6) {
+  margin-top: calc($rhythm-section - 27.2px);
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
+}
+
+body.project-page .page_container article > :is(.media-full, .media-half) + * {
+  margin-top: $rhythm-section;
+
+  @media screen and (max-width: 800px) {
+    margin-top: 40px;
+  }
+}
+
+body.project-page .page_container article ul {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body.project-page .page_container article blockquote {
+  margin-bottom: 0;
+}
+
+/* Extra space before figures that follow a paragraph (non-project pages) */
+body:not(.project-page) p ~ figure {
+  margin-top: 60px !important;
+}
+
+/* Project footer — "next project" pivot card + back link */
+#page-permalink-footer {
+  width: 100%;
+  padding-bottom: $page-gutter-y;
+}
+
+#page-permalink-footer .footer-content {
+  max-width: 540px;
+  margin: 0 auto;
+  padding-top: $page-gutter-y;
+}
+
+#page-permalink-footer .page-nav-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: 22px;
+}
+
+#page-permalink-footer .page-nav-buttons a {
+  @include link-underline-zip;
+}
+
+#page-permalink-footer .page-nav-buttons > div {
+  margin: 0 12px;
+}
+
+#page-permalink-footer #pivot {
+  margin: 0 0 48px;
+}
+
+#page-permalink-footer #pivot .pivot-link {
+  --rim-fill: var(--backgroundColor);
+  position: relative;
+  border: var(--button-rim-width) solid transparent;
+  border-radius: 16px;
+  box-sizing: border-box;
+  outline: none;
+  background-color: var(--backgroundColor);
+  transition:
+    outline 0.1s ease-out 0s,
+    outline-offset 0.1s ease-out 0s;
+  @include button-rim-pseudo;
+
+  > a {
+    position: relative;
+    z-index: 1;
+  }
+
+  &:focus-within {
+    &::before,
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      &::before,
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+#page-permalink-footer #pivot .pivot-link a {
+  padding: 14px;
+  display: block;
+}
+
+#page-permalink-footer #pivot .pivot-link a:focus-visible {
+  outline: none;
+}
+
+#page-permalink-footer #pivot .page-title {
+  line-height: $line-height-tight;
+  letter-spacing: $tracking-tight;
+}
+
+.pages-attachment {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+}
+
+.pages-thumbnail {
+  flex-shrink: 0;
+  width: 96px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: var(--white1);
+}
+
+#page-permalink-footer .pages-thumbnail img {
+  border-radius: 2px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.snippet {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--grey2);
+}

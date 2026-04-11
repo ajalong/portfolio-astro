@@ -1,0 +1,52 @@
+// Fixed project nav button (home/menu control on project pages).
+@use "tokens" as *;
+@use "rim" as *;
+
+.project-nav-btn {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  padding: 0;
+  border-radius: $pill-radius;
+  color: var(--grey1);
+  text-decoration: none;
+  transform: translateX(-50%);
+  cursor: pointer;
+  outline: none;
+  isolation: isolate;
+  touch-action: manipulation;
+  @include pill-button-interaction;
+  -webkit-tap-highlight-color: transparent;
+
+  @media screen and (max-width: 800px) {
+    top: 12px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* Referrer-gated: hidden until JS adds .project-nav-btn--from-site */
+body.project-page a.project-nav-btn.project-nav-btn--deferred:not(.project-nav-btn--from-site) {
+  display: none !important;
+}
+
+body.project-page a.project-nav-btn.project-nav-btn--deferred.project-nav-btn--from-site {
+  display: inline-flex !important;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.project-nav-btn__icon {
+  display: block;
+  flex-shrink: 0;
+}

@@ -1,0 +1,76 @@
+// Design tokens — Sass variables and CSS custom properties.
+// All other partials that need these @use this file.
+
+$type-size-lg: 20px;
+$line-height-tight: 1.45;
+$tracking-tight: -0.02em;
+$page-gutter-y: 112px;
+$rhythm-section: 80px;
+$rhythm-stack: 24px;
+$pill-radius: 200px;
+
+@font-face {
+  font-family: 'Graphik';
+  src:
+    url('/Graphik-Regular-Cy-Gr-Web.89bcdd78.woff2') format('woff2'),
+    url('/Graphik-Regular-Cy-Gr-Web.90e3efff.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src:
+    url('/Graphik-Medium-Cy-Gr-Web.8eb7d651.woff2') format('woff2'),
+    url('/Graphik-Medium-Cy-Gr-Web.4600902d.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+}
+
+:root {
+  --type-size: 14px;
+  --line-height: 1.6;
+  --grey1: #080808;
+  --grey2: #4a4a4a;
+  --white1: #fff;
+  --white2: #d1d1d1;
+  --backgroundColor: #f9f9fb;
+  --buttonBackground: #fafafa;
+  --buttonBackgroundActive: #ebebeb;
+  --buttonBorder: #eaeaea;
+  --button-rim-width: 1.4px;
+  --secondaryBorderColor: #f2f2f2;
+  /*
+   * Safari's own chrome is ~this grey — keep theme-color in BaseLayout in the same family.
+   * The page paint uses #fff at the top (see --top-white-solid-end); the UI chrome is separate.
+   */
+  --browser-chrome-hairline: #ebebeb;
+  /*
+   * Solid white band below the safe area so the top edge reads as pure #fff full width before
+   * the fade — avoids grey hairline + mesh showing through as horizontal banding.
+   */
+  --top-white-solid-end: max(44px, calc(env(safe-area-inset-top, 0px) + 28px));
+  /* Sits above `body > * { z-index: 1 }` so the top white fade isn't painted under <main>. */
+  --z-top-fade: 2;
+  /* Safe-area: mesh + document bg bleed past layout into notch / home indicator (viewport-fit=cover) */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  /* Link underline zip: iridescent band (purple → magenta → red-orange) */
+  --zip-hover-gradient: linear-gradient(
+    90deg,
+    hsl(265 26% 40%) 0,
+    hsl(265 26% 40%) calc(50% - 128px),
+    hsl(292 28% 48%) calc(50% - 80px),
+    hsl(318 26% 52%) calc(50% - 40px),
+    transparent calc(50% - 10px),
+    transparent calc(50% + 10px),
+    hsl(22 30% 52%) calc(50% + 40px),
+    hsl(8 28% 46%) calc(50% + 80px),
+    hsl(278 24% 38%) calc(50% + 128px),
+    hsl(265 26% 40%) 100%
+  );
+}

@@ -1,0 +1,227 @@
+// Button and CTA styles: .btn-border-ring, .cta, .cta-stack, button.u-pill-primary
+@use "tokens" as *;
+@use "rim" as *;
+
+/* SVG ring: solid stroke; quick opacity fade on hover */
+.btn-border-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.14s ease-out;
+
+  rect {
+    stroke-width: var(--button-rim-width);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-border-ring {
+    transition: opacity 0.08s ease;
+  }
+}
+
+/* Ring sits on the outer edge of the button; stroke isn't clipped by the fill */
+.cta a.cta__link,
+button.u-pill-primary,
+.project-nav-btn,
+#page-permalink-footer #pivot .pivot-link {
+  overflow: visible;
+}
+
+/* CTA layout — desktop: vertical stack; mobile: column */
+.cta-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+
+  @media screen and (min-width: 801px) {
+    > a {
+      align-self: flex-start;
+    }
+  }
+}
+
+.cta {
+  text-align: left;
+
+  /* Primary: pill fill, iridescent rim — shared mixin with `button.u-pill-primary` */
+  a.cta__link:not(.cta__link--secondary) {
+    @include cta-pill-primary;
+  }
+
+  /* Secondary: icon-only, no default border/background; hover uses darkening inner glow */
+  a.cta__link--secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    border-radius: $pill-radius;
+    color: var(--grey1);
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.28s ease-out;
+      box-shadow: $cta-secondary-inner-glow;
+    }
+
+    & > img,
+    & > svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    img {
+      filter: brightness(0);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--grey1);
+      outline-offset: 3px;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover::after {
+        opacity: 1;
+      }
+    }
+
+    &:active::after {
+      opacity: 1;
+      box-shadow: $cta-secondary-inner-glow-active;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.cta__link--secondary::after {
+      transition: opacity 0.08s ease-out;
+    }
+  }
+
+  /* Inline brand icons (e.g. LinkedIn [in] logo) use currentColor — no brightness filter */
+  svg.cta__icon-svg {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    width: fit-content;
+    margin: 0;
+  }
+
+  img,
+  svg.cta__icon-svg {
+    height: 20px;
+    width: 20px;
+    padding: 0;
+  }
+
+  span {
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: 800px) {
+    position: static;
+
+    .cta-stack {
+      gap: 4px;
+      align-items: flex-start;
+    }
+
+    a.cta__link:not(.cta__link--secondary) {
+      @include cta-pill-primary-mobile;
+    }
+
+    a.cta__link--secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      min-height: 48px;
+      padding: 0;
+      border: none;
+      border-bottom: none;
+      border-radius: $pill-radius;
+      background: transparent;
+
+      .btn-border-ring {
+        display: none;
+      }
+
+      img,
+      svg.cta__icon-svg {
+        display: block;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--grey1);
+        outline-offset: 3px;
+      }
+    }
+  }
+}
+
+/* Utility: primary pill (same look/behaviour as `.cta a.cta__link`) */
+button.u-pill-primary {
+  @include cta-pill-primary;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    width: fit-content;
+    margin: 0;
+  }
+
+  span {
+    margin-right: 0;
+  }
+
+  img,
+  svg.cta__icon-svg {
+    height: 20px;
+    width: 20px;
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  button.u-pill-primary {
+    @include cta-pill-primary-mobile;
+  }
+}

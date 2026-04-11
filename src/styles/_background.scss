@@ -1,0 +1,679 @@
+// Page background mesh — layered radial gradients + SVG displacement grain.
+// Includes html element paint, ::before mesh, ::after white wash,
+// Safari filter fallback, and OKLCH progressive enhancement.
+// TODO: performance pass — consider pre-rasterising the mesh to a static WebP.
+
+html {
+  position: relative;
+  isolation: isolate;
+  color-scheme: only light;
+  /* Canvas below the top stack; hairline + theme-color handle the chrome seam */
+  background-color: #fff;
+  min-height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  /*
+   * Corner / document washes live here (no SVG filter) so they always composite reliably.
+   * Mesh + grain stay on ::before only.
+   */
+  background-image:
+    linear-gradient(
+      180deg,
+      #fff 0%,
+      #fff var(--top-white-solid-end),
+      rgba(255, 255, 255, 0.994) calc(var(--top-white-solid-end) + min(4vh, 40px)),
+      rgba(255, 255, 255, 0.978) calc(var(--top-white-solid-end) + min(9vh, 88px)),
+      rgba(255, 255, 255, 0.94) calc(var(--top-white-solid-end) + min(14vh, 132px)),
+      rgba(255, 255, 255, 0.78) min(22vh, 220px),
+      rgba(255, 255, 255, 0.42) min(28vh, 300px),
+      rgba(255, 255, 255, 0.16) min(33vh, 320px),
+      rgba(255, 255, 255, 0) min(38vh, 360px)
+    ),
+    radial-gradient(
+      ellipse 130% 100% at 100% 100%,
+      hsl(268 38% 85% / 0.56) 0%,
+      hsl(274 34% 87% / 0.47) 14%,
+      hsl(280 30% 89% / 0.38) 28%,
+      hsl(284 28% 90% / 0.32) 34%,
+      hsl(288 26% 91% / 0.26) 40%,
+      hsl(291 23% 93% / 0.19) 48%,
+      hsl(294 20% 94% / 0.12) 56%,
+      hsl(296 18% 95% / 0.08) 62%,
+      hsl(298 16% 96% / 0.04) 68%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 115% 95% at 0% 100%,
+      hsl(24 46% 87% / 0.48) 0%,
+      hsl(22 41% 88.5% / 0.41) 16%,
+      hsl(20 36% 90% / 0.34) 32%,
+      hsl(19 33% 91% / 0.28) 38%,
+      hsl(18 30% 92% / 0.22) 44%,
+      hsl(17 27% 93% / 0.16) 51%,
+      hsl(16 24% 94% / 0.1) 58%,
+      hsl(15 21% 95% / 0.06) 64%,
+      hsl(14 18% 96% / 0.03) 70%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 100% 85% at 100% 0%,
+      hsl(28 38% 90% / 0.34) 0%,
+      hsl(27 34% 91.5% / 0.26) 19%,
+      hsl(26 30% 93% / 0.18) 38%,
+      hsl(25 26% 94% / 0.12) 46%,
+      hsl(24 22% 95% / 0.07) 54%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 110% 90% at 50% 0%,
+      hsl(252 24% 91% / 0.26) 0%,
+      hsl(253 21% 92.5% / 0.2) 20%,
+      hsl(254 18% 94% / 0.14) 40%,
+      hsl(255 16% 95% / 0.09) 49%,
+      hsl(256 14% 96% / 0.04) 58%,
+      transparent 74%
+    );
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 901px) {
+  html {
+    background-attachment: fixed;
+  }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes page-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+body.initial-load {
+  animation: page-fade-in 1s ease-out backwards;
+}
+
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: page-fade-out 0.4s ease-in-out both;
+}
+
+::view-transition-new(root) {
+  animation: page-fade-in 0.4s ease-in-out both;
+}
+
+/* Page backdrop mesh — layered radials + SVG displacement grain (static resting frame; no motion). */
+html::before {
+  content: '';
+  position: fixed;
+  /* Below page chrome (`body > *` is 1) and below --z-top-fade */
+  z-index: 0;
+  pointer-events: none;
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  bottom: calc(-6vh - env(safe-area-inset-bottom, 0px));
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  width: auto;
+  height: auto;
+  /* Breaks up 8-bit banding without darkening the gradient (displacement map, not noise overlay) */
+  filter: url(#page-mesh-grain);
+  /* Don't combine clip-path with SVG filters here — WebKit often clips the filtered output to nothing. */
+  background-image:
+    radial-gradient(
+      ellipse 130% 115% at 100% 100%,
+      hsl(268 42% 76% / 0.8) 0%,
+      hsl(271 40% 77.5% / 0.71) 9%,
+      hsl(274 38% 79% / 0.62) 12%,
+      hsl(276 36% 80% / 0.58) 15%,
+      hsl(278 34% 81% / 0.54) 18%,
+      hsl(280 32% 82% / 0.48) 21%,
+      hsl(283 30% 83% / 0.42) 27%,
+      hsl(288 28% 85% / 0.34) 34%,
+      hsl(290 25% 86% / 0.27) 39%,
+      hsl(292 22% 87% / 0.2) 44%,
+      hsl(295 18% 89% / 0.14) 50%,
+      hsl(296 17% 89.5% / 0.105) 57%,
+      hsl(298 15% 90% / 0.07) 62%,
+      transparent 71%
+    ),
+    radial-gradient(
+      ellipse 110% 100% at 0% 100%,
+      hsl(22 54% 78% / 0.7) 0%,
+      hsl(22 51% 79% / 0.64) 6%,
+      hsl(22 48% 80% / 0.58) 12%,
+      hsl(21 46% 81% / 0.53) 17%,
+      hsl(20 44% 82% / 0.48) 22%,
+      hsl(19 41% 83% / 0.43) 27%,
+      hsl(18 38% 84% / 0.38) 32%,
+      hsl(17 36% 85% / 0.33) 36%,
+      hsl(16 34% 86% / 0.28) 40%,
+      hsl(15 31% 87% / 0.23) 44%,
+      hsl(14 28% 88% / 0.18) 48%,
+      hsl(13 25% 89% / 0.145) 52%,
+      hsl(12 22% 90% / 0.11) 56%,
+      hsl(11 20% 91% / 0.075) 60%,
+      hsl(10 18% 92% / 0.04) 64%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 105% 95% at 100% 0%,
+      hsl(28 44% 81% / 0.46) 0%,
+      hsl(27 41% 82% / 0.4) 11%,
+      hsl(26 38% 83% / 0.34) 18%,
+      hsl(24 36% 84% / 0.3) 23%,
+      hsl(22 34% 85% / 0.26) 28%,
+      hsl(20 31% 86% / 0.21) 33%,
+      hsl(18 28% 87% / 0.16) 38%,
+      hsl(17 26% 88% / 0.135) 43%,
+      hsl(16 24% 89% / 0.11) 48%,
+      hsl(15 22% 90% / 0.075) 53%,
+      hsl(14 20% 91% / 0.04) 58%,
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse 115% 95% at 30% -6%,
+      hsl(248 28% 85% / 0.36) 0%,
+      hsl(249 26% 86% / 0.31) 13%,
+      hsl(250 24% 87% / 0.26) 22%,
+      hsl(251 23% 88% / 0.22) 28%,
+      hsl(252 22% 89% / 0.18) 34%,
+      hsl(253 20% 89.5% / 0.14) 39%,
+      hsl(254 18% 90% / 0.1) 44%,
+      hsl(255 17% 91% / 0.08) 48%,
+      hsl(256 16% 92% / 0.06) 52%,
+      hsl(257 15% 92.5% / 0.045) 57%,
+      hsl(258 14% 93% / 0.03) 62%,
+      transparent 69%
+    ),
+    radial-gradient(
+      ellipse 220% 120% at 50% 110%,
+      hsl(258 24% 82% / 0.36) 0%,
+      hsl(257 24% 82.5% / 0.31) 13%,
+      hsl(256 24% 83% / 0.26) 18%,
+      hsl(44 24% 84% / 0.22) 23%,
+      hsl(32 24% 85% / 0.18) 28%,
+      hsl(30 22% 86% / 0.14) 33%,
+      hsl(28 20% 87% / 0.1) 38%,
+      hsl(256 17% 88.5% / 0.09) 43%,
+      hsl(256 14% 90% / 0.08) 48%,
+      hsl(258 13% 91% / 0.055) 54%,
+      hsl(260 12% 92% / 0.03) 60%,
+      transparent 71%
+    );
+  background-repeat: no-repeat;
+  background-position:
+    96% 97%,
+    4% 96%,
+    97% 4%,
+    48% 3%,
+    50% 102%;
+  background-size:
+    138% 126%,
+    120% 110%,
+    116% 104%,
+    128% 106%,
+    230% 136%;
+  animation: none;
+  opacity: 1;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Top white wash — must stack above in-flow UI (see --z-top-fade); pointer-events none so clicks pass through. */
+html::after {
+  content: '';
+  position: fixed;
+  z-index: var(--z-top-fade);
+  pointer-events: none;
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  width: auto;
+  height: min(42vh, 400px);
+  background: linear-gradient(
+    180deg,
+    #fff 0%,
+    #fff var(--top-white-solid-end),
+    rgba(255, 255, 255, 0.996) calc(var(--top-white-solid-end) + min(5vh, 48px)),
+    rgba(255, 255, 255, 0.985) calc(var(--top-white-solid-end) + min(10vh, 96px)),
+    rgba(255, 255, 255, 0.96) calc(var(--top-white-solid-end) + min(15vh, 140px)),
+    rgba(255, 255, 255, 0.82) 36%,
+    rgba(255, 255, 255, 0.52) 54%,
+    rgba(255, 255, 255, 0.26) 72%,
+    rgba(255, 255, 255, 0.08) 88%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateZ(0);
+}
+
+/*
+ * Safari-only: same mesh as html::before but without the SVG filter.
+ * WebKit + feDisplacementMap often blanks entirely; multi-stop ramps mitigate banding.
+ * Class added by BaseLayout inline script (true Safari only, Chromium iOS excluded).
+ */
+html.safari-mesh-fallback::before {
+  animation: none !important;
+  filter: none !important;
+  opacity: 1;
+  top: calc(-6vh - env(safe-area-inset-top, 0px));
+  right: calc(-6vw - env(safe-area-inset-right, 0px));
+  bottom: calc(-6vh - env(safe-area-inset-bottom, 0px));
+  left: calc(-6vw - env(safe-area-inset-left, 0px));
+  background-image:
+    radial-gradient(
+      ellipse 130% 115% at 100% 100%,
+      hsl(268 42% 76% / 0.8) 0%,
+      hsl(271 40% 77.5% / 0.71) 9%,
+      hsl(274 38% 79% / 0.62) 12%,
+      hsl(276 36% 80% / 0.58) 15%,
+      hsl(278 34% 81% / 0.54) 18%,
+      hsl(280 32% 82% / 0.48) 21%,
+      hsl(283 30% 83% / 0.42) 27%,
+      hsl(288 28% 85% / 0.34) 34%,
+      hsl(290 25% 86% / 0.27) 39%,
+      hsl(292 22% 87% / 0.2) 44%,
+      hsl(295 18% 89% / 0.14) 50%,
+      hsl(296 17% 89.5% / 0.105) 57%,
+      hsl(298 15% 90% / 0.07) 62%,
+      transparent 71%
+    ),
+    radial-gradient(
+      ellipse 110% 100% at 0% 100%,
+      hsl(22 54% 78% / 0.7) 0%,
+      hsl(22 51% 79% / 0.64) 6%,
+      hsl(22 48% 80% / 0.58) 12%,
+      hsl(21 46% 81% / 0.53) 17%,
+      hsl(20 44% 82% / 0.48) 22%,
+      hsl(19 41% 83% / 0.43) 27%,
+      hsl(18 38% 84% / 0.38) 32%,
+      hsl(17 36% 85% / 0.33) 36%,
+      hsl(16 34% 86% / 0.28) 40%,
+      hsl(15 31% 87% / 0.23) 44%,
+      hsl(14 28% 88% / 0.18) 48%,
+      hsl(13 25% 89% / 0.145) 52%,
+      hsl(12 22% 90% / 0.11) 56%,
+      hsl(11 20% 91% / 0.075) 60%,
+      hsl(10 18% 92% / 0.04) 64%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 105% 95% at 100% 0%,
+      hsl(28 44% 81% / 0.46) 0%,
+      hsl(27 41% 82% / 0.4) 11%,
+      hsl(26 38% 83% / 0.34) 18%,
+      hsl(24 36% 84% / 0.3) 23%,
+      hsl(22 34% 85% / 0.26) 28%,
+      hsl(20 31% 86% / 0.21) 33%,
+      hsl(18 28% 87% / 0.16) 38%,
+      hsl(17 26% 88% / 0.135) 43%,
+      hsl(16 24% 89% / 0.11) 48%,
+      hsl(15 22% 90% / 0.075) 53%,
+      hsl(14 20% 91% / 0.04) 58%,
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse 115% 95% at 30% -6%,
+      hsl(248 28% 85% / 0.36) 0%,
+      hsl(249 26% 86% / 0.31) 13%,
+      hsl(250 24% 87% / 0.26) 22%,
+      hsl(251 23% 88% / 0.22) 28%,
+      hsl(252 22% 89% / 0.18) 34%,
+      hsl(253 20% 89.5% / 0.14) 39%,
+      hsl(254 18% 90% / 0.1) 44%,
+      hsl(255 17% 91% / 0.08) 48%,
+      hsl(256 16% 92% / 0.06) 52%,
+      hsl(257 15% 92.5% / 0.045) 57%,
+      hsl(258 14% 93% / 0.03) 62%,
+      transparent 69%
+    ),
+    radial-gradient(
+      ellipse 220% 120% at 50% 110%,
+      hsl(258 24% 82% / 0.36) 0%,
+      hsl(257 24% 82.5% / 0.31) 13%,
+      hsl(256 24% 83% / 0.26) 18%,
+      hsl(44 24% 84% / 0.22) 23%,
+      hsl(32 24% 85% / 0.18) 28%,
+      hsl(30 22% 86% / 0.14) 33%,
+      hsl(28 20% 87% / 0.1) 38%,
+      hsl(256 17% 88.5% / 0.09) 43%,
+      hsl(256 14% 90% / 0.08) 48%,
+      hsl(258 13% 91% / 0.055) 54%,
+      hsl(260 12% 92% / 0.03) 60%,
+      transparent 71%
+    );
+  background-repeat: no-repeat;
+  background-position:
+    96% 97%,
+    4% 96%,
+    97% 4%,
+    48% 3%,
+    50% 102%;
+  background-size:
+    138% 126%,
+    120% 110%,
+    116% 104%,
+    128% 106%,
+    230% 136%;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* OKLCH interpolation between stops (progressive enhancement over sRGB blending). */
+@supports (color: oklch(1 0 0)) {
+  html {
+    background-image:
+      linear-gradient(
+        in oklch,
+        180deg,
+        #fff 0%,
+        #fff var(--top-white-solid-end),
+        rgba(255, 255, 255, 0.994) calc(var(--top-white-solid-end) + min(4vh, 40px)),
+        rgba(255, 255, 255, 0.978) calc(var(--top-white-solid-end) + min(9vh, 88px)),
+        rgba(255, 255, 255, 0.94) calc(var(--top-white-solid-end) + min(14vh, 132px)),
+        rgba(255, 255, 255, 0.78) min(22vh, 220px),
+        rgba(255, 255, 255, 0.42) min(28vh, 300px),
+        rgba(255, 255, 255, 0.16) min(33vh, 320px),
+        rgba(255, 255, 255, 0) min(38vh, 360px)
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 130% 100% at 100% 100%,
+        hsl(268 38% 85% / 0.56) 0%,
+        hsl(274 34% 87% / 0.47) 14%,
+        hsl(280 30% 89% / 0.38) 28%,
+        hsl(284 28% 90% / 0.32) 34%,
+        hsl(288 26% 91% / 0.26) 40%,
+        hsl(291 23% 93% / 0.19) 48%,
+        hsl(294 20% 94% / 0.12) 56%,
+        hsl(296 18% 95% / 0.08) 62%,
+        hsl(298 16% 96% / 0.04) 68%,
+        transparent 76%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 0% 100%,
+        hsl(24 46% 87% / 0.48) 0%,
+        hsl(22 41% 88.5% / 0.41) 16%,
+        hsl(20 36% 90% / 0.34) 32%,
+        hsl(19 33% 91% / 0.28) 38%,
+        hsl(18 30% 92% / 0.22) 44%,
+        hsl(17 27% 93% / 0.16) 51%,
+        hsl(16 24% 94% / 0.1) 58%,
+        hsl(15 21% 95% / 0.06) 64%,
+        hsl(14 18% 96% / 0.03) 70%,
+        transparent 78%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 100% 85% at 100% 0%,
+        hsl(28 38% 90% / 0.34) 0%,
+        hsl(27 34% 91.5% / 0.26) 19%,
+        hsl(26 30% 93% / 0.18) 38%,
+        hsl(25 26% 94% / 0.12) 46%,
+        hsl(24 22% 95% / 0.07) 54%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 90% at 50% 0%,
+        hsl(252 24% 91% / 0.26) 0%,
+        hsl(253 21% 92.5% / 0.2) 20%,
+        hsl(254 18% 94% / 0.14) 40%,
+        hsl(255 16% 95% / 0.09) 49%,
+        hsl(256 14% 96% / 0.04) 58%,
+        transparent 74%
+      );
+  }
+
+  html::after {
+    background: linear-gradient(
+      in oklch,
+      180deg,
+      #fff 0%,
+      #fff var(--top-white-solid-end),
+      rgba(255, 255, 255, 0.996) calc(var(--top-white-solid-end) + min(5vh, 48px)),
+      rgba(255, 255, 255, 0.985) calc(var(--top-white-solid-end) + min(10vh, 96px)),
+      rgba(255, 255, 255, 0.96) calc(var(--top-white-solid-end) + min(15vh, 140px)),
+      rgba(255, 255, 255, 0.82) 36%,
+      rgba(255, 255, 255, 0.52) 54%,
+      rgba(255, 255, 255, 0.26) 72%,
+      rgba(255, 255, 255, 0.08) 88%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  html::before {
+    background-image:
+      radial-gradient(
+        in oklch,
+        ellipse 130% 115% at 100% 100%,
+        hsl(268 42% 76% / 0.8) 0%,
+        hsl(271 40% 77.5% / 0.71) 9%,
+        hsl(274 38% 79% / 0.62) 12%,
+        hsl(276 36% 80% / 0.58) 15%,
+        hsl(278 34% 81% / 0.54) 18%,
+        hsl(280 32% 82% / 0.48) 21%,
+        hsl(283 30% 83% / 0.42) 27%,
+        hsl(288 28% 85% / 0.34) 34%,
+        hsl(290 25% 86% / 0.27) 39%,
+        hsl(292 22% 87% / 0.2) 44%,
+        hsl(295 18% 89% / 0.14) 50%,
+        hsl(296 17% 89.5% / 0.105) 57%,
+        hsl(298 15% 90% / 0.07) 62%,
+        transparent 71%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 100% at 0% 100%,
+        hsl(22 54% 78% / 0.7) 0%,
+        hsl(22 51% 79% / 0.64) 6%,
+        hsl(22 48% 80% / 0.58) 12%,
+        hsl(21 46% 81% / 0.53) 17%,
+        hsl(20 44% 82% / 0.48) 22%,
+        hsl(19 41% 83% / 0.43) 27%,
+        hsl(18 38% 84% / 0.38) 32%,
+        hsl(17 36% 85% / 0.33) 36%,
+        hsl(16 34% 86% / 0.28) 40%,
+        hsl(15 31% 87% / 0.23) 44%,
+        hsl(14 28% 88% / 0.18) 48%,
+        hsl(13 25% 89% / 0.145) 52%,
+        hsl(12 22% 90% / 0.11) 56%,
+        hsl(11 20% 91% / 0.075) 60%,
+        hsl(10 18% 92% / 0.04) 64%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 105% 95% at 100% 0%,
+        hsl(28 44% 81% / 0.46) 0%,
+        hsl(27 41% 82% / 0.4) 11%,
+        hsl(26 38% 83% / 0.34) 18%,
+        hsl(24 36% 84% / 0.3) 23%,
+        hsl(22 34% 85% / 0.26) 28%,
+        hsl(20 31% 86% / 0.21) 33%,
+        hsl(18 28% 87% / 0.16) 38%,
+        hsl(17 26% 88% / 0.135) 43%,
+        hsl(16 24% 89% / 0.11) 48%,
+        hsl(15 22% 90% / 0.075) 53%,
+        hsl(14 20% 91% / 0.04) 58%,
+        transparent 66%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 30% -6%,
+        hsl(248 28% 85% / 0.36) 0%,
+        hsl(249 26% 86% / 0.31) 13%,
+        hsl(250 24% 87% / 0.26) 22%,
+        hsl(251 23% 88% / 0.22) 28%,
+        hsl(252 22% 89% / 0.18) 34%,
+        hsl(253 20% 89.5% / 0.14) 39%,
+        hsl(254 18% 90% / 0.1) 44%,
+        hsl(255 17% 91% / 0.08) 48%,
+        hsl(256 16% 92% / 0.06) 52%,
+        hsl(257 15% 92.5% / 0.045) 57%,
+        hsl(258 14% 93% / 0.03) 62%,
+        transparent 69%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 220% 120% at 50% 110%,
+        hsl(258 24% 82% / 0.36) 0%,
+        hsl(257 24% 82.5% / 0.31) 13%,
+        hsl(256 24% 83% / 0.26) 18%,
+        hsl(44 24% 84% / 0.22) 23%,
+        hsl(32 24% 85% / 0.18) 28%,
+        hsl(30 22% 86% / 0.14) 33%,
+        hsl(28 20% 87% / 0.1) 38%,
+        hsl(256 17% 88.5% / 0.09) 43%,
+        hsl(256 14% 90% / 0.08) 48%,
+        hsl(258 13% 91% / 0.055) 54%,
+        hsl(260 12% 92% / 0.03) 60%,
+        transparent 71%
+      );
+    animation: none;
+    background-repeat: no-repeat;
+    background-size:
+      138% 126%,
+      120% 110%,
+      116% 104%,
+      128% 106%,
+      230% 136%;
+    background-position:
+      96% 97%,
+      4% 96%,
+      97% 4%,
+      48% 3%,
+      50% 102%;
+    opacity: 1;
+  }
+
+  html.safari-mesh-fallback::before {
+    background-image:
+      radial-gradient(
+        in oklch,
+        ellipse 130% 115% at 100% 100%,
+        hsl(268 42% 76% / 0.8) 0%,
+        hsl(271 40% 77.5% / 0.71) 9%,
+        hsl(274 38% 79% / 0.62) 12%,
+        hsl(276 36% 80% / 0.58) 15%,
+        hsl(278 34% 81% / 0.54) 18%,
+        hsl(280 32% 82% / 0.48) 21%,
+        hsl(283 30% 83% / 0.42) 27%,
+        hsl(288 28% 85% / 0.34) 34%,
+        hsl(290 25% 86% / 0.27) 39%,
+        hsl(292 22% 87% / 0.2) 44%,
+        hsl(295 18% 89% / 0.14) 50%,
+        hsl(296 17% 89.5% / 0.105) 57%,
+        hsl(298 15% 90% / 0.07) 62%,
+        transparent 71%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 110% 100% at 0% 100%,
+        hsl(22 54% 78% / 0.7) 0%,
+        hsl(22 51% 79% / 0.64) 6%,
+        hsl(22 48% 80% / 0.58) 12%,
+        hsl(21 46% 81% / 0.53) 17%,
+        hsl(20 44% 82% / 0.48) 22%,
+        hsl(19 41% 83% / 0.43) 27%,
+        hsl(18 38% 84% / 0.38) 32%,
+        hsl(17 36% 85% / 0.33) 36%,
+        hsl(16 34% 86% / 0.28) 40%,
+        hsl(15 31% 87% / 0.23) 44%,
+        hsl(14 28% 88% / 0.18) 48%,
+        hsl(13 25% 89% / 0.145) 52%,
+        hsl(12 22% 90% / 0.11) 56%,
+        hsl(11 20% 91% / 0.075) 60%,
+        hsl(10 18% 92% / 0.04) 64%,
+        transparent 72%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 105% 95% at 100% 0%,
+        hsl(28 44% 81% / 0.46) 0%,
+        hsl(27 41% 82% / 0.4) 11%,
+        hsl(26 38% 83% / 0.34) 18%,
+        hsl(24 36% 84% / 0.3) 23%,
+        hsl(22 34% 85% / 0.26) 28%,
+        hsl(20 31% 86% / 0.21) 33%,
+        hsl(18 28% 87% / 0.16) 38%,
+        hsl(17 26% 88% / 0.135) 43%,
+        hsl(16 24% 89% / 0.11) 48%,
+        hsl(15 22% 90% / 0.075) 53%,
+        hsl(14 20% 91% / 0.04) 58%,
+        transparent 66%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 115% 95% at 30% -6%,
+        hsl(248 28% 85% / 0.36) 0%,
+        hsl(249 26% 86% / 0.31) 13%,
+        hsl(250 24% 87% / 0.26) 22%,
+        hsl(251 23% 88% / 0.22) 28%,
+        hsl(252 22% 89% / 0.18) 34%,
+        hsl(253 20% 89.5% / 0.14) 39%,
+        hsl(254 18% 90% / 0.1) 44%,
+        hsl(255 17% 91% / 0.08) 48%,
+        hsl(256 16% 92% / 0.06) 52%,
+        hsl(257 15% 92.5% / 0.045) 57%,
+        hsl(258 14% 93% / 0.03) 62%,
+        transparent 69%
+      ),
+      radial-gradient(
+        in oklch,
+        ellipse 220% 120% at 50% 110%,
+        hsl(258 24% 82% / 0.36) 0%,
+        hsl(257 24% 82.5% / 0.31) 13%,
+        hsl(256 24% 83% / 0.26) 18%,
+        hsl(44 24% 84% / 0.22) 23%,
+        hsl(32 24% 85% / 0.18) 28%,
+        hsl(30 22% 86% / 0.14) 33%,
+        hsl(28 20% 87% / 0.1) 38%,
+        hsl(256 17% 88.5% / 0.09) 43%,
+        hsl(256 14% 90% / 0.08) 48%,
+        hsl(258 13% 91% / 0.055) 54%,
+        hsl(260 12% 92% / 0.03) 60%,
+        transparent 71%
+      );
+    background-repeat: no-repeat;
+    background-position:
+      96% 97%,
+      4% 96%,
+      97% 4%,
+      48% 3%,
+      50% 102%;
+    background-size:
+      138% 126%,
+      120% 110%,
+      116% 104%,
+      128% 106%,
+      230% 136%;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/*
+ * Stack in-flow UI above the mesh (::before z-index 0). Top fade (::after) uses --z-top-fade
+ * so it paints *above* this layer — otherwise the white gradient is hidden behind <main>.
+ * Exclude `.project-nav-btn` (z-index 100) so the fixed home control stays on top.
+ */
+body > :not(.project-nav-btn) {
+  position: relative;
+  z-index: 1;
+}

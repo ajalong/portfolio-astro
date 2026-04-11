@@ -1,0 +1,52 @@
+// Media blocks — figure.media-full and .media-half two-column grid.
+// Supports: single full-width figures and two-column side-by-side rows.
+@use "tokens" as *;
+
+figure.media-full > :first-child {
+  background-color: var(--white1);
+}
+
+.media-full,
+.media-half > div {
+  img,
+  video {
+    width: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+  }
+
+  video[autoplay] {
+    opacity: 1;
+  }
+
+  figcaption {
+    font-size: 12px;
+    color: var(--grey2);
+    margin-top: 8px;
+  }
+}
+
+.media-full {
+  margin-bottom: $rhythm-stack;
+}
+
+.media-half > div {
+  margin-bottom: $rhythm-stack;
+  min-width: 0;
+  width: 100%;
+}
+
+.media-half {
+  margin: $rhythm-stack 0;
+
+  @media screen and (min-width: 801px) {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

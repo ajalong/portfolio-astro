@@ -1,0 +1,169 @@
+// Base reset, typography, and shared structural elements.
+@use "tokens" as *;
+@use "rim" as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  background-color: transparent;
+  min-height: 100vh;
+  max-width: 1320px;
+  margin: 0 auto;
+  font-family: 'Graphik', sans-serif;
+  font-size: var(--type-size);
+  line-height: var(--line-height);
+  color: var(--grey1);
+  -webkit-text-size-adjust: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+section {
+  margin: 0 0 60px;
+}
+
+h2,
+h3,
+p,
+ul,
+blockquote {
+  font-weight: 400;
+  max-width: 600px;
+}
+
+/* Case-study titles in article use project-page rhythm below; other .page_container h2 keep chunk spacing */
+.page_container h2 {
+  font-size: $type-size-lg;
+  color: var(--grey1);
+  margin: 32px 0 16px;
+}
+
+body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+}
+
+h3 {
+  font-size: $type-size-lg;
+  margin: 0;
+  color: var(--grey1);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: $line-height-tight;
+  letter-spacing: $tracking-tight;
+}
+
+p {
+  color: var(--grey2);
+}
+
+:is(p, blockquote, .page_container article li) {
+  a {
+    @include link-underline-zip;
+  }
+
+  strong {
+    font-weight: 500;
+  }
+}
+
+blockquote {
+  padding-inline-start: 1em;
+  border-left: 2px solid var(--grey2);
+  color: var(--grey2);
+  margin-bottom: 12px;
+}
+
+ul {
+  padding-inline-start: 2em;
+  color: var(--grey2);
+  margin: 16px 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Profile header section (shared by home + project pages) */
+header {
+  top: 0;
+
+  h2,
+  p {
+    margin: 0;
+  }
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .profile-photo-wrap {
+    align-self: flex-end;
+    margin-right: 16px;
+    position: relative;
+  }
+}
+
+.profile-photo {
+  width: 58px;
+  height: 58px;
+  margin: 0;
+  position: relative;
+  border-radius: 50%;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+
+  body.home & {
+    width: 92px;
+    height: 92px;
+  }
+
+  img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+.profile-info {
+  flex: 1 1;
+  display: grid;
+
+  .display-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  h2 {
+    font-size: $type-size-lg;
+    font-weight: 400;
+    line-height: $line-height-tight;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    max-width: 600px;
+    font-size: $type-size-lg;
+    font-weight: 400;
+    line-height: $line-height-tight;
+    letter-spacing: $tracking-tight;
+    color: var(--grey2);
+  }
+}

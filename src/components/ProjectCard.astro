@@ -1,0 +1,23 @@
+---
+interface Props {
+  href: string;
+  thumbnailSrc: string;
+  thumbnailAlt: string;
+  projectTitle: string;
+  client: string;
+  summary: string;
+}
+
+const { href, thumbnailSrc, thumbnailAlt, projectTitle, client, summary } = Astro.props as Props;
+---
+
+<a class="item" href={href}>
+  <p class="item-meta">{summary}</p>
+  <div class="thumbnail">
+    <img alt={thumbnailAlt} src={thumbnailSrc} />
+    <div class="thumbnail-caption">
+      <h3 class="thumbnail-title">{projectTitle}</h3>
+      <p class="thumbnail-client">{client}</p>
+    </div>
+  </div>
+</a>

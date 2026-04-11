@@ -1,0 +1,31 @@
+---
+/**
+ * Rounded-rect outline; rx/ry set by border-ring.ts from parent border-radius.
+ * Visibility: fast opacity fade (see .btn-border-ring in global.scss).
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+<svg
+  class:list={['btn-border-ring', className]}
+  viewBox="0 0 100 100"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <rect
+    x="0"
+    y="0"
+    width="100"
+    height="100"
+    rx="0"
+    ry="0"
+    fill="none"
+    stroke="url(#btn-border-ring-iridescent)"
+    vector-effect="non-scaling-stroke"
+    stroke-width="1.4px"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"></rect>
+</svg>

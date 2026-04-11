@@ -1,0 +1,56 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { PROJECT_THUMBNAIL_ALTS } from '../../data/projectThumbnailAlts';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+
+type ProjectEntry = CollectionEntry<'projects'>;
+
+export async function getStaticPaths() {
+  const all = await getCollection('projects');
+  const published = all.filter((p) => p.data.published !== false);
+  const sorted = [...published].sort((a, b) => a.data.order - b.data.order);
+
+  return sorted.map((project, i) => {
+    const next = sorted[(i + 1) % sorted.length];
+    return {
+      params: { slug: project.slug },
+      props: { project, nextProject: next },
+    };
+  });
+}
+
+interface Props {
+  project: ProjectEntry;
+  nextProject: ProjectEntry;
+}
+
+const { project, nextProject } = Astro.props as Props;
+
+const { title, client, metaDescription } = project.data;
+
+const pivot =
+  nextProject.slug !== project.slug
+    ? {
+        href: `/project/${nextProject.slug}`,
+        title: nextProject.data.title,
+        snippet: nextProject.data.summary,
+        thumbnailSrc: nextProject.data.thumbnailImage,
+        thumbnailAlt:
+          PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? `Next project: ${nextProject.data.title}`,
+      }
+    : undefined;
+
+const { Content } = await project.render();
+---
+<ProjectLayout
+  title={title}
+  client={client}
+  description={metaDescription}
+  team={project.data.team}
+  {pivot}
+>
+  <article>
+    <Content />
+  </article>
+</ProjectLayout>
+

@@ -1,0 +1,86 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ProjectTeamPanel from '../components/ProjectTeamPanel.astro';
+import ProjectNavbar from '../components/ProjectNavbar.astro';
+
+interface PivotProps {
+  href: string;
+  title: string;
+  snippet: string;
+  thumbnailSrc?: string;
+  thumbnailAlt?: string;
+}
+
+interface TeamMember {
+  name: string;
+  role: string;
+  headshot: string;
+  description?: string;
+}
+
+interface Props {
+  title: string;
+  client: string;
+  description: string;
+  url?: string;
+  pivot?: PivotProps;
+  team?: TeamMember[];
+}
+
+const { title, client, description, url, pivot, team } = Astro.props as Props;
+const showTeamPanel = team && team.length > 0;
+---
+<BaseLayout {title} description={description} url={url} bodyClass="project-page">
+  <ProjectNavbar internalEntryOnly />
+  <div class="page_container">
+    <header>
+      <div class="profile-header">
+        <div class="profile-info">
+          <div class="display-name">
+            <h2>{title}</h2>
+          </div>
+          <p>{client}</p>
+        </div>
+      </div>
+    </header>
+    <main>
+      {showTeamPanel && <ProjectTeamPanel team={team} />}
+      <slot />
+    </main>
+    <footer id="page-permalink-footer">
+      <div class="footer-content">
+        {pivot && (
+          <div id="pivot">
+            <div class="pivot-link">
+              <a href={pivot.href}>
+                <div class="pages-attachment">
+                  {pivot.thumbnailSrc && (
+                    <div class="pages-thumbnail">
+                      <img src={pivot.thumbnailSrc} alt={pivot.thumbnailAlt ?? ''} />
+                    </div>
+                  )}
+                  <div class="page-info">
+                    <div class="page-title">{pivot.title}</div>
+                    <div class="snippet">{pivot.snippet}</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        )}
+        <div class="page-nav-buttons">
+          <div>
+            <a href="/">Back to alanlong.design</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script>
+    import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
+    document.addEventListener('astro:page-load', () => {
+      initProjectNavFromInternal();
+    });
+  </script>
+</BaseLayout>
+

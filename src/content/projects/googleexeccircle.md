@@ -6,6 +6,28 @@ summary: How do you build relationships with your business partners during a pan
 metaDescription: How do you build relationships with your business partners during a pandemic?
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/google/google-thumbnail_alt
 order: 4
+team:
+  - name: Alan Long
+    role: UX/UI Designer & Front-end Developer
+    company: Cheerful Twentyfirst
+    description: |
+      Designed and built the front-end for Google Exec Circle: a virtual webinar platform connecting Google UK's business partners during the COVID-19 pandemic.
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+  - name: Tim O'Leary
+    role: Motion Designer
+    company: Cheerful Twentyfirst
+    headshot: https://media.licdn.com/dms/image/v2/D4D03AQE25y93rHdgoA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1678291457687
+    linkedin: https://www.linkedin.com/in/tim-o-leary-ba080661/
+  - name: Beth Nicholas
+    role: Project Manager
+    company: Cheerful Twentyfirst
+    headshot: https://media.licdn.com/dms/image/v2/C4E03AQEQ8sJVoDG4vA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1612299184888
+    linkedin: https://www.linkedin.com/in/beth-nicholas/
+  - name: Josh Hol
+    role: Event Manager
+    company: Google
+    headshot: https://media.licdn.com/dms/image/v2/D4E03AQFA3jUhqAOHKA/profile-displayphoto-shrink_400_400/B4EZPZn_JkHAAc-/0/1734522958921
+    linkedin: https://www.linkedin.com/in/joshhol/
 ---
 
 ## How do you build relationships with your business partners during a pandemic?

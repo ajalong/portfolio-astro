@@ -4,8 +4,10 @@ import { defineCollection, z } from 'astro:content';
 const projectTeamMemberSchema = z.object({
   name: z.string(),
   role: z.string(),
+  company: z.string().optional(),
   headshot: z.string(),
   description: z.string().optional(),
+  linkedin: z.string().url().optional(),
 });
 
 const projects = defineCollection({

@@ -8,13 +8,30 @@ thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:be
 order: 1
 team:
   - name: Alan Long
-    role: UX/UI design lead (Interbrand)
+    role: UX/UI design lead
+    company: Interbrand
     description: |
       Contracted lead for GSK’s core digital design system: stakeholder workshops, Figma libraries, accessibility remediation, and adoption support with product teams across the business.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+  - name: Damaris Homo
+    role: Account Manager
+    company: Interbrand
+    headshot: https://media.licdn.com/dms/image/v2/D4E03AQHueB4l8KdJ-Q/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1704204410169
+    linkedin: https://www.linkedin.com/in/damaris-homo-35027031/
   - name: Anna Morrison
-    role: Senior Brand Manager, GSK
+    role: Senior Brand Manager
+    company: GSK
     headshot: https://ui-avatars.com/api/?name=Anna+Morrison&size=128&background=e8e8e8&color=333333
+  - name: Rowan Green
+    role: Director, Brand Identity (Global Brand)
+    company: GSK
+    headshot: https://media.licdn.com/dms/image/v2/D4E03AQEZQ50Agipqow/profile-displayphoto-scale_400_400/B4EZs2UHSfKMAg-/0/1766142802851
+    linkedin: https://www.linkedin.com/in/rowan-green/
+  - name: Jon Warden
+    role: Global Director, Product and UX & Design
+    company: GSK
+    headshot: https://media.licdn.com/dms/image/v2/D4E03AQGKbGBpsjU3xA/profile-displayphoto-shrink_400_400/B4EZVYyrczHgAg-/0/1740951436311
+    linkedin: https://www.linkedin.com/in/jonwarden/
 ---
 
 ## An accessible design system for big biopharma

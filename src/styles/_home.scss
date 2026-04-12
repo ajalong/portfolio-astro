@@ -46,6 +46,7 @@ body main {
 .left {
   position: fixed;
   width: calc(50% - 96px - 24px);
+  max-width: 515px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -71,8 +72,6 @@ body main {
 }
 
 .about {
-  max-width: 450px;
-
   p {
     margin: 0;
     font-size: $type-size-lg;

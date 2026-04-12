@@ -35,6 +35,12 @@
   }
 }
 
+/* Hidden while team panel is open */
+body.project-team-panel-open .project-nav-btn {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* Referrer-gated: hidden until JS adds .project-nav-btn--from-site */
 body.project-page a.project-nav-btn.project-nav-btn--deferred:not(.project-nav-btn--from-site) {
   display: none !important;

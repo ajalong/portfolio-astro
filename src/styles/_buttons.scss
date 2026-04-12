@@ -30,6 +30,7 @@
 .cta a.cta__link,
 button.u-pill-primary,
 .project-nav-btn,
+.project-team-panel__close,
 #page-permalink-footer #pivot .pivot-link {
   overflow: visible;
 }
@@ -58,8 +59,9 @@ button.u-pill-primary,
     @include cta-pill-primary;
   }
 
-  /* Secondary: icon-only, no default border/background; hover uses darkening inner glow */
+  /* Secondary: icon-only; hover shows faint iridescent rim + grey background */
   a.cta__link--secondary {
+    --rim-fill: var(--buttonBackground);
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -69,7 +71,7 @@ button.u-pill-primary,
     height: 48px;
     padding: 0;
     margin: 0;
-    border: none;
+    border: var(--button-rim-width) solid transparent;
     background: transparent;
     border-radius: $pill-radius;
     color: var(--grey1);
@@ -77,21 +79,16 @@ button.u-pill-primary,
     text-decoration: none;
     cursor: pointer;
     box-sizing: border-box;
+    transition: background 0.18s ease-out;
+    @include button-rim-pseudo;
 
+    // Override the inner wash — use lighter press shadow instead
     &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.28s ease-out;
       box-shadow: $cta-secondary-inner-glow;
     }
 
     & > img,
-    & > svg {
+    & > svg:not(.btn-border-ring) {
       position: relative;
       z-index: 1;
     }
@@ -106,14 +103,22 @@ button.u-pill-primary,
     }
 
     @media (hover: hover) and (pointer: fine) {
-      &:hover::after {
-        opacity: 1;
+      &:hover {
+        background: var(--buttonBackground);
+
+        &::before {
+          opacity: 0.5;
+        }
       }
     }
 
-    &:active::after {
-      opacity: 1;
-      box-shadow: $cta-secondary-inner-glow-active;
+    &:active {
+      background: var(--buttonBackgroundActive);
+
+      &::before,
+      &::after {
+        opacity: 1;
+      }
     }
   }
 
@@ -173,6 +178,8 @@ button.u-pill-primary,
       border-bottom: none;
       border-radius: $pill-radius;
       background: transparent;
+      background: transparent;
+      transition: none;
 
       .btn-border-ring {
         display: none;

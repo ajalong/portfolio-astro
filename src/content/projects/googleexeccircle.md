@@ -29,7 +29,7 @@ team:
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1734522958921
     linkedin: https://www.linkedin.com/in/joshhol/
   - name: Arran Wilson
-    role: Senior Social Impact Marketing Manager
+    role: Product Marketing Manager
     company: Google
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1715804030566
     linkedin: https://www.linkedin.com/in/arran-wilson-315817bb/

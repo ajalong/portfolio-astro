@@ -16,7 +16,7 @@ team:
   - name: Damaris Homo
     role: Account Manager
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQHueB4l8KdJ-Q/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1704204410169
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1704204410169
     linkedin: https://www.linkedin.com/in/damaris-homo-35027031/
   - name: Anna Morrison
     role: Senior Brand Manager
@@ -25,12 +25,12 @@ team:
   - name: Rowan Green
     role: Director, Brand Identity (Global Brand)
     company: GSK
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQEZQ50Agipqow/profile-displayphoto-scale_400_400/B4EZs2UHSfKMAg-/0/1766142802851
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1766142802851
     linkedin: https://www.linkedin.com/in/rowan-green/
   - name: Jon Warden
     role: Global Director, Product and UX & Design
     company: GSK
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQGKbGBpsjU3xA/profile-displayphoto-shrink_400_400/B4EZVYyrczHgAg-/0/1740951436311
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1740951436311
     linkedin: https://www.linkedin.com/in/jonwarden/
 ---
 

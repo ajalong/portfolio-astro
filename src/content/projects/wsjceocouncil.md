@@ -16,42 +16,42 @@ team:
   - name: Chris Keirnan
     role: Head of Creative
     company: Cheerful Twentyfirst
-    headshot: https://media.licdn.com/dms/image/v2/C5103AQEGJpOUu1k7WA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516894070447
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516894070447
     linkedin: https://www.linkedin.com/in/chris-kiernan-99213756/
   - name: Tim O'Leary
     role: Motion Designer
     company: Cheerful Twentyfirst
-    headshot: https://media.licdn.com/dms/image/v2/D4D03AQE25y93rHdgoA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1678291457687
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1678291457687
     linkedin: https://www.linkedin.com/in/tim-o-leary-ba080661/
   - name: Alex Cooper
     role: Head of Events
     company: Cheerful Twentyfirst
-    headshot: https://media.licdn.com/dms/image/v2/C4D03AQEEi5TncC2OCQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516480608189
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516480608189
     linkedin: https://www.linkedin.com/in/alex-cooper-1b991312/
   - name: Debbie Lo
     role: Project Manager
     company: Cheerful Twentyfirst
-    headshot: https://media.licdn.com/dms/image/v2/C4E03AQGXUMAnHv7H8g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1662459515389
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1662459515389
     linkedin: https://www.linkedin.com/in/dsmlo/
   - name: Ollie Smith
     role: Events Director
     company: Wall Street Journal
-    headshot: https://media.licdn.com/dms/image/v2/C5603AQHawQvKjc8rpg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516570405062
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516570405062
     linkedin: https://www.linkedin.com/in/ollie-smith-35894434/
   - name: Angus Peckham-Cooper
     role: Vice President, Global Events
     company: Wall Street Journal
-    headshot: https://media.licdn.com/dms/image/v2/C4D03AQFdpXGllr1vag/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1567457277372
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1567457277372
     linkedin: https://www.linkedin.com/in/angus-peckham-cooper-b5b7171a/
   - name: Adam Katze
     role: Developer
     company: Gramercy Tech
-    headshot: https://media.licdn.com/dms/image/v2/C5603AQFAQ3tRU65eXg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1558229189058
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1558229189058
     linkedin: https://www.linkedin.com/in/adam-katze-50690595/
   - name: John Speck
     role: Developer
     company: Gramercy Tech
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQHDBpkug2FXxQ/profile-displayphoto-scale_400_400/B4EZmg9Q6gHgAg-/0/1759342039973
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1759342039973
     linkedin: https://www.linkedin.com/in/john-speck-7281358/
 ---
 

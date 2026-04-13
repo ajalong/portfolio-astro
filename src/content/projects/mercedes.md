@@ -16,22 +16,22 @@ team:
   - name: Niq Curry
     role: UX Researcher
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/C5603AQHPDea61AmbbQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1631826630951
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1631826630951
     linkedin: https://www.linkedin.com/in/niqcurry/
   - name: Laura Harding
     role: Project Manager
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQFwPybE7JXJLQ/profile-displayphoto-shrink_400_400/B4EZRQvUJrHgAY-/0/1736521369138
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1736521369138
     linkedin: https://www.linkedin.com/in/laura-harding-00357814/
   - name: Jonathan Kappler
     role: Data & Analytics Product Owner
     company: Mercedes-Benz
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQHrO8xEw4MfPw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1711127182920
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1711127182920
     linkedin: https://www.linkedin.com/in/jonathan-kappler-67498294/
   - name: James Hutchinson
     role: Data Operations Manager
     company: OMD
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQEhiUUd2KZEMA/profile-displayphoto-scale_400_400/B4EZ1A5lmuIQAc-/0/1774910332352
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1774910332352
     linkedin: https://www.linkedin.com/in/jrohutch/
 ---
 

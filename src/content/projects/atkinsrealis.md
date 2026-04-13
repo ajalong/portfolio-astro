@@ -16,37 +16,37 @@ team:
   - name: Jonny Buck
     role: UX Researcher
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQEN-h1Uwh0Yrg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1679930681989
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1679930681989
     linkedin: https://www.linkedin.com/in/jonnybuck/
   - name: Lisa Pink
     role: Project Manager
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/C5103AQH_Os3NtUujIg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516943250671
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516943250671
     linkedin: https://www.linkedin.com/in/lisapink/
   - name: Adam Johnson
     role: Creative Director
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/C4E03AQE-lm2UZYSUEg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1605210895407
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1605210895407
     linkedin: https://www.linkedin.com/in/adamjohnson0404/
   - name: Lottie Evelyn
     role: Graphic Designer
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQHnxo7eosxZ7Q/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1708264829400
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1708264829400
     linkedin: https://www.linkedin.com/in/lottie-evelyn-b17843117/
   - name: Jonny Stafford
     role: CX Strategist
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/C4E03AQEwlhHXOkbxTg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1656340268116
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1656340268116
     linkedin: https://www.linkedin.com/in/johnnystafford/
   - name: Mandy Bray
     role: Account Manager
     company: Interbrand
-    headshot: https://media.licdn.com/dms/image/v2/C5603AQFEqnLysn4bIA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516615925202
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516615925202
     linkedin: https://www.linkedin.com/in/mandy-bray-384b8935/
   - name: Sue Foster
     role: Vice President, Global Marketing and Digital Communications
     company: AtkinsRéalis
-    headshot: https://media.licdn.com/dms/image/v2/D4E03AQFeKKg0Icbr6A/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1694615949793
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1694615949793
     linkedin: https://www.linkedin.com/in/sue-foster/
 ---
 

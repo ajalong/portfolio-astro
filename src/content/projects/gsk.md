@@ -21,7 +21,7 @@ team:
   - name: Anna Morrison
     role: Senior Brand Manager
     company: GSK
-    headshot: https://ui-avatars.com/api/?name=Anna+Morrison&size=128&background=e8e8e8&color=333333
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/anna-morrison
   - name: Rowan Green
     role: Director, Brand Identity (Global Brand)
     company: GSK

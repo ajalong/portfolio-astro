@@ -21,7 +21,7 @@ team:
   - name: Tim O'Leary
     role: Motion Designer
     company: Cheerful Twentyfirst
-    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1678291457687
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/tim-oleary-2
     linkedin: https://www.linkedin.com/in/tim-o-leary-ba080661/
   - name: Alex Cooper
     role: Head of Events

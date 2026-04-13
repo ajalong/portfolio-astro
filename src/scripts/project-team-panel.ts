@@ -1,11 +1,24 @@
 const BODY_LOCK = 'project-team-panel-open';
 
+function lockScroll() {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  if (scrollbarWidth > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+  document.documentElement.classList.add(BODY_LOCK);
+}
+
+function unlockScroll() {
+  document.documentElement.classList.remove(BODY_LOCK);
+  document.body.style.paddingRight = '';
+}
+
 export function initProjectTeamPanel(): void {
   const openBtn = document.querySelector<HTMLButtonElement>('[data-project-team-open]');
   const panel = document.querySelector<HTMLElement>('[data-project-team-panel]');
-  const backdrop = document.querySelector<HTMLElement>('[data-project-team-backdrop]');
+  const card = document.querySelector<HTMLElement>('[data-project-team-card]');
   const closeBtn = document.querySelector<HTMLButtonElement>('[data-project-team-close]');
-  if (!openBtn || !panel || !backdrop) return;
+  if (!openBtn || !panel) return;
 
   const onDocumentKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && !panel.hidden) {
@@ -16,22 +29,25 @@ export function initProjectTeamPanel(): void {
 
   const closePanel = () => {
     openBtn.setAttribute('aria-expanded', 'false');
-    panel.hidden = true;
-    backdrop.hidden = true;
-    backdrop.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove(BODY_LOCK);
+    panel.classList.remove('is-visible');
     document.removeEventListener('keydown', onDocumentKeydown);
-    openBtn.focus();
+    panel.addEventListener('transitionend', () => {
+      panel.setAttribute('hidden', '');
+      unlockScroll();
+      openBtn.focus();
+    }, { once: true });
   };
 
   const openPanel = () => {
     openBtn.setAttribute('aria-expanded', 'true');
-    panel.hidden = false;
-    backdrop.hidden = false;
-    backdrop.setAttribute('aria-hidden', 'false');
-    document.body.classList.add(BODY_LOCK);
+    panel.removeAttribute('hidden');
+    lockScroll();
     document.addEventListener('keydown', onDocumentKeydown);
-    closeBtn?.focus();
+    // Double rAF ensures hidden removal is painted before opacity transition starts
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      panel.classList.add('is-visible');
+      closeBtn?.focus();
+    }));
   };
 
   openBtn.addEventListener('click', () => {
@@ -40,5 +56,9 @@ export function initProjectTeamPanel(): void {
   });
 
   closeBtn?.addEventListener('click', closePanel);
-  backdrop.addEventListener('click', closePanel);
+
+  // Click outside the card closes the panel
+  panel.addEventListener('click', (e) => {
+    if (card && !card.contains(e.target as Node)) closePanel();
+  });
 }

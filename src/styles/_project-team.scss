@@ -14,23 +14,17 @@
 .my-role-card {
   display: block;
   width: 100%;
-  max-width: 380px;
-  padding: 16px 18px;
-  border-radius: 16px;
-  background: var(--buttonBackground);
-  border: 1px solid var(--buttonBorder);
+  max-width: 600px;
+  padding: 0;
+  border: none;
+  background: transparent;
   color: var(--grey1);
   text-align: left;
   cursor: pointer;
-  transition: background 150ms ease, border-color 150ms ease;
-
-  &:hover {
-    background: rgb(0 0 0 / 0.04);
-  }
 }
 
 .my-role-card__label {
-  margin: 0 0 12px;
+  margin: 0 0 20px;
   font-size: calc(var(--type-size) * 0.85);
   font-weight: 400;
   letter-spacing: 0.07em;
@@ -43,7 +37,6 @@
   flex-direction: row;
   align-items: center;
   gap: 12px;
-  margin-bottom: 0;
 }
 
 .my-role-card__avatar {
@@ -85,7 +78,7 @@
 }
 
 .my-role-card__bio {
-  margin: 10px 0 0 60px; // 48px avatar + 12px gap
+  margin: 14px 0 0 60px; // 48px avatar + 12px gap
   font-size: calc(var(--type-size) * 0.93);
   font-weight: 400;
   line-height: 1.55;
@@ -97,9 +90,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--buttonBorder);
+  margin-top: 28px;
   font-size: calc(var(--type-size) * 0.93);
   font-weight: 400;
   color: var(--grey2);

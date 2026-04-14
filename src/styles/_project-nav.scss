@@ -36,9 +36,10 @@
 }
 
 /* Hidden while team panel is open */
-html.project-team-panel-open .project-nav-btn {
-  visibility: hidden;
-  pointer-events: none;
+html.project-team-panel-open .project-nav-btn,
+html.project-team-panel-open body.project-page a.project-nav-btn {
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Referrer-gated: hidden until JS adds .project-nav-btn--from-site */

@@ -17,6 +17,9 @@ interface Props {
 const { team } = Astro.props as Props;
 const panelId = 'project-team-panel';
 
+// Alan Long's entry is always the first member — used for the inline "My role" widget
+const alan = team.find((m) => m.name === 'Alan Long') ?? team[0];
+
 // Group all members by company; Interbrand always first, then alphabetical
 const grouped = team.reduce<Record<string, TeamMember[]>>((acc, member) => {
   const key = member.company ?? 'Other';
@@ -34,14 +37,36 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
 <div class="project-team-toolbar">
   <button
     type="button"
-    class="u-pill-primary"
+    class="my-role-card"
     aria-expanded="false"
     aria-controls={panelId}
     data-project-team-open
   >
-    <ButtonBorderRing />
-    <div>
-      <span>See everyone's role</span>
+    <p class="my-role-card__label">My role</p>
+    <div class="my-role-card__row">
+      <div class="my-role-card__avatar">
+        <img
+          src={alan.headshot}
+          alt={alan.name}
+          width="48"
+          height="48"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      <div class="my-role-card__meta">
+        <p class="my-role-card__name">{alan.name}</p>
+        <p class="my-role-card__role">{alan.role}</p>
+      </div>
+    </div>
+    {alan.description && (
+      <p class="my-role-card__bio">{alan.description}</p>
+    )}
+    <div class="my-role-card__cta">
+      <span>See who else worked on this</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
   </button>
 </div>

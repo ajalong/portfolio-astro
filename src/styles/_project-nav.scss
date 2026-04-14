@@ -24,6 +24,11 @@
   isolation: isolate;
   touch-action: manipulation;
   @include pill-button-interaction;
+  // Extend mixin's transition to include opacity for smooth panel hide/show
+  transition:
+    outline 0.1s ease-out,
+    outline-offset 0.1s ease-out,
+    opacity 200ms ease;
   -webkit-tap-highlight-color: transparent;
 
   @media screen and (max-width: 800px) {
@@ -35,10 +40,10 @@
   }
 }
 
-/* Hidden while team panel is open */
+/* Faded out while team panel is open */
 html.project-team-panel-open .project-nav-btn,
 html.project-team-panel-open body.project-page a.project-nav-btn {
-  visibility: hidden !important;
+  opacity: 0 !important;
   pointer-events: none !important;
 }
 

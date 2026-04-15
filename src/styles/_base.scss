@@ -145,12 +145,22 @@ header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  gap: 0;
+  margin-left: 24px;
+
+  @media (hover: hover) and (pointer: fine) {
+    [aria-label="LinkedIn"]:hover {
+      color: rgb(10, 102, 194);
+    }
+
+    [aria-label="Dribbble"]:hover {
+      color: #ea4c89;
+    }
+  }
 }
 
 .profile-info {
-  flex: 1 1;
+  flex: 0 0 auto;
   display: grid;
 
   .display-name {

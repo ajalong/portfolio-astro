@@ -11,14 +11,14 @@ team:
     role: UX/UI Designer
     company: Interbrand
     description: |
-      The sole UX/UI designer on the project. I worked in partnership with Jonny Buck. Together, we ran design sprints and user testing to explore brand expression and accessibility. I delivered low-fidelity mockups of the site illustrating the findings from our research and overall information architecture. I also worked with the broader Interbrand design team to test the accessibility of the in-development brand.
+      The sole UX/UI designer on the project. I worked in partnership with Jonny Buck (UX Researcher, Interbrand). Together, we ran design sprints and user testing to explore brand expression and accessibility. I delivered low-fidelity mockups of the site illustrating the findings from our research and overall information architecture. I also worked with the broader Interbrand design team to test the accessibility of the in-development brand.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Jonny Buck
     role: UX Researcher
     company: Interbrand
     description: |
-      Conducted user research and testing with me. With CX guidance from Jonny Stafford, we agreed on areas to explore. With my design variants, he ran user tests and analysed the results. We delivered a final report which covered these findings along with my low-fidelity mockups.
+      Conducted user research and testing with me. With CX guidance from Jonny Stafford (CX Strategist, Interbrand), we agreed on areas to explore. With my design variants, he ran user tests and analysed the results. We delivered a final report which covered these findings along with my low-fidelity mockups.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1679930681989
     linkedin: https://www.linkedin.com/in/jonnybuck/
   - name: Lisa Pink

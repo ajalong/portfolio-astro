@@ -681,7 +681,7 @@ html.safari-mesh-fallback::before {
  * so it paints *above* this layer — otherwise the white gradient is hidden behind <main>.
  * Exclude `.project-nav-btn` (z-index 100) so the fixed home control stays on top.
  */
-body > :not(.project-nav-btn) {
+body > :not(.project-nav-btn):not(.project-team-panel) {
   position: relative;
   z-index: 1;
 }

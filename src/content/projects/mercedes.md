@@ -11,21 +11,21 @@ team:
     role: UX/UI Designer
     company: Interbrand
     description: |
-      Responsible for the end-to-end design on the overhaul of Mercedes-Benz's Media Decision Engine. I collaborated with Niq Curry and Laura Harding in identifying user insights. I participated in workshops with stakeholders from Mercedes-Benz.
+      Responsible for the end-to-end design on the overhaul of Mercedes-Benz's Media Decision Engine. I collaborated with Niq Curry (UX Researcher, Interbrand) and Laura Harding (Project Manager, Interbrand) in identifying user insights. I participated in workshops with stakeholders from Mercedes-Benz.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Niq Curry
     role: UX Researcher
     company: Interbrand
     description: |
-      Conducted user research consisting of stakeholder interviews and user testing. Collaborated with Laura Harding and me in identifying user insights. Co-led workshops with stakeholders from Mercedes-Benz.
+      Conducted user research consisting of stakeholder interviews and user testing. Collaborated with Laura Harding (Project Manager, Interbrand) and me in identifying user insights. Co-led workshops with stakeholders from Mercedes-Benz.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1631826630951
     linkedin: https://www.linkedin.com/in/niqcurry/
   - name: Laura Harding
     role: Project Manager
     company: Interbrand
     description: |
-      Collaborated with Niq Curry and me in identifying user insights. Co-led workshops with stakeholders from Mercedes-Benz.
+      Collaborated with Niq Curry (UX Researcher, Interbrand) and me in identifying user insights. Co-led workshops with stakeholders from Mercedes-Benz.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1736521369138
     linkedin: https://www.linkedin.com/in/laura-harding-00357814/
   - name: Lisa Pink

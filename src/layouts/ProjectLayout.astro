@@ -22,15 +22,16 @@ interface Props {
   title: string;
   client: string;
   description: string;
+  image?: string;
   url?: string;
   pivot?: PivotProps;
   team?: TeamMember[];
 }
 
-const { title, client, description, url, pivot, team } = Astro.props as Props;
+const { title, client, description, image, url, pivot, team } = Astro.props as Props;
 const showTeamPanel = team && team.length > 0;
 ---
-<BaseLayout {title} description={description} url={url} bodyClass="project-page">
+<BaseLayout {title} description={description} {image} url={url} bodyClass="project-page">
   <ProjectNavbar internalEntryOnly />
   <div class="page_container">
     <header>

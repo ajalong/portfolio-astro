@@ -26,7 +26,7 @@ interface Props {
 
 const { project, nextProject } = Astro.props as Props;
 
-const { title, client, metaDescription } = project.data;
+const { title, client, metaDescription, thumbnailImage } = project.data;
 
 const pivot =
   nextProject.slug !== project.slug
@@ -46,6 +46,7 @@ const { Content } = await project.render();
   title={title}
   client={client}
   description={metaDescription}
+  image={thumbnailImage}
   team={project.data.team}
   {pivot}
 >

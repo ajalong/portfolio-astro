@@ -5,11 +5,12 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title: string;
   description: string;
+  image?: string;
   url?: string;
   bodyClass?: string;
 }
 
-const { title, description, url, bodyClass } = Astro.props as Props;
+const { title, description, image, url, bodyClass } = Astro.props as Props;
 
 const siteName = 'Alan Long';
 const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
@@ -49,10 +50,17 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <meta name="theme-color" content="#ebebeb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#ebebeb" />
 
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+    {image && <meta property="og:image:alt" content={title} />}
+
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    {image && <meta name="twitter:image" content={image} />}
 
     <ClientRouter />
     <script is:inline type="text/javascript">

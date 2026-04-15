@@ -11,7 +11,7 @@ team:
     role: UX/UI design lead
     company: Interbrand
     description: |
-      Responsible for the end-to-end design of GSK’s core design system until the initial release. Lead workshops with representatives from product teams across GSK to ensure stakeholder buy-in and alignment. Provided adoption support to certain teams. Typically liaised directly with Anna Morrison, with creative oversight from Rowan Green.
+      Responsible for the end-to-end design of GSK’s core design system until the initial release. Led workshops with representatives from product teams across GSK to ensure stakeholder buy-in and alignment. Provided adoption support to certain teams. Typically liaised directly with Anna Morrison, with creative oversight from Rowan Green.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Damaris Homo

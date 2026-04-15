@@ -163,12 +163,12 @@ body:not(.project-page) p ~ figure {
   @include surface-hover-strong;
   border: var(--button-rim-width) solid var(--buttonBorder);
   border-radius: 16px;
-  background-color: $bg-card;
+  background-color: var(--white1);
 }
 
 #page-permalink-footer #pivot .pivot-link a {
   display: block;
-  padding: 32px;
+  padding: 14px;
 }
 
 #page-permalink-footer #pivot .pivot-link a:focus-visible {

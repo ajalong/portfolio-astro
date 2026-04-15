@@ -63,6 +63,12 @@ function buildMediaFigure(img) {
   const alt = img.properties?.alt ?? '';
   const isVideo = VIDEO_EXT.test(src);
 
+  // Split "Caption — Detailed screen-reader description" on em dash.
+  // Caption goes in <figcaption> (visible); description goes in alt/aria-label.
+  const separatorIdx = alt.indexOf(' — ');
+  const caption = separatorIdx !== -1 ? alt.slice(0, separatorIdx) : alt;
+  const altText = separatorIdx !== -1 ? alt.slice(separatorIdx + 3) : alt;
+
   const figureChildren = [];
 
   if (isVideo) {
@@ -75,6 +81,7 @@ function buildMediaFigure(img) {
         loop: true,
         muted: true,
         playsInline: true,
+        'aria-label': altText || undefined,
       },
       children: [],
     });
@@ -84,16 +91,17 @@ function buildMediaFigure(img) {
       properties: {
         ...img.properties,
         src: optimizeCloudinaryUrl(src, false),
+        alt: altText,
         draggable: false,
       },
     });
   }
 
-  if (alt) {
+  if (caption) {
     figureChildren.push({
       type: 'element',
       tagName: 'figcaption',
-      children: [{ type: 'text', value: alt }],
+      children: [{ type: 'text', value: caption }],
     });
   }
 

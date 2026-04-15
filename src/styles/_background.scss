@@ -232,6 +232,14 @@ html::before {
   backface-visibility: hidden;
 }
 
+/* Mobile: disable SVG grain filter — Android Chrome's GPU compositor renders feTurbulence
+   as a visible repeating pattern. The gradients are clean enough without it at small sizes. */
+@media screen and (max-width: 900px) {
+  html::before {
+    filter: none;
+  }
+}
+
 /* Top white wash — must stack above in-flow UI (see --z-top-fade); pointer-events none so clicks pass through. */
 html::after {
   content: '';

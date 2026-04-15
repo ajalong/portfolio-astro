@@ -79,7 +79,7 @@ As the Core Design System is to be adopted across the company, it could not be t
 
 ![GSK’s internal brand guidelines hub created using the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
 
-Built around design tokens, components and patterns created in it can switch sizes for different devices and adapt to different colour modes like dark mode. Platform-specific components were also created for native teams.
+Built around design tokens, components and patterns can switch sizes for different devices and adapt to different colour modes like dark mode. Platform-specific components were also created for native teams.
 
 ![gsk.com updated to reflect the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
 

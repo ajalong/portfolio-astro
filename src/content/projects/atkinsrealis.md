@@ -88,6 +88,6 @@ We also did a deep dive on accessibility in general. Whilst users responded well
 
 ![A settings onboarding screen featuring language and accessibility presented next to an employee's headshot and name. Used as a variant in testing user preferences regarding site accessibility — Headline, profile photo “Alli”, three setting cards (Language, Accessibility, Data usage), Jump in.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-settings_person.png)
 
-Due to project deadlines a decision was made to simply reskin the existing site for the brand launch. AtkinsRéalis expressed interest in incorporating our findings into future site development.
+Due to project deadlines a decision was made to simply reskin the existing site for the brand launch. AtkinsRéalis plan to incorporate our findings into a future ground up overhaul of the site.
 
 ![A range of low-fidelity wireframes exploring homepage layout variants — Grid of eight sketched page layouts, each exploring different arrangements of hero, navigation, content cards, and search.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-wireframe_collection.png)

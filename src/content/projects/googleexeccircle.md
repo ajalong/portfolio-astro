@@ -86,7 +86,7 @@ The platform needed to:
 
 Of the invited executives, **72% accessed** the platform at least once. Of those who did, on average they **viewed >7 resources** each. Most impressively, the webinar series received an **overall rating of 4.9/5**.
 
-Google and Stanford are thrilled with these results and preparation for next year's Exec Circle has already begun.
+Google and Stanford were thrilled with these results and Cheerful Twentyfirst won more work from Google as a result.
 
 > "Thank you, Google. Exec Circle has been very enlightening, inspiring and great for building a peer network."
 >

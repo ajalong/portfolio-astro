@@ -67,7 +67,7 @@ team:
 
 ## How do you engage top business leaders when you can't host them in person?
 
-Typically the Wall Street Journal (WSJ) hosts business leaders in Davos for the WSJ CEO Council, an exclusive forum in which key issues of the day are discussed. The coronavirus has made this impossible, so Cheerful Twentyfirst were challenged with building a virtual experience to replace the in-person forum.
+Typically the Wall Street Journal (WSJ) hosts business leaders in Davos for the WSJ CEO Council, an exclusive forum in which key issues of the day are discussed. The coronavirus had made this impossible, so Cheerful Twentyfirst were challenged with building a virtual experience to replace the in-person forum.
 
 ![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page — Wide live-stream block, “Ask a question” strip and session labels; motion shows the ask flow.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
 

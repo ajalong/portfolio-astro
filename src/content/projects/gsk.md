@@ -25,7 +25,7 @@ team:
     role: Senior Brand Manager
     company: GSK
     description: |
-      Lead the project from within GSK. Provided general support and project management, meeting with me several times a week. Introduced me to key stakeholders throughout GSK and organised milestone meetings in which we presented the project progress.
+      Led the project from within GSK. Provided general support and project management, meeting with me several times a week. Introduced me to key stakeholders throughout GSK and organised milestone meetings in which we presented the project progress.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/anna-morrison
   - name: Rowan Green
     role: Director, Brand Identity (Global Brand)

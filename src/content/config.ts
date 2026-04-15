@@ -5,7 +5,7 @@ const projectTeamMemberSchema = z.object({
   name: z.string(),
   role: z.string(),
   company: z.string().optional(),
-  headshot: z.string(),
+  headshot: z.string().optional(),
   description: z.string().optional(),
   linkedin: z.string().url().optional(),
 });

@@ -1,6 +1,14 @@
 // Design tokens — Sass variables and CSS custom properties.
 // All other partials that need these @use this file.
 
+// My role card — neutral grey at 40% opacity so the page background bleeds through
+$bg-card: rgba(230, 230, 230, 0.4);
+// Hover: lavender bloom (hsl 268) bottom-right + warm hue-26 top-left, echoing the site background
+$bg-card-hover-gradient:
+  radial-gradient(ellipse at 110% -10%,  hsl(26 44% 84% / 0.45) 0%, hsl(26 32% 89% / 0.2) 45%, transparent 68%),
+  radial-gradient(ellipse at -10% 110%,  hsl(15 44% 84% / 0.45) 0%, hsl(15 32% 89% / 0.2) 45%, transparent 68%),
+  radial-gradient(ellipse at 110% 110%, hsl(268 34% 83% / 0.45) 0%, hsl(268 24% 89% / 0.2) 45%, transparent 68%);
+
 $type-size-lg: 20px;
 $line-height-tight: 1.45;
 $tracking-tight: -0.02em;

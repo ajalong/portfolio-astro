@@ -11,25 +11,41 @@ team:
     role: UX/UI design lead
     company: Interbrand
     description: |
-      Contracted lead for GSK’s core digital design system: stakeholder workshops, Figma libraries, accessibility remediation, and adoption support with product teams across the business.
+      Responsible for the end-to-end design of GSK’s core design system until the initial release. Lead workshops with representatives from product teams across GSK to ensure stakeholder buy-in and alignment. Provided adoption support to certain teams. Typically liaised directly with Anna Morrison, with creative oversight from Rowan Green.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+    linkedin: https://linkedin.com/in/alanalberglong
   - name: Damaris Homo
     role: Account Manager
     company: Interbrand
+    description: |
+      Managed the timeline and the budget to ensure the project stayed on course. Provided guidance on what was in scope for the project.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1704204410169
     linkedin: https://www.linkedin.com/in/damaris-homo-35027031/
   - name: Anna Morrison
     role: Senior Brand Manager
     company: GSK
+    description: |
+      Lead the project from within GSK. Provided general support and project management, meeting with me several times a week. Introduced me to key stakeholders throughout GSK and organised milestone meetings in which we presented the project progress.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/anna-morrison
   - name: Rowan Green
     role: Director, Brand Identity (Global Brand)
     company: GSK
+    description: |
+      Provided creative oversight in relation to GSK’s brand. Since he was involved in the creative direction of GSK’s rebrand, he was invaluable in making sure the design system was visually aligned with the brand.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1766142802851
     linkedin: https://www.linkedin.com/in/rowan-green/
+  - name: Phillipa Proctor
+    role: Head of Brand Identity and Content Production
+    company: GSK
+    description: |
+      Provided strategic oversight in relation to GSK’s brand. Since she was involved in the strategic direction of GSK’s rebrand, she was invaluable in making sure the design system was strategically aligned with the brand.
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_crop,h_580,w_700,x_50,y_0/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/phillipa-proctor
+    linkedin: https://www.linkedin.com/in/phillipa-proctor/
   - name: Jon Warden
     role: Global Director, Product and UX & Design
     company: GSK
+    description: |
+      Represented the needs of GSK’s largest product team, ensuring the design system was practical and effective for those using it daily. His guidance and sign-off during milestone reviews were essential for aligning the system with leadership’s goals.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1740951436311
     linkedin: https://www.linkedin.com/in/jonwarden/
 ---

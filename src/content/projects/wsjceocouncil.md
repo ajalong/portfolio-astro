@@ -11,46 +11,56 @@ team:
     role: UX/UI Designer & Front-end Developer
     company: Cheerful Twentyfirst
     description: |
-      Designed and led front-end development for the WSJ CEO Council virtual event platform, replacing the in-person Davos forum with a digital experience for top business leaders.
+      Responsible for the end-to-end design and led front-end development for the WSJ CEO Council virtual event platform. Due to the tight deadline of this project, developers from Gramercy Tech worked with me to implement my designs. I presented to WSJ stakeholders directly.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+    linkedin: https://linkedin.com/in/alanalberglong
   - name: Chris Keirnan
     role: Head of Creative
     company: Cheerful Twentyfirst
+    description: |
+      Provided creative leadership throughout. He ensured the design stayed true to the WSJ brand while helping the team navigate the unique requirements of a high-level executive audience.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516894070447
     linkedin: https://www.linkedin.com/in/chris-kiernan-99213756/
   - name: Tim O'Leary
     role: Motion Designer
     company: Cheerful Twentyfirst
+    description: |
+      Designed the motion graphics used on the site and event itself. This included creating the background animation seen on the Welcome page.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/tim-oleary-2
     linkedin: https://www.linkedin.com/in/tim-o-leary-ba080661/
-  - name: Alex Cooper
-    role: Head of Events
-    company: Cheerful Twentyfirst
-    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516480608189
-    linkedin: https://www.linkedin.com/in/alex-cooper-1b991312/
   - name: Debbie Lo
     role: Project Manager
     company: Cheerful Twentyfirst
+    description: |
+      Responsible for project management and internal coordination. She held frequent status meetings to monitor progress, manage feedback, and ensure the project met its deadlines.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1662459515389
     linkedin: https://www.linkedin.com/in/dsmlo/
   - name: Ollie Smith
     role: Events Director
     company: Wall Street Journal
+    description: |
+      Provided day-to-day oversight from the WSJ side, ensuring the project stayed on schedule and met internal requirements. He was our primary point of contact at WSJ and streamlined communication between Cheerful Twentyfirst and WSJ.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516570405062
     linkedin: https://www.linkedin.com/in/ollie-smith-35894434/
   - name: Angus Peckham-Cooper
     role: Vice President, Global Events
     company: Wall Street Journal
+    description: |
+      Acted as the senior stakeholder responsible for final sign-off. As a key senior stakeholder, he ensured the project's high-level objectives remained aligned with the Wall Street Journal's broader commercial and brand strategy.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1567457277372
     linkedin: https://www.linkedin.com/in/angus-peckham-cooper-b5b7171a/
   - name: Adam Katze
     role: Developer
     company: Gramercy Tech
+    description: |
+      Provided the full-stack development, focused on the site's underlying logic, performance and reliability. He was responsible for ensuring the site stayed fast, functional, and technically sound.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1558229189058
     linkedin: https://www.linkedin.com/in/adam-katze-50690595/
   - name: John Speck
     role: Developer
     company: Gramercy Tech
+    description: |
+      Collaborated with me on the front-end development, building a scalable system with utility classes and CSS variables. We documented the code thoroughly to ensure it could be easily reused for future event sites.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1759342039973
     linkedin: https://www.linkedin.com/in/john-speck-7281358/
 ---

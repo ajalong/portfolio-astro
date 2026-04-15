@@ -12,30 +12,31 @@
 
 // Inline "My role" card — opens the full team overlay on click.
 .my-role-card {
+  @include surface-hover-strong;
   display: block;
   width: 100%;
   max-width: 600px;
-  padding: 22px 24px;
+  padding: 32px;
   border: none;
   border-radius: 16px;
-  background: var(--buttonBackground);
+  background-color: $bg-card;
   color: var(--grey1);
   text-align: left;
   cursor: pointer;
-  transition: background 150ms ease;
-
-  &:hover {
-    background: rgb(0 0 0 / 0.04);
-  }
 }
 
-.my-role-card__label {
-  margin: 0 0 20px;
-  font-size: calc(var(--type-size) * 0.85);
+.my-role-card p {
+  max-width: none;
+}
+
+.my-role-heading {
+  max-width: none;
+  margin: 0 0 16px;
+  font-size: $type-size-lg;
   font-weight: 400;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--grey2);
+  line-height: $line-height-tight;
+  letter-spacing: $tracking-tight;
+  color: var(--grey1);
 }
 
 .my-role-card__row {
@@ -47,8 +48,8 @@
 
 .my-role-card__avatar {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--buttonBorder);
@@ -77,36 +78,43 @@
 
 .my-role-card__role {
   margin: 0;
-  font-size: calc(var(--type-size) * 0.93);
+  font-size: var(--type-size);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: var(--line-height);
   color: var(--grey2);
 }
 
 .my-role-card__bio {
-  margin: 14px 0 0 60px; // 48px avatar + 12px gap
-  font-size: calc(var(--type-size) * 0.93);
+  margin: 14px 0 0 64px; // 52px avatar + 12px gap
+  font-size: var(--type-size);
   font-weight: 400;
-  line-height: 1.55;
+  line-height: var(--line-height);
   color: var(--grey2);
   white-space: pre-wrap;
 }
 
 .my-role-card__cta {
+  @include link-underline-zip;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 28px;
-  font-size: calc(var(--type-size) * 0.93);
+  margin-top: 32px;
+  margin-left: 64px; // 52px avatar + 12px gap — aligns with name/bio text
+  font-size: var(--type-size);
   font-weight: 400;
-  color: var(--grey2);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: rgb(0 0 0 / 0.25);
 
   svg {
     flex-shrink: 0;
     opacity: 0.6;
+  }
+}
+
+// Trigger zip animation when the whole card is hovered, not just the CTA text
+@media (hover: hover) and (pointer: fine) {
+  .my-role-card:hover .my-role-card__cta {
+    background-image: var(--zip-hover-gradient);
+    background-size: 200% var(--button-rim-width);
+    background-position: 100% 100%;
   }
 }
 
@@ -148,7 +156,7 @@ html.project-team-panel-open {
 .project-team-panel__card {
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: 560px;
   max-height: calc(100svh - 48px);
   display: flex;
   flex-direction: column;
@@ -184,13 +192,13 @@ html.project-team-panel-open {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 16px 12px;
+  padding: 14px 32px 12px 32px;
   flex-shrink: 0;
   border-bottom: 1px solid rgb(0 0 0 / 0.07);
 }
 
 .project-team-panel__title {
-  margin: 0;
+  margin: 24px 0 20px;
   font-size: $type-size-lg;
   font-weight: 400;
   line-height: $line-height-tight;
@@ -234,7 +242,7 @@ html.project-team-panel-open {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 4px 20px 32px;
+  padding: 4px 20px 20px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -248,8 +256,8 @@ html.project-team-panel-open {
 
 .project-team-group__heading {
   margin: 0;
-  padding: 16px 0 10px;
-  font-size: calc(var(--type-size) * 0.9);
+  padding: 16px 12px 10px;
+  font-size: var(--type-size);
   font-weight: 400;
   line-height: $line-height-tight;
   letter-spacing: 0.07em;
@@ -267,14 +275,11 @@ html.project-team-panel-open {
 
 .project-team-list__item {
   border-radius: 12px;
-
-  &:has(.project-team-list__link:hover) {
-    background: rgb(0 0 0 / 0.03);
-  }
 }
 
 // Linked items (have LinkedIn)
 .project-team-list__link {
+  @include surface-hover;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -342,11 +347,19 @@ html.project-team-panel-open {
   flex-shrink: 0;
   color: var(--grey2);
   opacity: 0.5;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-team-list__link:hover .project-team-li-icon {
+    color: rgb(10, 102, 194);
+    opacity: 1;
+  }
 }
 
 .project-team-role {
   margin: 0;
-  font-size: calc(var(--type-size) * 0.93);
+  font-size: var(--type-size);
   font-weight: 400;
   line-height: 1.4;
   color: var(--grey2);
@@ -354,7 +367,7 @@ html.project-team-panel-open {
 
 .project-team-list__bio {
   margin: 8px 0 0 70px; // 56px avatar + 14px gap
-  font-size: calc(var(--type-size) * 0.93);
+  font-size: var(--type-size);
   font-weight: 400;
   line-height: 1.55;
   color: var(--grey2);

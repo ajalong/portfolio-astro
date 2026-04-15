@@ -160,47 +160,15 @@ body:not(.project-page) p ~ figure {
 }
 
 #page-permalink-footer #pivot .pivot-link {
-  --rim-fill: var(--backgroundColor);
-  position: relative;
+  @include surface-hover-strong;
   border: var(--button-rim-width) solid var(--buttonBorder);
   border-radius: 16px;
-  box-sizing: border-box;
-  outline: none;
-  background-color: var(--buttonBackground);
-  transition:
-    outline 0.1s ease-out 0s,
-    outline-offset 0.1s ease-out 0s;
-  @include button-rim-pseudo;
-
-  > a {
-    position: relative;
-    z-index: 1;
-  }
-
-  &:focus-within {
-    border-color: transparent;
-
-    &::before,
-    &::after {
-      opacity: 1;
-    }
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      border-color: transparent;
-
-      &::before,
-      &::after {
-        opacity: 1;
-      }
-    }
-  }
+  background-color: $bg-card;
 }
 
 #page-permalink-footer #pivot .pivot-link a {
-  padding: 14px;
   display: block;
+  padding: 32px;
 }
 
 #page-permalink-footer #pivot .pivot-link a:focus-visible {

@@ -10,6 +10,7 @@
   inherits: false;
 }
 
+
 // 10s cycle — sine-like velocity profile: slow ramp → fast sweep → slow ease.
 // Nine stops replace the original thirty; the shape is identical to the eye.
 // 0°→360° runs backwards so the "bright zone" sweeps left-to-right.
@@ -103,18 +104,6 @@ $cta-secondary-inner-glow-active:
     animation: none;
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: var(--button-rim-width);
-    border-radius: inherit;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.28s ease-out;
-    box-shadow: $rim-inner-wash;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     &::before {
       animation: none;
@@ -151,8 +140,7 @@ $cta-secondary-inner-glow-active:
     border-color: transparent;
     background: var(--buttonBackground);
 
-    &::before,
-    &::after {
+    &::before {
       opacity: 1;
     }
   }
@@ -169,8 +157,7 @@ $cta-secondary-inner-glow-active:
       border-color: transparent;
       background: var(--buttonBackground);
 
-      &::before,
-      &::after {
+      &::before {
         opacity: 1;
       }
     }
@@ -245,6 +232,39 @@ $cta-secondary-inner-glow-active:
       color: var(--grey1);
       background: none;
       border: none;
+    }
+  }
+}
+
+// Subtle surface hover — faint background tint. Default for list rows and less prominent surfaces.
+@mixin surface-hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: rgb(0 0 0 / 0.03);
+    }
+  }
+}
+
+// Rich surface hover — iridescent gradient bloom via ::after opacity. For prominent cards.
+@mixin surface-hover-strong {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-image: $bg-card-hover-gradient;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover::after {
+      opacity: 1;
     }
   }
 }

@@ -11,41 +11,49 @@ team:
     role: UX/UI Designer
     company: Interbrand
     description: |
-      Led UX/UI design exploring how the new AtkinsRéalis brand could be expressed online, running design sprints and user testing to balance brand expression with accessibility and implementation practicality.
+      The sole UX/UI designer on the project. I worked in partnership with Jonny Buck. Together, we ran design sprints and user testing to explore brand expression and accessibility. I delivered low-fidelity mockups of the site illustrating the findings from our research and overall information architecture. I also worked with the broader Interbrand design team to test the accessibility of the in-development brand.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+    linkedin: https://linkedin.com/in/alanalberglong
   - name: Jonny Buck
     role: UX Researcher
     company: Interbrand
+    description: |
+      Conducted user research and testing with me. With CX guidance from Jonny Stafford, we agreed on areas to explore. With my design variants, he ran user tests and analysed the results. We delivered a final report which covered these findings along with my low-fidelity mockups.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1679930681989
     linkedin: https://www.linkedin.com/in/jonnybuck/
   - name: Lisa Pink
     role: Project Manager
     company: Interbrand
+    description: |
+      Provided project management and daily operational support. She managed the project schedule and coordination to ensure our UX workstream aligned with the broader Interbrand rebranding work.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516943250671
     linkedin: https://www.linkedin.com/in/lisapink/
-  - name: Adam Johnson
-    role: Creative Director
-    company: Interbrand
-    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1605210895407
-    linkedin: https://www.linkedin.com/in/adamjohnson0404/
-  - name: Lottie Evelyn
-    role: Graphic Designer
-    company: Interbrand
-    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1708264829400
-    linkedin: https://www.linkedin.com/in/lottie-evelyn-b17843117/
   - name: Jonny Stafford
     role: CX Strategist
     company: Interbrand
+    description: |
+      Provided CX strategy for the project. He focused on the end-to-end customer journey, ensuring the new digital brand experience was strategically aligned across all user touchpoints, including digital.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1656340268116
     linkedin: https://www.linkedin.com/in/johnnystafford/
+  - name: Adam Johnson
+    role: Creative Director
+    company: Interbrand
+    description: |
+      Lead the brand design team workstream, working in parallel with the UX team I was a part of. He ensured the UX exploration stayed aligned with the core principles of the new AtkinsRéalis identity and maintained a high level of visual quality. I also worked with his team to test the accessibility of the new brand.
+    headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1605210895407
+    linkedin: https://www.linkedin.com/in/adamjohnson0404/
   - name: Mandy Bray
     role: Account Manager
     company: Interbrand
+    description: |
+      Oversaw the relationship between everyone at Interbrand and AtkinsRéalis. She managed the commercial and administrative aspects of the project, ensuring clear communication between each workstream and the client.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1516615925202
     linkedin: https://www.linkedin.com/in/mandy-bray-384b8935/
   - name: Sue Foster
     role: Vice President, Global Marketing and Digital Communications
     company: AtkinsRéalis
+    description: |
+      A senior stakeholder at AtkinsRéalis. She provided executive oversight and final sign-off, ensuring the work aligned with the firm's global marketing and digital communication strategy.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1694615949793
     linkedin: https://www.linkedin.com/in/sue-foster/
 ---

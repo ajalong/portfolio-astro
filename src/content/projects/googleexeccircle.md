@@ -11,26 +11,35 @@ team:
     role: UX/UI Designer & Front-end Developer
     company: Cheerful Twentyfirst
     description: |
-      Designed and built the front-end for Google Exec Circle: a virtual webinar platform connecting Google UK's business partners during the COVID-19 pandemic.
+      Responsible for the end-to-end design and front-end implementation of the platform. This involved the technical challenge of building a user interface onto a pre-existing back-end system. I presented to Google stakeholders directly.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
+    linkedin: https://linkedin.com/in/alanalberglong
   - name: Tim O'Leary
     role: Motion Designer
     company: Cheerful Twentyfirst
+    description: |
+      Designed the motion graphics used on the site and event itself. This included creating the animation seen on the Welcome page.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/tim-oleary-2
     linkedin: https://www.linkedin.com/in/tim-o-leary-ba080661/
   - name: Beth Nicholas
     role: Project Manager
     company: Cheerful Twentyfirst
+    description: |
+      Responsible for project management and internal coordination. She held frequent status meetings to monitor progress, manage feedback, and ensure the project met its deadlines.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1612299184888
     linkedin: https://www.linkedin.com/in/beth-nicholas/
   - name: Josh Hol
     role: Event Manager
     company: Google
+    description: |
+      Provided day-to-day oversight from Google's side, ensuring the project stayed on schedule and met internal requirements. He was our primary point of contact at Google and streamlined communication between Cheerful Twentyfirst and Google.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1734522958921
     linkedin: https://www.linkedin.com/in/joshhol/
   - name: Arran Wilson
     role: Product Marketing Manager
     company: Google
+    description: |
+      Provided senior oversight and final sign-off. He ensured the project successfully addressed the core objectives of Google's event team.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1715804030566
     linkedin: https://www.linkedin.com/in/arran-wilson-315817bb/
 ---

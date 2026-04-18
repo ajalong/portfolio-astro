@@ -38,12 +38,30 @@ $pill-radius: 200px;
 }
 
 :root {
+  /* ─────────── Type ─────────── */
+  --font-sans: 'Graphik', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   --type-size: 14px;
+  --type-size-lg: 20px;
   --line-height: 1.6;
+  --line-height-tight: 1.45;
+  --tracking-tight: -0.02em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+
+  /* ─────────── Neutrals (source) ─────────── */
   --grey1: #080808;
   --grey2: #4a4a4a;
   --white1: #fff;
   --white2: #d1d1d1;
+
+  /* ─────────── Semantic text ─────────── */
+  --text-primary: var(--grey1);
+  --text-secondary: var(--grey2);
+  --text-accent: #BB5B25;
+  --text-inverse: var(--white1);
+  --text-inverse-muted: var(--white2);
+
+  /* ─────────── Surfaces ─────────── */
   --backgroundColor: #f9f9fb;
   --buttonBackground: #fafafa;
   --buttonBackgroundActive: #ebebeb;
@@ -55,6 +73,34 @@ $pill-radius: 200px;
    * The page paint uses #fff at the top (see --top-white-solid-end); the UI chrome is separate.
    */
   --browser-chrome-hairline: #ebebeb;
+
+  /* ─────────── Radii ─────────── */
+  --radius-panel: 20px;   /* modals, sheets, team panel */
+  --radius-card: 16px;    /* content cards */
+  --radius-inset: 8px;    /* thumbnails, media, inputs inside a card */
+  --radius-pill: 200px;   /* all buttons & chips */
+
+  /* ─────────── Spacing ─────────── */
+  --space-stack-tight: 16px;     /* heading ↔ paragraph within a block */
+  --space-stack: 24px;           /* between related paragraphs */
+  --space-group: 40px;           /* card ↔ card, mobile section break */
+  --space-header-offset: 56px;   /* clearance below fixed mobile header */
+  --space-section: 80px;         /* section ↔ section on desktop */
+  --space-page-gutter: 112px;    /* page top/bottom gutter */
+
+  /* ─────────── Shadows ─────────── */
+  --shadow-pill:
+    0px 0px 2px rgba(3, 7, 18, 0.04),
+    0px 0px 9px rgba(3, 7, 18, 0.03),
+    0px 0px 20px rgba(3, 7, 18, 0.01);
+  --shadow-panel:
+    0 32px 80px rgb(0 0 0 / 0.16),
+    0 4px 16px rgb(0 0 0 / 0.06);
+
+  /* ─────────── Brand social ─────────── */
+  --brand-linkedin: rgb(10, 102, 194);
+  --brand-dribbble: #ea4c89;
+
   /*
    * Solid white band below the safe area so the top edge reads as pure #fff full width before
    * the fade — avoids grey hairline + mesh showing through as horizontal banding.

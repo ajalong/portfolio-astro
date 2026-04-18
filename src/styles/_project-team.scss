@@ -18,9 +18,9 @@
   max-width: 600px;
   padding: 32px;
   border: none;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background-color: $bg-card;
-  color: var(--grey1);
+  color: var(--text-primary);
   text-align: left;
   cursor: pointer;
 }
@@ -32,11 +32,11 @@
 .my-role-heading {
   max-width: none;
   margin: 0 0 16px;
-  font-size: $type-size-lg;
-  font-weight: 400;
-  line-height: $line-height-tight;
-  letter-spacing: $tracking-tight;
-  color: var(--grey1);
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
 }
 
 .my-role-card__row {
@@ -70,26 +70,26 @@
 .my-role-card__name {
   margin: 0 0 2px;
   font-size: var(--type-size);
-  font-weight: 400;
-  line-height: $line-height-tight;
-  letter-spacing: $tracking-tight;
-  color: var(--grey1);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
 }
 
 .my-role-card__role {
   margin: 0;
   font-size: var(--type-size);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: var(--line-height);
-  color: var(--grey2);
+  color: var(--text-secondary);
 }
 
 .my-role-card__bio {
   margin: 14px 0 0 64px; // 52px avatar + 12px gap
   font-size: var(--type-size);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: var(--line-height);
-  color: var(--grey2);
+  color: var(--text-secondary);
   white-space: pre-wrap;
 }
 
@@ -163,11 +163,9 @@ html.project-team-panel-open {
   background: rgb(249 249 251 / 0.96);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-radius: 20px;
+  border-radius: var(--radius-panel);
   border: 1px solid rgb(0 0 0 / 0.07);
-  box-shadow:
-    0 32px 80px rgb(0 0 0 / 0.16),
-    0 4px 16px rgb(0 0 0 / 0.06);
+  box-shadow: var(--shadow-panel);
   overflow: hidden;
   // Slide-up on mobile
   transform: translateY(0);
@@ -176,7 +174,7 @@ html.project-team-panel-open {
   @media screen and (max-width: 600px) {
     max-width: 100%;
     max-height: 88svh;
-    border-radius: 20px 20px 0 0;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
   }
 }
 
@@ -199,11 +197,11 @@ html.project-team-panel-open {
 
 .project-team-panel__title {
   margin: 24px 0 20px;
-  font-size: $type-size-lg;
-  font-weight: 400;
-  line-height: $line-height-tight;
-  letter-spacing: $tracking-tight;
-  color: var(--grey1);
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
 }
 
 .project-team-panel__close {
@@ -217,8 +215,8 @@ html.project-team-panel-open {
   height: 40px;
   margin: 0;
   padding: 0;
-  border-radius: 999px;
-  color: var(--grey1);
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
   cursor: pointer;
   overflow: visible;
   box-sizing: border-box;
@@ -233,7 +231,7 @@ html.project-team-panel-open {
   }
 
   &:focus-visible {
-    outline: 2px solid var(--grey1);
+    outline: 2px solid var(--text-primary);
     outline-offset: 2px;
   }
 }
@@ -258,11 +256,11 @@ html.project-team-panel-open {
   margin: 0;
   padding: 16px 12px 10px;
   font-size: var(--type-size);
-  font-weight: 400;
-  line-height: $line-height-tight;
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--grey2);
+  color: var(--text-secondary);
 }
 
 .project-team-list {
@@ -337,22 +335,22 @@ html.project-team-panel-open {
 .project-team-name {
   margin: 0;
   font-size: var(--type-size);
-  font-weight: 400;
-  line-height: $line-height-tight;
-  letter-spacing: $tracking-tight;
-  color: var(--grey1);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
 }
 
 .project-team-li-icon {
   flex-shrink: 0;
-  color: var(--grey2);
+  color: var(--text-secondary);
   opacity: 0.5;
   transition: color 0.15s ease, opacity 0.15s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .project-team-list__link:hover .project-team-li-icon {
-    color: rgb(10, 102, 194);
+    color: var(--brand-linkedin);
     opacity: 1;
   }
 }
@@ -360,16 +358,16 @@ html.project-team-panel-open {
 .project-team-role {
   margin: 0;
   font-size: var(--type-size);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: 1.4;
-  color: var(--grey2);
+  color: var(--text-secondary);
 }
 
 .project-team-list__bio {
   margin: 8px 0 0 70px; // 56px avatar + 14px gap
   font-size: var(--type-size);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: 1.55;
-  color: var(--grey2);
+  color: var(--text-secondary);
   white-space: pre-wrap;
 }

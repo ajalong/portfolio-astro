@@ -73,8 +73,8 @@ button.u-pill-primary,
     margin: 0;
     border: var(--button-rim-width) solid transparent;
     background: transparent;
-    border-radius: $pill-radius;
-    color: var(--grey1);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
     outline: none;
     text-decoration: none;
     cursor: pointer;
@@ -98,7 +98,7 @@ button.u-pill-primary,
     }
 
     &:focus-visible {
-      outline: 2px solid var(--grey1);
+      outline: 2px solid var(--text-primary);
       outline-offset: 3px;
     }
 
@@ -176,7 +176,7 @@ button.u-pill-primary,
       padding: 0;
       border: none;
       border-bottom: none;
-      border-radius: $pill-radius;
+      border-radius: var(--radius-pill);
       background: transparent;
       background: transparent;
       transition: none;
@@ -191,7 +191,7 @@ button.u-pill-primary,
       }
 
       &:focus-visible {
-        outline: 2px solid var(--grey1);
+        outline: 2px solid var(--text-primary);
         outline-offset: 3px;
       }
     }

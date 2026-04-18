@@ -113,18 +113,27 @@ $pill-radius: 200px;
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
-  /* Link underline zip: iridescent band (purple → magenta → red-orange) */
+  /*
+   * Link underline zip — lilac → rose → peach → butter, matching the button rim palette.
+   *
+   * Gradient is 200% wide; background-position animates 0% → 100% on hover.
+   * At 0%: left half visible  (colourful → transparent zip gap on the right)
+   * At 100%: right half visible (lilac → rose → peach → butter — fully colourful, no gap)
+   *
+   * The transparent zip zone sits entirely in the left half (≤46%) so it sweeps
+   * across the link and exits to the left — leaving only colour in the final state.
+   * All stops are percentage-based so the effect scales with any link length.
+   */
   --zip-hover-gradient: linear-gradient(
     90deg,
-    hsl(265 26% 40%) 0,
-    hsl(265 26% 40%) calc(50% - 128px),
-    hsl(292 28% 48%) calc(50% - 80px),
-    hsl(318 26% 52%) calc(50% - 40px),
-    transparent calc(50% - 10px),
-    transparent calc(50% + 10px),
-    hsl(22 30% 52%) calc(50% + 40px),
-    hsl(8 28% 46%) calc(50% + 80px),
-    hsl(278 24% 38%) calc(50% + 128px),
-    hsl(265 26% 40%) 100%
+    hsl(268 48% 52%)  0%,   /* lilac  — left edge */
+    hsl(338 50% 50%) 18%,   /* rose */
+    hsl(22  56% 54%) 34%,   /* peach */
+    transparent      42%,   /* fade into zip gap */
+    transparent      46%,   /* zip gap — still in left half, exits on animation */
+    hsl(268 48% 52%) 52%,   /* lilac  — right half begins, fully colourful */
+    hsl(338 50% 50%) 68%,   /* rose */
+    hsl(22  56% 54%) 84%,   /* peach */
+    hsl(42  58% 56%) 100%   /* butter — right edge */
   );
 }

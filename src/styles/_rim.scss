@@ -26,44 +26,26 @@
   100% { --button-rim-angle: 0deg;   }
 }
 
-// Full-spectrum iridescent ring: white → cool grey → mauve → rose → ochre → warm grey → back.
+// Iridescent rim — cream → lilac → rose → peach → butter → cream.
+// 8 stops with wide spans so the browser blurs hues into each other.
+// Cream holds ~22% (80°) of the wheel; colour band runs purple → orange.
+// Degree positions are required so the cream hold stays flat at each end.
 $rim-gradient-stops:
-  hsl(215 12% 98%),
-  hsl(218 11% 98%),
-  hsl(224 14% 97%),
-  hsl(230 16% 96%),
-  hsl(236 17% 94%),
-  hsl(240 18% 92%),
-  hsl(242 20% 90%),
-  hsl(265 24% 82%),
-  hsl(285 26% 72%),
-  hsl(305 24% 64%),
-  hsl(325 24% 56%),
-  hsl(345 26% 50%),
-  hsl(5 28% 46%),
-  hsl(22 28% 44%),
-  hsl(38 26% 43%),
-  hsl(28 24% 44%),
-  hsl(320 22% 46%),
-  hsl(292 22% 48%),
-  hsl(275 20% 50%),
-  hsl(258 18% 54%),
-  hsl(248 16% 58%),
-  hsl(240 14% 66%),
-  hsl(232 13% 74%),
-  hsl(228 12% 80%),
-  hsl(224 11% 86%),
-  hsl(220 11% 91%),
-  hsl(218 12% 94%),
-  hsl(216 12% 96%),
-  hsl(215 12% 98%);
+  hsl(32 38% 94%)    0deg,    /* cream — start  */
+  hsl(32 38% 94%)   20deg,    /* cream — flat hold */
+  hsl(268 52% 68%)  80deg,    /* lilac */
+  hsl(338 54% 62%) 160deg,    /* rose */
+  hsl(22 64% 68%)  220deg,    /* peach */
+  hsl(42 70% 72%)  290deg,    /* butter */
+  hsl(32 38% 94%)  340deg,    /* cream — flat hold */
+  hsl(32 38% 94%)  360deg;    /* cream — end */
 
-// Inner-glow wash for iridescent pill buttons (::after shadow)
+// Inner-glow wash — updated to echo the new warmer rim palette
 $rim-inner-wash:
-  inset 0 0 8px 0 hsl(268 28% 54% / 0.038),
-  inset 0 0 18px 3px hsl(305 24% 56% / 0.03),
-  inset 0 0 30px 7px hsl(22 28% 54% / 0.024),
-  inset 0 0 42px 10px hsl(285 22% 58% / 0.016);
+  inset 0 0 8px 0 hsl(268 40% 60% / 0.05),
+  inset 0 0 18px 3px hsl(338 44% 60% / 0.04),
+  inset 0 0 30px 7px hsl(22 54% 62% / 0.03),
+  inset 0 0 42px 10px hsl(268 36% 64% / 0.02);
 
 // Inner-glow for icon-only secondary CTAs (neutral darkening variant)
 $cta-secondary-inner-glow:
@@ -109,7 +91,7 @@ $cta-secondary-inner-glow-active:
       animation: none;
       background:
         linear-gradient(var(--rim-fill), var(--rim-fill)) padding-box,
-        conic-gradient(from 235deg, #{$rim-gradient-stops}) border-box;
+        conic-gradient(from 0deg, #{$rim-gradient-stops}) border-box;
       background-clip: padding-box, border-box;
     }
 

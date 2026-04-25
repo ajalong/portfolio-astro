@@ -1,0 +1,146 @@
+// Jump-to-section nav for project case studies.
+//
+// Desktop/tablet (≥801px): placed in col 6, stacks vertically and sticks.
+// Mobile (≤800px): hidden entirely.
+@use "tokens" as *;
+@use "rim" as *;
+
+.project-section-index {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  row-gap: var(--unit-32);
+  pointer-events: auto;
+  position: sticky;
+  top: var(--page-gutter-y);
+  // Whole nav is inset by --unit-16 so the jump-link group's ::before rail
+  // sits in a padding channel, flush with the nav's left edge.
+  padding-left: var(--unit-16);
+
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+}
+
+.project-section-index__group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--unit-4);
+
+  // Middle group (jump links) carries a vertical rail on the nav's left edge,
+  // plus a moving black indicator that slides to match the active link.
+  // Inspired by .case-study-index on samwill.is.
+  &:nth-child(2) {
+    position: relative;
+
+    // Grey track — full height of the group.
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(-1 * var(--unit-16));
+      width: 2px;
+      background-color: var(--buttonBorder);
+    }
+
+    // Black indicator — JS sets --active-top and --active-height to the
+    // active link's offsetTop/offsetHeight; transitions animate the move.
+    &::after {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--unit-16));
+      top: var(--active-top, 0);
+      height: var(--active-height, 0);
+      width: 2px;
+      background-color: var(--text-primary);
+      opacity: 0;
+      transition:
+        top 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.2s ease;
+    }
+
+    // Visible once JS has an active section.
+    &[data-has-active]::after {
+      opacity: 1;
+    }
+
+    // During initial positioning, skip the slide so the bar doesn't animate
+    // in from top:0 on first paint. JS removes this attribute after the
+    // initial position is flushed.
+    &[data-init]::after {
+      transition: opacity 0.2s ease;
+    }
+  }
+
+}
+
+
+.project-section-index__permalink {
+  display: block;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+}
+
+.project-section-index__back {
+  @include link-underline-zip;
+  padding: var(--unit-4) 0;
+  // Tight line-height so the zip underline hugs the text the same way it
+  // does on inline links inside <p>. Without this, flex blockifies the
+  // <a> and the underline drifts to the bottom of a tall line-box.
+  line-height: 1;
+  // background-origin: content-box keeps the underline anchored to the text
+  // rather than the bottom of the padding box.
+  background-origin: content-box;
+  background-position: 0 calc(100% + 0.12em);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover { background-position: 100% calc(100% + 0.12em); }
+  }
+  &:focus-visible { background-position: 100% calc(100% + 0.12em); }
+}
+
+.project-section-index__link {
+  display: inline-flex;
+  flex-direction: column;
+  padding: var(--unit-4) 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &[data-active] {
+    color: var(--text-primary);
+  }
+}
+
+
+.project-section-index__contact-link {
+  @include link-underline-zip;
+  padding: var(--unit-4) 0;
+  line-height: 1;
+  background-origin: content-box;
+  background-position: 0 calc(100% + 0.12em);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover { background-position: 100% calc(100% + 0.12em); }
+  }
+  &:focus-visible { background-position: 100% calc(100% + 0.12em); }
+}
+
+// Pull anchored scroll targets down a bit so the section heading doesn't
+// sit flush against the very top of the viewport when jumped to.
+// Covers <section id> nodes inside both <article> (case-study sections)
+// and <main> (e.g. the team panel's "My role" section).
+body.project-page main section[id] {
+  scroll-margin-top: var(--page-gutter-y);
+}

@@ -34,8 +34,9 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
 });
 ---
 
-<div class="project-team-toolbar">
-  <p class="my-role-heading">My role</p>
+<section id="my-role" class="project-team-toolbar">
+  <p class="kicker">My role</p>
+  <p class="my-role-heading">UX/UI Design Lead</p>
   <button
     type="button"
     class="my-role-card"
@@ -68,7 +69,7 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
       <span>See everyone that worked on this</span>
     </div>
   </button>
-</div>
+</section>
 
 <div
   id={panelId}

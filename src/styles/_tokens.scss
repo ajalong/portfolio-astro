@@ -9,14 +9,6 @@ $bg-card-hover-gradient:
   radial-gradient(ellipse at -10% 110%,  hsl(15 44% 84% / 0.45) 0%, hsl(15 32% 89% / 0.2) 45%, transparent 68%),
   radial-gradient(ellipse at 110% 110%, hsl(268 34% 83% / 0.45) 0%, hsl(268 24% 89% / 0.2) 45%, transparent 68%);
 
-$type-size-lg: 20px;
-$line-height-tight: 1.45;
-$tracking-tight: -0.02em;
-$page-gutter-y: 112px;
-$rhythm-section: 80px;
-$rhythm-stack: 24px;
-$pill-radius: 200px;
-
 @font-face {
   font-family: 'Graphik';
   src:
@@ -51,12 +43,14 @@ $pill-radius: 200px;
   /* ─────────── Neutrals (source) ─────────── */
   --grey1: #080808;
   --grey2: #4a4a4a;
+  --grey-media: #eaeaea;
   --white1: #fff;
   --white2: #d1d1d1;
 
   /* ─────────── Semantic text ─────────── */
   --text-primary: var(--grey1);
   --text-secondary: var(--grey2);
+  --text-tertiary: #9a9a9a;
   --text-accent: #BB5B25;
   --text-inverse: var(--white1);
   --text-inverse-muted: var(--white2);
@@ -67,6 +61,7 @@ $pill-radius: 200px;
   --buttonBackgroundActive: #ebebeb;
   --buttonBorder: #eaeaea;
   --button-rim-width: 1.4px;
+  --text-underline-width: 1px;
   --secondaryBorderColor: #f2f2f2;
   /*
    * Safari's own chrome is ~this grey — keep theme-color in BaseLayout in the same family.
@@ -80,13 +75,69 @@ $pill-radius: 200px;
   --radius-inset: 8px;    /* thumbnails, media, inputs inside a card */
   --radius-pill: 200px;   /* all buttons & chips */
 
-  /* ─────────── Spacing ─────────── */
-  --space-stack-tight: 16px;     /* heading ↔ paragraph within a block */
-  --space-stack: 24px;           /* between related paragraphs */
-  --space-group: 40px;           /* card ↔ card, mobile section break */
-  --space-header-offset: 56px;   /* clearance below fixed mobile header */
-  --space-section: 80px;         /* section ↔ section on desktop */
-  --space-page-gutter: 112px;    /* page top/bottom gutter */
+  /* ─────────── Spacing primitives (4px grid) ─────────── */
+  --unit-2:   2px;  /* nudge — not a 4px multiple, kept for micro-gaps */
+  --unit-4:   4px;
+  --unit-8:   8px;
+  --unit-12:  12px;
+  --unit-16:  16px;
+  --unit-20:  20px;
+  --unit-24:  24px;
+  --unit-28:  28px;
+  --unit-32:  32px;
+  --unit-36:  36px;
+  --unit-40:  40px;
+  --unit-44:  44px;
+  --unit-48:  48px;
+  --unit-52:  52px;
+  --unit-56:  56px;
+  --unit-60:  60px;
+  --unit-64:  64px;
+  --unit-68:  68px;
+  --unit-72:  72px;
+  --unit-76:  76px;
+  --unit-80:  80px;
+  --unit-84:  84px;
+  --unit-88:  88px;
+  --unit-92:  92px;
+  --unit-96:  96px;
+  --unit-100: 100px;
+  --unit-104: 104px;
+  --unit-108: 108px;
+  --unit-112: 112px;
+  --unit-116: 116px;
+  --unit-120: 120px;
+  --unit-124: 124px;
+  --unit-128: 128px;
+
+  /* ─────────── Spacing semantic ─────────── */
+  --nudge:              var(--unit-2);   /* micro-gap, e.g. kicker ↔ heading */
+  --text-spacing-tight: var(--unit-16);  /* heading ↔ first paragraph */
+  --text-spacing-standard:       var(--unit-28);  /* between related paragraphs */
+  --block-spacing:      var(--unit-64);  /* text ↔ media transitions */
+  --header-offset:      var(--unit-56);  /* clearance below fixed mobile header */
+  --section-spacing:    var(--unit-88);  /* section ↔ section on desktop */
+  --page-gutter:        var(--unit-112); /* legacy alias — prefer --page-gutter-y */
+
+  /* ─────────── Layout grid ─────────── */
+  --grid-gap:           var(--unit-16);  /* gutter between grid columns */
+  --page-gutter-y:      var(--unit-88);  /* space from viewport top to title */
+  --page-gutter-x:      var(--unit-16);  /* space from viewport left/right to grid */
+}
+
+/* Mobile re-tune — tokens shift at 800px so per-rule media queries are unnecessary */
+@media screen and (max-width: 800px) {
+  :root {
+    --text-spacing-tight: var(--unit-24);
+    --text-spacing-standard:       var(--unit-32);
+    --block-spacing:      var(--unit-40);
+    --section-spacing:    var(--unit-40);
+    --page-gutter-y:      var(--unit-40);
+    --page-gutter-x:      var(--unit-16);
+  }
+}
+
+:root {
 
   /* ─────────── Shadows ─────────── */
   --shadow-pill:

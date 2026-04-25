@@ -252,8 +252,19 @@ $cta-secondary-inner-glow-active:
   }
 }
 
-// Body copy links + footer "Back to…" — grey underline + iridescent zip on hover.
-// Inline + box-decoration-break: clone so underlines repeat on each wrapped line.
+// Canonical text-link style for the whole site.
+// Reference: "For further context on the 2022 rebrand, see Wolff Olins's
+// case study." in the GSK case study — that's the look we standardise on.
+//
+// Behaviour: black text, no decoration, painted-on underline (background-image
+// rather than text-decoration so each wrapped line gets its own line via
+// box-decoration-break: clone), iridescent zip-slide gradient on hover.
+//
+// Caveat: assumes the link can render as `display: inline` (i.e. inside a
+// paragraph or any non-flex parent). When the parent is a flex/grid container
+// the link gets blockified — set `line-height: 1` on the link so the painted
+// underline still hugs the text instead of drifting to the bottom of the
+// line-box.
 @mixin link-underline-zip {
   color: var(--text-primary);
   text-decoration: none;
@@ -267,7 +278,7 @@ $cta-secondary-inner-glow-active:
   /* Per-line underline via background strip (clone paints one per fragment) */
   background-image: linear-gradient(var(--text-primary), var(--text-primary));
   background-position: 0 100%;
-  background-size: 100% var(--button-rim-width);
+  background-size: 100% var(--text-underline-width);
   background-repeat: no-repeat;
   transition:
     background-color 0.12s ease,
@@ -282,7 +293,7 @@ $cta-secondary-inner-glow-active:
 
   &:focus-visible {
     background-image: var(--zip-hover-gradient);
-    background-size: 200% var(--button-rim-width);
+    background-size: 200% var(--text-underline-width);
     background-position: 100% 100%;
     outline: 2px solid var(--text-primary);
     outline-offset: 3px;
@@ -293,14 +304,14 @@ $cta-secondary-inner-glow-active:
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-image: var(--zip-hover-gradient);
-      background-size: 200% var(--button-rim-width);
+      background-size: 200% var(--text-underline-width);
       background-position: 100% 100%;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     background-image: linear-gradient(var(--text-primary), var(--text-primary));
-    background-size: 100% var(--button-rim-width);
+    background-size: 100% var(--text-underline-width);
     background-position: 0 100%;
     transition:
       background-color 0.12s ease,
@@ -308,14 +319,14 @@ $cta-secondary-inner-glow-active:
 
     &:focus-visible {
       background-image: linear-gradient(var(--text-primary), var(--text-primary));
-      background-size: 100% var(--button-rim-width);
+      background-size: 100% var(--text-underline-width);
       background-position: 0 100%;
     }
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         background-image: linear-gradient(var(--text-primary), var(--text-primary));
-        background-size: 100% var(--button-rim-width);
+        background-size: 100% var(--text-underline-width);
         background-position: 0 100%;
       }
     }

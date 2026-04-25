@@ -6,6 +6,8 @@ summary: Exploring how a new AtkinsRéalis brand could live online through desig
 metaDescription: In 2023 I worked with Interbrand to explore how the new AtkinsRéalis brand could be expressed on the web, running design sprints and user testing to communicate the brand’s tenets while ensuring accessibility and practicality for future implementation.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/AtkinsRealis/atkinsrealis-thumbnail-alt.jpg
 order: 5
+year: 2023
+sector: UX Exploration
 team:
   - name: Alan Long
     role: UX/UI Designer

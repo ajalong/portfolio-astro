@@ -20,6 +20,8 @@ const projects = defineCollection({
     thumbnailImage: z.string(),
     order: z.number(),
     published: z.boolean().optional(),
+    year: z.number().optional(),
+    sector: z.string().optional(),
     team: z.array(projectTeamMemberSchema).optional(),
   }),
 });

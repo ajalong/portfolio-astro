@@ -3,11 +3,199 @@
 @use "tokens" as *;
 @use "rim" as *;
 
+// Page padding: top/bottom is --page-gutter-y, left/right is --page-gutter-x.
+// Horizontal padding on the container acts as the page's outer rails — the
+// 8-col grid sits inside. No need for a body max-width anymore.
 .page_container {
-  padding: $page-gutter-y 48px 0;
+  padding: var(--page-gutter-y) var(--page-gutter-x) 0;
+}
 
-  @media screen and (max-width: 800px) {
-    padding: 104px 14px 0;
+/*
+ * Page grid — 6 equal cols (≥801px).
+ *
+ *   col 1      : left margin
+ *   cols 2–5   : main content — header, body copy, team card, images
+ *   cols 2–3 / 4–5 : image pair (2 cols each)
+ *   col 6      : section jump-nav + captions
+ *
+ * main spans all 6 cols as a subgrid so article content can address col 1
+ * and col 6 for margin captions.
+ */
+@media screen and (min-width: 801px) {
+  body.project-page .page_container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: var(--grid-gap);
+  }
+
+  // Project title — spans the main content area (cols 2–5).
+  body.project-page .page_container > header {
+    grid-column: 2 / 6;
+  }
+
+  // Main spans all 6 cols as a subgrid so article can reach col 1 and col 6.
+  // grid-row: 2 is explicit so it overlaps col 6 (always occupied by the nav).
+  body.project-page .page_container > main {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  // Non-article direct children of main (e.g. team panel) sit in the content area.
+  body.project-page .page_container > main > * {
+    grid-column: 2 / 6;
+  }
+
+  body.project-page .page_container > main > article {
+    grid-column: 1 / -1;
+  }
+
+  body.project-page .page_container > footer {
+    grid-column: 2 / 6;
+    grid-row: 3;
+  }
+
+  // Section nav — col 6, sticky alongside content, above margin captions.
+  // z-index keeps it above captions that scroll into col 6; position: sticky
+  // lives in _project-section-index.scss so we must not override it here.
+  body.project-page .page_container > .project-section-index {
+    grid-column: 6;
+    grid-row: 1 / -1;
+    align-self: start;
+    z-index: 10;
+  }
+}
+
+/*
+ * Content sub-grid — article and each section subgrid from the 6-col page grid.
+ *
+ *   cols 2–5 : text, headings, lists, full-width media
+ *   cols 2–3 / 4–5 : image pair (each figure within the block)
+ *   col 1    : left margin (reserved)
+ *   col 6    : right caption (single image or both captions of a pair)
+ */
+@media screen and (min-width: 801px) {
+  body.project-page article,
+  body.project-page article > section {
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: 0;
+    align-items: start;
+  }
+
+  // Default: text column, cols 2–5.
+  body.project-page :is(article, article > section) > * {
+    grid-column: 2 / 6;
+  }
+
+  // Sections span full width and are themselves a subgrid.
+  body.project-page article > section {
+    grid-column: 1 / -1;
+  }
+
+  // Media blocks span all 6 cols; internal layout handled by .media-block rules.
+  body.project-page :is(article, article > section) > .media-block {
+    grid-column: 1 / -1;
+  }
+
+  // Media block: subgrid so figures and captions address page cols directly.
+  .media-block {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-flow: dense;
+    align-items: start;
+  }
+
+  // Single image spans cols 2–5 within the block.
+  .media-block > figure.media-full {
+    grid-column: 2 / 6;
+  }
+
+  // Pair: left image cols 2–3, right image cols 4–5.
+  .media-block--pair > figure.media-full:first-child {
+    grid-column: 2 / 4;
+  }
+  .media-block--pair > figure.media-full:nth-child(2) {
+    grid-column: 4 / 6;
+  }
+
+  // Captions in the page margins, bottom-aligned to their image row.
+  .media-caption {
+    align-self: end;
+    max-width: 190px;
+  }
+  .media-caption--right {
+    grid-column: 6;
+  }
+  // Left caption: text reads left-to-right but the block hugs the right edge of col 1.
+  .media-caption--left {
+    grid-column: 1;
+    justify-self: end;
+    text-align: left;
+  }
+  // Pair caption group: single grid item in col 6 that stacks both captions
+  // and bottom-aligns the whole group with the image row.
+  .media-caption-group {
+    grid-column: 6;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
+    max-width: 190px;
+  }
+  .media-caption-group .media-caption {
+    align-self: auto;
+    max-width: none;
+  }
+}
+
+/*
+ * Mobile media (≤800px) — captions sit below their images instead of in
+ * a margin column. Pairs stay side-by-side as a 2-col row, with their
+ * "(Left)" and "(Right)" captions in a matching 2-col row beneath.
+ */
+@media screen and (max-width: 800px) {
+  // Pair: 2-col grid — figures on row 1, caption group on row 2.
+  .media-block--pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--grid-gap);
+    row-gap: var(--unit-8);
+  }
+  .media-block--pair > figure.media-full {
+    margin: 0;
+    grid-row: 1;
+  }
+  .media-block--pair > figure.media-full:first-child  { grid-column: 1; }
+  .media-block--pair > figure.media-full:nth-child(2) { grid-column: 2; }
+
+  // Caption group: spans the row, splits into matching 2 sub-cols
+  // so each "(Left)"/"(Right)" caption sits beneath its image.
+  .media-block--pair > .media-caption-group {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--grid-gap);
+    max-width: none;
+  }
+  .media-block--pair > .media-caption-group > .media-caption {
+    margin: 0;
+    max-width: none;
+  }
+
+  // Single image: caption follows the image in normal flow.
+  .media-block:not(.media-block--pair) > .media-caption {
+    margin-top: var(--unit-8);
+    max-width: none;
+  }
+
+  // "(Left) " / "(Right) " prefix is redundant once captions sit beneath
+  // their respective images.
+  .media-caption__side {
+    display: none;
   }
 }
 
@@ -20,106 +208,92 @@ body:not(.project-page) .page_container article section {
 }
 
 /*
- * Project case studies — vertical rhythm
- * - $rhythm-section (80px): profile header → main; after media when next block isn't prose
- * - Mobile (≤800px): 40px figure / section breaks
- * - After media → text/headings: 80px minus caption optical offset (27.2px)
- * - $rhythm-stack (24px): default stack; mobile 32px
- * - 16px: heading → following block; mobile 24px
+ * Project case studies — vertical rhythm via flow utility.
+ *
+ * Single rule: every element gets `margin-top: var(--flow-space, --text-spacing-standard)`.
+ * Each element declares its own contribution (--flow-space) via a class or tag
+ * rule below, so adding a new content type is one line instead of forking every
+ * selector across multiple nesting depths.
+ *
+ * Mobile values come from the token-level overrides in _tokens.scss — this file
+ * has zero media queries for rhythm.
+ *
+ * - var(--section-spacing):    sections (any depth)
+ * - var(--block-spacing):      media blocks + their adjacent siblings
+ * - var(--text-spacing-standard): default stack between related elements
+ * - var(--text-spacing-tight):    after any heading (except before ul)
+ * - var(--nudge):              kicker → heading
  */
+
 body.project-page .page_container > header {
-  margin-bottom: $rhythm-section;
+  margin-bottom: var(--section-spacing);
 
   @media screen and (max-width: 800px) {
-    margin-bottom: 56px;
+    margin-bottom: var(--unit-56);
   }
 }
 
-body.project-page .page_container article > * {
+$a: 'body.project-page .page_container article';
+$flow: ':is(#{$a}, #{$a} section)';
+
+// Zero browser default margins on every rhythm-managed element.
+#{$a} :is(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, figure, section) {
   margin-block: 0;
 }
 
-body.project-page .page_container article .media-full {
-  margin-bottom: 0;
+// Reset inherited --flow-space at each flow-container boundary.
+:where(#{$flow}) > * {
+  --flow-space: initial;
 }
 
-body.project-page .page_container article :is(.media-full, .media-half) {
-  margin-top: 0;
-  margin-bottom: 0;
+// Single flow rule — distributes rhythm at any depth.
+#{$flow} > * + * {
+  margin-top: var(--flow-space, var(--text-spacing-standard));
 }
 
-body.project-page .page_container article > * + * {
-  margin-top: $rhythm-stack;
+// ─────────── Per-element contributions ───────────
+#{$a} {
+  section {
+    --flow-space: var(--section-spacing);
+  }
 
-  @media screen and (max-width: 800px) {
-    margin-top: 32px;
+  .media-block {
+    --flow-space: var(--block-spacing);
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) + * {
+    --flow-space: var(--text-spacing-tight);
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) + .media-block {
+    --flow-space: var(--block-spacing);
+  }
+
+  .media-block + * {
+    --flow-space: var(--block-spacing);
+  }
+
+  // Media stacked on media shares rhythm with the horizontal grid gap.
+  .media-block + .media-block {
+    --flow-space: var(--grid-gap);
+  }
+
+  .media-block + section {
+    --flow-space: var(--section-spacing);
+  }
+
+  .kicker + :is(h1, h2, h3, h4, h5, h6) {
+    --flow-space: var(--unit-4);
   }
 }
 
-body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) + * {
-  margin-top: 16px;
-
-  @media screen and (max-width: 800px) {
-    margin-top: 24px;
-  }
-}
-
-body.project-page .page_container article > * + :is(.media-full, .media-half) {
-  margin-top: $rhythm-section;
-
-  @media screen and (max-width: 800px) {
-    margin-top: 40px;
-  }
-}
-
-body.project-page
-  .page_container
-  article
-  > :is(h1, h2, h3, h4, h5, h6)
-  + :is(.media-full, .media-half) {
-  margin-top: $rhythm-section;
-
-  @media screen and (max-width: 800px) {
-    margin-top: 40px;
-  }
-}
-
-body.project-page .page_container article > :is(.media-full, .media-half)
-  + :is(.media-full, .media-half) {
-  margin-top: $rhythm-stack;
-
-  @media screen and (max-width: 800px) {
-    margin-top: 40px;
-  }
-}
-
-body.project-page
-  .page_container
-  article
-  > :is(.media-full, .media-half)
-  + :is(p, ul, ol, blockquote, h1, h2, h3, h4, h5, h6) {
-  margin-top: calc($rhythm-section - 27.2px);
-
-  @media screen and (max-width: 800px) {
-    margin-top: 40px;
-  }
-}
-
-body.project-page .page_container article > :is(.media-full, .media-half) + * {
-  margin-top: $rhythm-section;
-
-  @media screen and (max-width: 800px) {
-    margin-top: 40px;
-  }
-}
-
-body.project-page .page_container article ul {
+#{$a} ul {
   margin-left: 0;
   margin-right: 0;
-}
 
-body.project-page .page_container article blockquote {
-  margin-bottom: 0;
+  li + li {
+    margin-top: var(--text-spacing-tight);
+  }
 }
 
 /* Extra space before figures that follow a paragraph (non-project pages) */
@@ -130,13 +304,13 @@ body:not(.project-page) p ~ figure {
 /* Project footer — "next project" pivot card + back link */
 #page-permalink-footer {
   width: 100%;
-  padding-bottom: $page-gutter-y;
+  padding-bottom: var(--page-gutter-y);
 }
 
 #page-permalink-footer .footer-content {
   max-width: 540px;
   margin: 0 auto;
-  padding-top: $page-gutter-y;
+  padding-top: var(--page-gutter-y);
 }
 
 #page-permalink-footer .page-nav-buttons {
@@ -176,8 +350,8 @@ body:not(.project-page) p ~ figure {
 }
 
 #page-permalink-footer #pivot .page-title {
-  line-height: $line-height-tight;
-  letter-spacing: $tracking-tight;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 .pages-attachment {

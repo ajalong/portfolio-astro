@@ -1,10 +1,28 @@
 /**
- * Rehype plugin for project markdown:
- * 1. Ensure Cloudinary image/video URLs include f_auto, q_auto, and a width cap.
- * 2. Wrap markdown images in <figure class="media-full"> with <figcaption> from alt.
- * 3. If src is a video (.mp4, .webm, .mov), render <video> instead of <img>.
- * 4. Two consecutive media figures are wrapped in a <section class="media-half"> row.
- *    A single figure remains full-width. More than two is not supported.
+ * Rehype plugin for project markdown.
+ *
+ * Authoring contract:
+ *   - A single markdown image on its own becomes a full-width figure (cols 2–7).
+ *   - Two consecutive markdown images (no blank line between) become a side-by-side
+ *     pair: left image in cols 2–4, right in cols 5–7.
+ *   - Captions (the alt text, or the part before " — " in "Caption — Alt") are
+ *     placed in the page margin: right margin (col 8) for single images and the
+ *     right image of a pair; left margin (col 1) for the left image of a pair.
+ *   - .mp4 / .webm / .mov sources render as autoplaying <video> instead of <img>.
+ *   - Cloudinary URLs are auto-optimised with f_auto, q_auto, and a width cap.
+ *
+ * Emits:
+ *   <div class="media-block">
+ *     <figure class="media-full">…</figure>
+ *     <p class="media-caption media-caption--right">Caption</p>
+ *   </div>
+ *
+ *   <div class="media-block media-block--pair">
+ *     <figure class="media-full">…</figure>
+ *     <figure class="media-full">…</figure>
+ *     <p class="media-caption media-caption--left">Left caption</p>
+ *     <p class="media-caption media-caption--right">Right caption</p>
+ *   </div>
  */
 import { visit } from 'unist-util-visit';
 
@@ -12,16 +30,8 @@ const VIDEO_EXT = /\.(mp4|webm|mov)(\?.*)?$/i;
 const CLOUDINARY_IMAGE_RE = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\//;
 const CLOUDINARY_VIDEO_RE = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/video\/upload\//;
 
-// Known Cloudinary transformation prefixes — used to distinguish transform
-// segments from the public ID. Listing known prefixes avoids false-matching
-// public IDs that happen to contain an underscore.
 const CLOUDINARY_TRANSFORM_PREFIX = /^(?:a|ar|b|bo|c|co|dpr|e|f|fl|g|h|l|o|q|r|t|u|w|x|y|z)_/;
 
-/**
- * Ensure a Cloudinary delivery URL includes baseline optimisation params.
- * Injects f_auto, q_auto:best, and (images only) c_limit,w_1800 when missing.
- * Preserves any existing transformations the author already specified.
- */
 function optimizeCloudinaryUrl(src, isVideo) {
   const re = isVideo ? CLOUDINARY_VIDEO_RE : CLOUDINARY_IMAGE_RE;
   if (!re.test(src)) return src;
@@ -30,11 +40,8 @@ function optimizeCloudinaryUrl(src, isVideo) {
   const rest = src.slice(prefix.length);
   const parts = rest.split('/');
 
-  // Collect leading transform segments and version string (v123456).
-  // Stop as soon as we hit a segment that doesn't look like a known transform.
   const transformSegments = [];
   let publicIdStart = 0;
-
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
     if (CLOUDINARY_TRANSFORM_PREFIX.test(part) || /^v\d+$/.test(part)) {
@@ -46,33 +53,37 @@ function optimizeCloudinaryUrl(src, isVideo) {
   }
 
   const existingParams = transformSegments.join(',');
+  const publicId = parts.slice(publicIdStart).join('/');
+  const isGif = /\.gif$/i.test(publicId);
+
   const missing = [];
   if (!/\bf_auto\b/.test(existingParams)) missing.push('f_auto');
   if (!/\bq_auto\b/.test(existingParams)) missing.push('q_auto:best');
+  // Animated GIFs need fl_animated so Cloudinary preserves animation when
+  // converting to WebP/AVIF via f_auto.
+  if (isGif && !/\bfl_animated\b/.test(existingParams)) missing.push('fl_animated');
   if (!isVideo && !/\b[wc]_\d/.test(existingParams)) missing.push('c_limit', 'w_1800');
 
   if (!missing.length) return src;
 
-  const publicId = parts.slice(publicIdStart).join('/');
   const allTransforms = [...transformSegments, ...missing].filter(Boolean);
   return prefix + allTransforms.join(',') + '/' + publicId;
 }
 
-function buildMediaFigure(img) {
+// Returns { figure, captionText } — caption is placed in the page margin, not inside figure.
+function buildFigure(img) {
   const src = img.properties?.src ?? '';
   const alt = img.properties?.alt ?? '';
   const isVideo = VIDEO_EXT.test(src);
 
-  // Split "Caption — Detailed screen-reader description" on em dash.
-  // Caption goes in <figcaption> (visible); description goes in alt/aria-label.
+  // "Caption — Detailed description": caption → margin, description → alt/aria-label.
   const separatorIdx = alt.indexOf(' — ');
-  const caption = separatorIdx !== -1 ? alt.slice(0, separatorIdx) : alt;
+  const captionText = separatorIdx !== -1 ? alt.slice(0, separatorIdx) : alt;
   const altText = separatorIdx !== -1 ? alt.slice(separatorIdx + 3) : alt;
 
-  const figureChildren = [];
-
+  let mediaChild;
   if (isVideo) {
-    figureChildren.push({
+    mediaChild = {
       type: 'element',
       tagName: 'video',
       properties: {
@@ -84,9 +95,9 @@ function buildMediaFigure(img) {
         'aria-label': altText || undefined,
       },
       children: [],
-    });
+    };
   } else {
-    figureChildren.push({
+    mediaChild = {
       ...img,
       properties: {
         ...img.properties,
@@ -94,126 +105,133 @@ function buildMediaFigure(img) {
         alt: altText,
         draggable: false,
       },
-    });
-  }
-
-  if (caption) {
-    figureChildren.push({
-      type: 'element',
-      tagName: 'figcaption',
-      children: [{ type: 'text', value: caption }],
-    });
+    };
   }
 
   return {
-    type: 'element',
-    tagName: 'figure',
-    properties: { className: ['media-full'] },
-    children: figureChildren,
+    figure: {
+      type: 'element',
+      tagName: 'figure',
+      properties: { className: ['media-full'] },
+      children: [mediaChild],
+    },
+    captionText: captionText || null,
   };
 }
 
-function isMediaFigure(node) {
-  return (
-    node.type === 'element' &&
-    node.tagName === 'figure' &&
-    Array.isArray(node.properties?.className) &&
-    node.properties.className.includes('media-full')
-  );
+function makeCaptionEl(text, side) {
+  const cls = side ? ['media-caption', `media-caption--${side}`] : ['media-caption'];
+  return {
+    type: 'element',
+    tagName: 'p',
+    properties: { className: cls },
+    children: [{ type: 'text', value: text }],
+  };
 }
 
-function isWhitespace(node) {
-  return node.type === 'text' && /^\s*$/.test(node.value ?? '');
+// Caption for a pair where the side ("Left"/"Right") is rendered as a
+// separately-classed prefix span so CSS can hide it on mobile (where the
+// caption already sits beneath its image and the prefix is redundant).
+function makePairCaptionEl(sideLabel, text) {
+  return {
+    type: 'element',
+    tagName: 'p',
+    properties: { className: ['media-caption'] },
+    children: [
+      {
+        type: 'element',
+        tagName: 'span',
+        properties: { className: ['media-caption__side'] },
+        children: [{ type: 'text', value: `(${sideLabel}) ` }],
+      },
+      { type: 'text', value: text },
+    ],
+  };
+}
+
+// Wraps multiple caption <p>s in a single grid item so they occupy one cell
+// in col 8 and can bottom-align as a group.
+function makeCaptionGroup(captionEls) {
+  return {
+    type: 'element',
+    tagName: 'div',
+    properties: { className: ['media-caption-group'] },
+    children: captionEls,
+  };
+}
+
+function makeMediaBlock(figures, captions, isPair) {
+  return {
+    type: 'element',
+    tagName: 'div',
+    properties: { className: isPair ? ['media-block', 'media-block--pair'] : ['media-block'] },
+    children: [...figures, ...captions],
+  };
+}
+
+// An "image paragraph": <p> containing only <img>s (any whitespace between).
+function imageParagraphImgs(node) {
+  if (node.type !== 'element' || node.tagName !== 'p') return null;
+  const kids = node.children ?? [];
+  const imgs = kids.filter((c) => c.type === 'element' && c.tagName === 'img');
+  if (!imgs.length) return null;
+  const allImgs = kids.every(
+    (c) =>
+      (c.type === 'element' && c.tagName === 'img') ||
+      (c.type === 'text' && /^\s*$/.test(c.value ?? '')),
+  );
+  return allImgs ? imgs : null;
 }
 
 export default function rehypeProjectMedia() {
   return (tree) => {
-    // Pass 1: transform image-only <p> nodes into media figures.
-    visit(tree, 'element', (node) => {
-      if (node.tagName !== 'p') return;
-
-      const elementChildren = (node.children ?? []).filter((c) => c.type === 'element');
-      if (!elementChildren.length) return;
-      if (!elementChildren.every((c) => c.tagName === 'img')) return;
-      if ((node.children ?? []).some((c) => c.type === 'text' && !/^\s*$/.test(c.value ?? ''))) return;
-
-      const figures = elementChildren.map(buildMediaFigure);
-
-      if (figures.length === 1) {
-        Object.assign(node, figures[0]);
-      } else {
-        // Two images: side-by-side columns. More than two is not supported.
-        node.tagName = 'section';
-        node.properties = { className: ['media-half'] };
-        node.children = figures.map((fig) => ({
-          type: 'element',
-          tagName: 'div',
-          properties: {},
-          children: [fig],
-        }));
-      }
-    });
-
-    // Pass 2: group pairs of consecutive sibling figures into media-half rows.
-    // This handles the case where two separate single-image paragraphs sit
-    // adjacent in the markdown (each becomes a figure after Pass 1).
-    visit(tree, 'element', (node) => {
+    const processChildren = (node) => {
       if (!Array.isArray(node.children)) return;
 
       const next = [];
       let i = 0;
+      const n = node.children.length;
 
-      while (i < node.children.length) {
+      while (i < n) {
         const child = node.children[i];
+        const imgs = imageParagraphImgs(child);
 
-        if (!isMediaFigure(child) && !isWhitespace(child)) {
+        if (!imgs) {
           next.push(child);
           i++;
           continue;
         }
 
-        // Skip leading whitespace.
-        while (i < node.children.length && isWhitespace(node.children[i])) i++;
-
-        // Collect a run of consecutive figures (ignoring whitespace between them).
-        const run = [];
-        while (i < node.children.length) {
-          if (isMediaFigure(node.children[i])) {
-            run.push(node.children[i]);
-            i++;
-          } else if (isWhitespace(node.children[i])) {
-            i++;
-          } else {
-            break;
-          }
-        }
-
-        if (!run.length) continue;
-
-        if (run.length === 1) {
-          next.push(run[0]);
+        if (imgs.length === 1) {
+          const { figure, captionText } = buildFigure(imgs[0]);
+          const captions = captionText ? [makeCaptionEl(captionText, 'right')] : [];
+          next.push(makeMediaBlock([figure], captions, false));
         } else {
-          // Two figures: side-by-side. Emit as media-half, then continue with
-          // any remainder as individual full-width figures.
-          next.push({
-            type: 'element',
-            tagName: 'section',
-            properties: { className: ['media-half'] },
-            children: run.slice(0, 2).map((fig) => ({
-              type: 'element',
-              tagName: 'div',
-              properties: {},
-              children: [fig],
-            })),
-          });
-          // Any figures beyond the first two get emitted individually.
-          for (let j = 2; j < run.length; j++) {
-            next.push(run[j]);
+          // 2+ images in same paragraph → pairs; odd trailing → full-width.
+          for (let k = 0; k < imgs.length; k += 2) {
+            const left = buildFigure(imgs[k]);
+            const rightImg = imgs[k + 1];
+            if (!rightImg) {
+              const captions = left.captionText ? [makeCaptionEl(left.captionText, 'right')] : [];
+              next.push(makeMediaBlock([left.figure], captions, false));
+            } else {
+              const right = buildFigure(rightImg);
+              const innerCaptions = [
+                ...(left.captionText ? [makePairCaptionEl('Left', left.captionText)] : []),
+                ...(right.captionText ? [makePairCaptionEl('Right', right.captionText)] : []),
+              ];
+              const captions = innerCaptions.length ? [makeCaptionGroup(innerCaptions)] : [];
+              next.push(makeMediaBlock([left.figure, right.figure], captions, true));
+            }
           }
         }
+        i++;
       }
 
       node.children = next;
-    });
+    };
+
+    processChildren(tree);
+    visit(tree, 'element', processChildren);
   };
 }

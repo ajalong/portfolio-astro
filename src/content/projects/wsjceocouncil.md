@@ -6,6 +6,8 @@ summary: How do you engage top business leaders when you can't host them in pers
 metaDescription: I designed and built a virtual event platform for the Wall Street Journal's CEO Council — an exclusive forum for senior business leaders — for Cheerful Twentyfirst, delivering on a tight deadline during COVID-19.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/WSJ/wsj-thumbnail.jpg
 order: 2
+year: 2021
+sector: Virtual Event
 team:
   - name: Alan Long
     role: UX/UI Designer & Front-end Developer

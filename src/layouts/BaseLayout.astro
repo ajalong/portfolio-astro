@@ -134,7 +134,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
         initButtonBorderRings();
 
         document.querySelectorAll<HTMLImageElement>(
-          '.media-full img, .media-half img, .media-thirds img, .media-four img, .media-five img, .thumbnail img'
+          '.media-full img, .media-half img, .thumbnail img'
         ).forEach((img) => {
           if (img.complete) {
             img.classList.add('is-loaded');

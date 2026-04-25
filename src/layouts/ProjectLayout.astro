@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import ProjectTeamPanel from '../components/ProjectTeamPanel.astro';
 import ProjectNavbar from '../components/ProjectNavbar.astro';
+import ProjectSectionIndex from '../components/ProjectSectionIndex.astro';
 
 interface PivotProps {
   href: string;
@@ -18,6 +19,11 @@ interface TeamMember {
   description?: string;
 }
 
+interface SectionIndexEntry {
+  id: string;
+  label: string;
+}
+
 interface Props {
   title: string;
   client: string;
@@ -26,13 +32,18 @@ interface Props {
   url?: string;
   pivot?: PivotProps;
   team?: TeamMember[];
+  year?: number;
+  sector?: string;
+  sectionIndex?: SectionIndexEntry[];
 }
 
-const { title, client, description, image, url, pivot, team } = Astro.props as Props;
+const { title, client, description, image, url, pivot, team, year, sector, sectionIndex } = Astro.props as Props;
+const clientWithYear = [client, year].filter(Boolean).join(' – ');
 const showTeamPanel = team && team.length > 0;
+const showSectionIndex = sectionIndex && sectionIndex.length > 0;
 ---
 <BaseLayout {title} description={description} {image} url={url} bodyClass="project-page">
-  <ProjectNavbar internalEntryOnly />
+  {!showSectionIndex && <ProjectNavbar internalEntryOnly />}
   <div class="page_container">
     <header>
       <div class="profile-header">
@@ -40,10 +51,11 @@ const showTeamPanel = team && team.length > 0;
           <div class="display-name">
             <h1>{title}</h1>
           </div>
-          <p>{client}</p>
+          <p>{clientWithYear}</p>
         </div>
       </div>
     </header>
+    {showSectionIndex && <ProjectSectionIndex sections={sectionIndex} />}
     <main>
       {showTeamPanel && <ProjectTeamPanel team={team} />}
       <slot />
@@ -71,7 +83,7 @@ const showTeamPanel = team && team.length > 0;
         )}
         <div class="page-nav-buttons">
           <div>
-            <a href="/">Back to alanlong.design</a>
+            <a href="/">See all work</a>
           </div>
         </div>
       </div>
@@ -79,8 +91,12 @@ const showTeamPanel = team && team.length > 0;
   </div>
   <script>
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
+    import { initCaptionFade } from '../scripts/caption-fade';
+    import { initMediaAutoplay } from '../scripts/media-autoplay';
     document.addEventListener('astro:page-load', () => {
       initProjectNavFromInternal();
+      initCaptionFade();
+      initMediaAutoplay();
     });
   </script>
 </BaseLayout>

@@ -26,7 +26,7 @@ interface Props {
 
 const { project, nextProject } = Astro.props as Props;
 
-const { title, client, metaDescription, thumbnailImage } = project.data;
+const { title, client, metaDescription, thumbnailImage, year, sector } = project.data;
 
 const pivot =
   nextProject.slug !== project.slug
@@ -41,14 +41,32 @@ const pivot =
     : undefined;
 
 const { Content } = await project.render();
+
+// Section-index overlay is opt-in per project. Only gsk uses it for now.
+const sectionIndex =
+  project.slug === 'gsk'
+    ? [
+        { id: 'my-role', label: 'My role' },
+        { id: 'context', label: 'Context' },
+        { id: 'problem', label: 'Problem' },
+        { id: 'research', label: 'Research & strategy' },
+        { id: 'ux', label: 'System architecture' },
+        { id: 'implementation', label: 'Implementation' },
+        { id: 'impact', label: 'Impact' },
+        { id: 'lessons', label: 'Lessons learned' },
+      ]
+    : undefined;
 ---
 <ProjectLayout
   title={title}
   client={client}
   description={metaDescription}
   image={thumbnailImage}
+  year={year}
+  sector={sector}
   team={project.data.team}
   {pivot}
+  {sectionIndex}
 >
   <article>
     <Content />

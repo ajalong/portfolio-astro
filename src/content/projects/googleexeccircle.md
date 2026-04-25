@@ -6,6 +6,8 @@ summary: How do you build relationships with your business partners during a pan
 metaDescription: I designed and built the Google Exec Circle platform for Cheerful Twentyfirst — a digital experience helping Google build and maintain relationships with senior business partners during the COVID-19 pandemic.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/google/google-thumbnail_alt
 order: 4
+year: 2021
+sector: Virtual Event
 team:
   - name: Alan Long
     role: UX/UI Designer & Front-end Developer
@@ -50,39 +52,24 @@ Google Exec Circle was a weekly webinar series launched as a response to the COV
 
 ![Animation showing the Welcome page (landing page) of the site — Full-bleed hero, headline, primary CTA and content blocks animating into view.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/google/exec-welcome_cqegak.mp4)
 
-<section class="media-half">
-  <div>
-
 ![Lower half of welcome page](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_welcome_lower-1-1_yslqdt.png)
-
-  </div>
-  <div>
 
 ![Upcoming event cards](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_next-event-cards_1-1_yp2fyt.png)
 
-  </div>
-</section>
-
 The events were a collaboration with [Stanford's Graduate School of Business](https://www.gsb.stanford.edu/), whose pre‑eminent academics led the sessions. I designed and led the front‑end development of the platform at the centre of this event series.
 
-The platform needed to:
+<p class="kicker">The platform</p>
 
-- Facilitate the formation and strengthening of this network of business leaders and academics.
-- Support the events with pre-event content to drive engagement and post-event content to keep the conversation going.
+<ul class="callout-grid cols-2">
+  <li class="callout-card"><strong>Facilitate</strong> the formation and strengthening of this network of business leaders and academics.</li>
+  <li class="callout-card"><strong>Support the events</strong> with pre-event content to drive engagement and post-event content to keep the conversation going.</li>
+</ul>
 
 ![Menu variants](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_menu_16-9_syspyu.png)
 
-<section class="media-half">
-  <div>
-
 ![Lower half of Calendar page](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_calendar_1-1_uzx9ym.png)
-  </div>
-  <div>
 
 ![Section of Resources page](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/google/Google-exec_resources_1-1_m1anjw.png)
-
-  </div>
-</section>
 
 Of the invited executives, **72% accessed** the platform at least once. Of those who did, on average they **viewed >7 resources** each. Most impressively, the webinar series received an **overall rating of 4.9/5**.
 

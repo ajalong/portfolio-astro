@@ -1,0 +1,79 @@
+// Callout grid — post-it style cards in a three-column grid.
+// Usage in markdown: <ul class="callout-grid"><li class="callout-card">…</li></ul>
+@use "tokens" as *;
+
+// Size of the dog-ear fold — driven by --unit-40 (40px)
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--text-spacing-standard);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+
+  @media screen and (max-width: 800px) {
+    grid-template-columns: 1fr;
+    gap: var(--text-spacing-tight);
+  }
+
+  &.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.callout-card {
+  aspect-ratio: 1;
+  position: relative;
+  // isolation: isolate ensures ::before and ::after (z-index: -1) sit behind the
+  // card's text content but above the page background — without a stacking context
+  // the negative z-index would punch through the card entirely.
+  isolation: isolate;
+  padding: var(--text-spacing-standard);
+  font-size: var(--type-size);
+  line-height: var(--line-height);
+  color: var(--text-primary);
+
+  // Card surface — background + border live here so clip-path cuts the corner
+  // cleanly including the border line, without affecting the text content layer.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--buttonBackground);
+    border: var(--button-rim-width) solid var(--buttonBorder);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - var(--unit-40)),
+      calc(100% - var(--unit-40)) 100%,
+      0 100%
+    );
+    z-index: -1;
+  }
+
+  // Fold shadow — subtle darkened triangle sitting in the cut corner,
+  // suggesting the paper flap curling behind.
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: var(--unit-40);
+    height: var(--unit-40);
+    // 135deg = top-left → bottom-right: shadow fills the top-left triangle
+    // (the fold face), transparent in the bottom-right (page bg shows through).
+    background: linear-gradient(
+      135deg,
+      var(--secondaryBorderColor) 50%,
+      transparent 50%
+    );
+    z-index: -1;
+  }
+
+  strong {
+    color: var(--text-primary);
+    font-weight: var(--weight-medium);
+  }
+}

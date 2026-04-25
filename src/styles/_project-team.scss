@@ -3,10 +3,14 @@
 @use "rim" as *;
 
 .project-team-toolbar {
-  margin-bottom: $rhythm-section;
+  margin-bottom: var(--section-spacing);
 
   @media screen and (max-width: 800px) {
-    margin-bottom: 40px;
+    margin-bottom: var(--unit-40);
+  }
+
+  .kicker {
+    margin-bottom: var(--unit-4);
   }
 }
 
@@ -31,7 +35,7 @@
 
 .my-role-heading {
   max-width: none;
-  margin: 0 0 16px;
+  margin: 0 0 var(--text-spacing-standard);
   font-size: var(--type-size-lg);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);

@@ -6,6 +6,8 @@ summary: Redesigning Mercedes-Benz’s ad analytics platform to fix navigation, 
 metaDescription: Working with Interbrand, I helped overhaul Mercedes-Benz’s ad analytics platform, addressing pain points in navigation, onboarding and data visualisation through research, design sprints and collaboration with their UX team.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/Mercedes/mercedes-thumbnail.jpg
 order: 3
+year: 2025
+sector: UX Overhaul
 team:
   - name: Alan Long
     role: UX/UI Designer

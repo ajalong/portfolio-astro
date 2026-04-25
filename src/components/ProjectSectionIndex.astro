@@ -1,0 +1,59 @@
+---
+/**
+ * Sticky jump-to-section navigator shown on project pages that opt in.
+ *
+ * Each entry links to an `id` on a section within the article. Active-state
+ * tracking is handled in project-section-index.ts via IntersectionObserver.
+ */
+
+interface SectionEntry {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  sections: SectionEntry[];
+}
+
+const { sections } = Astro.props as Props;
+// "/project/gsk" → "alanlong.design/gsk"
+const slug = Astro.url.pathname.replace(/^\/project\//, '');
+const displayUrl = `alanlong.design/${slug}`;
+---
+
+{sections && sections.length > 0 && (
+  <nav
+    class="project-section-index"
+    aria-label="Case study sections"
+    data-project-section-index
+  >
+    <div class="project-section-index__group">
+      <span class="project-section-index__permalink">{displayUrl}</span>
+      <a class="project-section-index__back" href="/">See all work</a>
+    </div>
+    <div class="project-section-index__group">
+      {sections.map((s) => (
+        <a
+          class="project-section-index__link"
+          href={`#${s.id}`}
+          data-section-id={s.id}
+          data-label={s.label}
+        >
+          {s.label}
+        </a>
+      ))}
+    </div>
+    <div class="project-section-index__group project-section-index__contact">
+      <a class="project-section-index__contact-link" href="/Alan-Long-Resume-2026.pdf" target="_blank" rel="noopener noreferrer">Resume-2026.pdf</a>
+      <a class="project-section-index__contact-link" href="mailto:alan@ajalong.com">alan@ajalong.com</a>
+    </div>
+  </nav>
+)}
+
+<script>
+  import { initProjectSectionIndex } from '../scripts/project-section-index';
+
+  document.addEventListener('astro:page-load', () => {
+    initProjectSectionIndex();
+  });
+</script>

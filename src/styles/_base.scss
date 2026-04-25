@@ -14,8 +14,6 @@ body {
   isolation: isolate;
   background-color: transparent;
   min-height: 100vh;
-  max-width: 1320px;
-  margin: 0 auto;
   font-family: var(--font-sans);
   font-size: var(--type-size);
   line-height: var(--line-height);
@@ -30,11 +28,21 @@ section {
 
 h2,
 h3,
-p,
-ul,
 blockquote {
+  font-size: var(--type-size-lg);
   font-weight: 400;
   max-width: 600px;
+}
+
+p,
+ul {
+  max-width: 600px;
+}
+
+.testimonial-attr {
+  font-size: var(--type-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
 }
 
 /* Case-study titles in article use project-page rhythm below; other .page_container h2 keep chunk spacing */
@@ -66,6 +74,19 @@ h6 {
 
 p {
   color: var(--text-secondary);
+}
+
+/*
+ * Kicker — small accent label placed immediately before a heading.
+ * Semantic pattern: <p class="kicker">Label</p> followed by <h2/h3/…>
+ * Keep as a <p> so screen readers announce it as separate text before the heading,
+ * preserving the heading hierarchy without merging the strings.
+ */
+.kicker {
+  font-size: var(--type-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-accent);
+  text-transform: uppercase;
 }
 
 :is(p, blockquote, .page_container article li) {
@@ -184,5 +205,9 @@ header {
     line-height: var(--line-height-tight);
     letter-spacing: var(--tracking-tight);
     color: var(--text-secondary);
+  }
+
+  p.project-meta {
+    margin-top: 0;
   }
 }

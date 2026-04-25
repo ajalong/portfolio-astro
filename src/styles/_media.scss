@@ -1,13 +1,19 @@
-// Media blocks — figure.media-full and .media-half two-column grid.
-// Supports: single full-width figures and two-column side-by-side rows.
+// Media figures and margin captions.
+//
+// figure.media-full  — single media item; column placement handled by _project-layout.scss
+// .media-block       — wrapper for one or two figures + their margin captions
+// .media-block--pair — two-image row
+// .media-caption     — placed in col 1 (left) or col 8 (right) of the page grid
 @use "tokens" as *;
 
-figure.media-full > :first-child {
-  background-color: var(--white1);
-}
+figure.media-full {
+  margin: 0;
+  min-width: 0;
 
-.media-full,
-.media-half > div {
+  > :first-child {
+    background-color: var(--white1);
+  }
+
   img,
   video {
     width: 100%;
@@ -23,30 +29,20 @@ figure.media-full > :first-child {
   video[autoplay] {
     opacity: 1;
   }
-
-  figcaption {
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-top: 8px;
-  }
 }
 
-.media-full {
-  margin-bottom: $rhythm-stack;
+// Margin captions — mobile: flow below images as normal text.
+.media-caption {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: var(--grid-gap);
 }
 
-.media-half > div {
-  margin-bottom: $rhythm-stack;
-  min-width: 0;
-  width: 100%;
-}
-
-.media-half {
-  margin: $rhythm-stack 0;
-
-  @media screen and (min-width: 801px) {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+// Pair stacks vertically on mobile; side-by-side layout is desktop-only (via subgrid).
+@media screen and (max-width: 800px) {
+  .media-block--pair {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gap);
   }
 }

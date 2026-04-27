@@ -26,7 +26,7 @@ figure.media-full {
     }
   }
 
-  video[autoplay] {
+  video[data-autoplay-on-view] {
     opacity: 1;
   }
 }

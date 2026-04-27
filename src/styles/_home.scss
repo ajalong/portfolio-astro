@@ -1,110 +1,148 @@
-// Home page layout — two-column fixed/scrolling split.
+// Home page layout — 6-col grid mirroring the project pages.
+//
+// Cols 1     : left margin
+// Cols 2–5   : header (h1 + intro) and project list
+// Col 6      : sticky section-index nav (HomeSectionIndex)
+//
+// Mobile (≤800px): the grid collapses to a single stacked column. The
+// sticky nav's first two groups (the "alanlong.design / Portfolio" header
+// and the project jump-links) are hidden — visitors scroll directly through
+// the cards. The contact + social groups stay visible inline at the bottom.
 @use "tokens" as *;
+@use "rim" as *;
 
+// Reset the body chrome shared with project pages.
 body.home {
   max-width: none;
   margin: 0;
-  padding: 0 96px;
-
-  @media screen and (max-width: 1280px) {
-    padding: 0 48px;
-  }
-
-  @media screen and (max-width: 800px) {
-    padding: 0 14px;
-  }
-
-  section {
-    margin-top: 60px;
-    margin-bottom: 0;
-
-    @media screen and (max-width: 800px) {
-      margin-top: 40px;
-    }
-  }
-}
-
-body.project-page {
   padding: 0;
 }
 
-body main {
+body.home main {
   margin: 0;
 }
 
-@media screen and (max-width: 800px) {
-  body main {
-    margin: 14px 0;
+// Page container — same gutters as project pages so the visual rhythm matches.
+body.home .page_container {
+  padding: var(--page-gutter-y) var(--page-gutter-x) var(--unit-88);
+}
+
+@media screen and (min-width: 801px) {
+  body.home .page_container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--grid-gap);
   }
 
-  body.home main {
-    margin: 80px 0 60px;
+  // Header sits in the main content area (cols 2–5), row 1.
+  body.home .page_container > header {
+    grid-column: 2 / 6;
+    grid-row: 1;
+  }
+
+  // Project list spans the same content area, row 2.
+  body.home .page_container > main {
+    grid-column: 2 / 6;
+    grid-row: 2;
+  }
+
+  // Sticky nav lives in col 6, spanning both rows so it lines up with the
+  // header at the top of the page.
+  body.home .page_container > .project-section-index {
+    grid-column: 6;
+    grid-row: 1 / -1;
+    align-self: start;
+    z-index: 10;
   }
 }
 
-/* Fixed left column — bio + CTA */
-.left {
-  position: fixed;
-  width: calc(50% - 96px - 24px);
-  max-width: 515px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-top: 96px;
-  padding-bottom: 96px;
-  overflow: visible;
+// ─────────── Header ───────────
 
-  @media screen and (max-width: 1280px) {
-    width: calc(50% - 48px - 24px);
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
+body.home header {
+  // Match the section-spacing rhythm used between project sections.
+  padding-bottom: var(--section-spacing);
 
   @media screen and (max-width: 800px) {
-    position: static;
-    width: 100%;
-    height: fit-content;
-    margin-bottom: 56px;
-    padding-top: 0;
     padding-bottom: 0;
   }
 }
 
-.about {
+body.home .profile-info h1 {
+  margin: 0;
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+}
+
+body.home .profile-info p {
+  margin: 0;
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  color: var(--text-secondary);
+}
+
+body.home .about {
+  margin-top: var(--unit-32);
+
   p {
     margin: 0;
-    font-size: var(--type-size-lg);
+    max-width: 38ch;
+    font-size: var(--type-size);
     font-weight: var(--weight-regular);
-    line-height: 1.65;
+    line-height: var(--line-height);
     color: var(--text-primary);
-    letter-spacing: var(--tracking-tight);
+  }
+
+  a {
+    @include link-underline-zip;
   }
 }
 
-/* Scrolling right column — project cards */
-.right {
-  position: relative;
-  top: 0;
-  left: calc(50% + 24px);
-  width: calc(50% - 24px);
+// ─────────── Project list ───────────
+
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  // Override the global `p, ul { max-width: 600px }` in _base.scss so the
+  // list fills its grid cell (cols 2–5) instead of capping at 600px.
+  max-width: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 96px;
-  padding-bottom: 96px;
+  gap: var(--grid-gap);
 
-  @media screen and (max-width: 1280px) {
-    padding-top: 48px;
-    padding-bottom: 48px;
+  > li {
+    margin: 0;
+    // Pull jump-target offsets down from the top of the viewport so the
+    // active card doesn't sit flush against the page-fade.
+    scroll-margin-top: var(--page-gutter-y);
+  }
+}
+
+// ─────────── Mobile ───────────
+
+@media screen and (max-width: 800px) {
+  body.home .page_container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-40);
   }
 
-  @media screen and (max-width: 800px) {
-    position: relative;
-    width: 100%;
-    left: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    gap: 14px;
+  // Override the desktop hide rule from _project-section-index.scss: at
+  // mobile we keep the contact + social groups visible inline.
+  body.home .project-section-index {
+    display: flex;
+    position: static;
+    padding-left: 0;
+  }
+
+  // Hide groups 1 (heading) and 2 (project jump-links) on mobile.
+  // Group 2's left-rail indicator goes with it via the same selector.
+  body.home .project-section-index__group:nth-child(1),
+  body.home .project-section-index__group:nth-child(2) {
+    display: none;
   }
 }

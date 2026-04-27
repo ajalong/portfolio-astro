@@ -3,13 +3,16 @@ import BaseLayout from './BaseLayout.astro';
 import ProjectTeamPanel from '../components/ProjectTeamPanel.astro';
 import ProjectNavbar from '../components/ProjectNavbar.astro';
 import ProjectSectionIndex from '../components/ProjectSectionIndex.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 
-interface PivotProps {
+interface NextProjectCard {
   href: string;
   title: string;
-  snippet: string;
-  thumbnailSrc?: string;
-  thumbnailAlt?: string;
+  client: string;
+  summary: string;
+  thumbnailSrc: string;
+  thumbnailVideo?: string;
+  thumbnailAlt: string;
 }
 
 interface TeamMember {
@@ -30,14 +33,14 @@ interface Props {
   description: string;
   image?: string;
   url?: string;
-  pivot?: PivotProps;
+  otherWork?: NextProjectCard[];
   team?: TeamMember[];
   year?: number;
   sector?: string;
   sectionIndex?: SectionIndexEntry[];
 }
 
-const { title, client, description, image, url, pivot, team, year, sector, sectionIndex } = Astro.props as Props;
+const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex } = Astro.props as Props;
 const clientWithYear = [client, year].filter(Boolean).join(' – ');
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
@@ -62,24 +65,23 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     </main>
     <footer id="page-permalink-footer">
       <div class="footer-content">
-        {pivot && (
-          <div id="pivot">
-            <div class="pivot-link">
-              <a href={pivot.href}>
-                <div class="pages-attachment">
-                  {pivot.thumbnailSrc && (
-                    <div class="pages-thumbnail">
-                      <img src={pivot.thumbnailSrc} alt={pivot.thumbnailAlt ?? ''} />
-                    </div>
-                  )}
-                  <div class="page-info">
-                    <div class="page-title">{pivot.title}</div>
-                    <div class="snippet">{pivot.snippet}</div>
-                  </div>
-                </div>
-              </a>
+        {otherWork && otherWork.length > 0 && (
+          <section class="other-work" aria-label="Other work">
+            <p class="kicker">Other work</p>
+            <div class="other-work__grid">
+              {otherWork.map((p) => (
+                <ProjectCard
+                  href={p.href}
+                  thumbnailSrc={p.thumbnailSrc}
+                  thumbnailVideo={p.thumbnailVideo}
+                  thumbnailAlt={p.thumbnailAlt}
+                  projectTitle={p.title}
+                  client={p.client}
+                  summary={p.summary}
+                />
+              ))}
             </div>
-          </div>
+          </section>
         )}
         <div class="page-nav-buttons">
           <div>
@@ -92,11 +94,10 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
   <script>
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
     import { initCaptionFade } from '../scripts/caption-fade';
-    import { initMediaAutoplay } from '../scripts/media-autoplay';
+    // initMediaAutoplay moved to BaseLayout so home thumbnails benefit too.
     document.addEventListener('astro:page-load', () => {
       initProjectNavFromInternal();
       initCaptionFade();
-      initMediaAutoplay();
     });
   </script>
 </BaseLayout>

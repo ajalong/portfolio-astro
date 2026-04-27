@@ -11,51 +11,113 @@ export async function getStaticPaths() {
   const sorted = [...published].sort((a, b) => a.data.order - b.data.order);
 
   return sorted.map((project, i) => {
-    const next = sorted[(i + 1) % sorted.length];
+    const otherWork = [
+      sorted[(i + 1) % sorted.length],
+      sorted[(i + 2) % sorted.length],
+    ].filter((p, idx, arr) => p.slug !== project.slug && arr.findIndex((x) => x.slug === p.slug) === idx);
     return {
       params: { slug: project.slug },
-      props: { project, nextProject: next },
+      props: { project, otherWork },
     };
   });
 }
 
 interface Props {
   project: ProjectEntry;
-  nextProject: ProjectEntry;
+  otherWork: ProjectEntry[];
 }
 
-const { project, nextProject } = Astro.props as Props;
+const { project, otherWork } = Astro.props as Props;
 
 const { title, client, metaDescription, thumbnailImage, year, sector } = project.data;
 
-const pivot =
-  nextProject.slug !== project.slug
-    ? {
-        href: `/project/${nextProject.slug}`,
-        title: nextProject.data.title,
-        snippet: nextProject.data.summary,
-        thumbnailSrc: nextProject.data.thumbnailImage,
-        thumbnailAlt:
-          PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? `Next project: ${nextProject.data.title}`,
-      }
-    : undefined;
+const otherWorkCards = otherWork.map((p) => ({
+  href: `/project/${p.slug}`,
+  title: p.data.title,
+  client: p.data.client,
+  summary: p.data.summary,
+  thumbnailSrc: p.data.thumbnailImage,
+  thumbnailVideo: p.data.thumbnailVideo,
+  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[p.slug] ?? p.data.title,
+}));
 
 const { Content } = await project.render();
 
-// Section-index overlay is opt-in per project. Only gsk uses it for now.
-const sectionIndex =
-  project.slug === 'gsk'
-    ? [
-        { id: 'my-role', label: 'My role' },
-        { id: 'context', label: 'Context' },
-        { id: 'problem', label: 'Problem' },
-        { id: 'research', label: 'Research & strategy' },
-        { id: 'ux', label: 'System architecture' },
-        { id: 'implementation', label: 'Implementation' },
-        { id: 'impact', label: 'Impact' },
-        { id: 'lessons', label: 'Lessons learned' },
-      ]
-    : undefined;
+// Section index is auto-derived from the markdown body. Each italic-only
+// paragraph (`_Kicker_`) immediately followed by a heading (`##` or `###`)
+// becomes a nav entry — the kicker is both the label and (slugified) the id.
+// h2 sections are top-level; h3 sections nest under the most recent h2.
+//
+// The "My role" panel is rendered by ProjectLayout from the `team` frontmatter
+// (not from markdown), so it's auto-prepended when team data exists.
+type SectionEntry = { id: string; label: string; children?: SectionEntry[] };
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[''']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+function parseSectionIndex(body: string, hasTeam: boolean): SectionEntry[] | undefined {
+  // Two authoring forms are supported during migration:
+  //   New (preferred): `_Kicker_` italic line followed by `##`/`###` heading.
+  //   Legacy:          `<section id="…" data-parent="…"> <p class="kicker">…</p>`.
+  // Walk the body in document order matching either, so nav order is preserved.
+  const flat: Array<{ id: string; label: string; parent?: string }> = [];
+  let lastTopId: string | undefined;
+
+  const newRe = /^_([^_\n]+)_\s*\n+(#{2,3})\s+/gm;
+  const legacyRe = /<section\s+([^>]+)>\s*\n+\s*<p class="kicker">([^<]+)<\/p>/g;
+
+  type Hit = { idx: number; id: string; label: string; depth: 2 | 3; parentAttr?: string };
+  const hits: Hit[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = newRe.exec(body))) {
+    const label = m[1].trim();
+    hits.push({
+      idx: m.index,
+      id: slugify(label),
+      label,
+      depth: m[2].length === 3 ? 3 : 2,
+    });
+  }
+  while ((m = legacyRe.exec(body))) {
+    const attrs = m[1];
+    const id = attrs.match(/id="([^"]+)"/)?.[1];
+    if (!id) continue;
+    hits.push({
+      idx: m.index,
+      id,
+      label: m[2].trim(),
+      depth: attrs.includes('data-parent=') ? 3 : 2,
+      parentAttr: attrs.match(/data-parent="([^"]+)"/)?.[1],
+    });
+  }
+  hits.sort((a, b) => a.idx - b.idx);
+  for (const h of hits) {
+    const parent = h.parentAttr ?? (h.depth === 3 ? lastTopId : undefined);
+    flat.push({ id: h.id, label: h.label, parent });
+    if (h.depth === 2) lastTopId = h.id;
+  }
+  if (flat.length < 2) return undefined;
+  const byId = new Map<string, SectionEntry>(
+    flat.map((s) => [s.id, { id: s.id, label: s.label }])
+  );
+  const roots: SectionEntry[] = [];
+  for (const s of flat) {
+    const node = byId.get(s.id)!;
+    if (s.parent && byId.has(s.parent)) {
+      const parent = byId.get(s.parent)!;
+      (parent.children ??= []).push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+  if (hasTeam) roots.unshift({ id: 'my-role', label: 'My role' });
+  return roots;
+}
+const sectionIndex = parseSectionIndex(project.body, !!project.data.team?.length);
 ---
 <ProjectLayout
   title={title}
@@ -65,7 +127,7 @@ const sectionIndex =
   year={year}
   sector={sector}
   team={project.data.team}
-  {pivot}
+  otherWork={otherWorkCards}
   {sectionIndex}
 >
   <article>

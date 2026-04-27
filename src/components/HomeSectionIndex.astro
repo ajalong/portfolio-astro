@@ -1,0 +1,96 @@
+---
+/**
+ * Home page sticky nav — jump-to-project + contact + social links.
+ *
+ * Mirrors ProjectSectionIndex's structure and reuses the same CSS classes
+ * (`.project-section-index*`) and JS (`initProjectSectionIndex`). The only
+ * differences from a project page nav:
+ *
+ *  - Group 1's second line is plain text (e.g. "Updated April 2026") rather
+ *    than a "See all work" back link.
+ *  - Group 2's jump links target project cards instead of article sections.
+ *  - Group 4 adds LinkedIn / Dribbble.
+ *
+ * Active-state tracking and the indicator rail are driven by the shared
+ * IntersectionObserver script — it picks up any `<a data-section-id>`
+ * pointing at an element with a matching `id`.
+ */
+
+interface ProjectEntry {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  projects: ProjectEntry[];
+  /** Second line of the heading group — e.g. "Updated April 2026". */
+  subtitle: string;
+}
+
+const { projects, subtitle } = Astro.props as Props;
+---
+
+<nav
+  class="project-section-index"
+  aria-label="Site sections"
+  data-project-section-index
+>
+  <div class="project-section-index__group">
+    <span class="project-section-index__permalink">alanlong.design</span>
+    <span class="project-section-index__site-section">{subtitle}</span>
+  </div>
+  <div class="project-section-index__group">
+    {projects.map((p) => (
+      <a
+        class="project-section-index__link"
+        href={`#${p.id}`}
+        data-section-id={p.id}
+        data-label={p.label}
+      >
+        {p.label}
+      </a>
+    ))}
+  </div>
+  <div class="project-section-index__group">
+    <a
+      class="project-section-index__contact-link"
+      href="mailto:alan@ajalong.com"
+    >
+      alan@ajalong.com
+    </a>
+    <a
+      class="project-section-index__contact-link"
+      href="/Alan-Long-Resume-2026.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Resume-2026.pdf
+    </a>
+  </div>
+  <div class="project-section-index__group">
+    <a
+      class="project-section-index__contact-link"
+      href="https://linkedin.com/in/alanalberglong"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Linkedin
+    </a>
+    <a
+      class="project-section-index__contact-link"
+      href="https://dribbble.com/alalo"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Dribbble
+    </a>
+  </div>
+</nav>
+
+<script>
+  import { initProjectSectionIndex } from '../scripts/project-section-index';
+
+  document.addEventListener('astro:page-load', () => {
+    initProjectSectionIndex();
+  });
+</script>

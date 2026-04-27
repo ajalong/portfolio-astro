@@ -265,8 +265,22 @@ $cta-secondary-inner-glow-active:
 // the link gets blockified — set `line-height: 1` on the link so the painted
 // underline still hugs the text instead of drifting to the bottom of the
 // line-box.
+// Color/underline/outline use `currentColor` — the link inherits its text
+// colour from its context (light, dark/inverse, or anywhere else), and the
+// underline + focus ring follow that colour automatically. To switch a link
+// to white on a dark surface, set `color: var(--text-inverse)` on the link
+// or any ancestor; the mixin needs no overrides.
+//
+// Display: defaults to `inline` so `box-decoration-break: clone` paints one
+// underline per wrapped line. Consumers that need the link on its own line
+// (under a block-level sibling, etc.) can set `display: inline-block` —
+// that hugs the text width so the underline doesn't stretch past the
+// content, and still allows top margin.
 @mixin link-underline-zip {
-  color: var(--text-primary);
+  // Intentionally no `color` declaration — colour comes from context via the
+  // cascade. Global `a { color: inherit }` defeats UA link blue; spans
+  // inherit naturally. Setting colour here would override consumer
+  // declarations made before `@include`, which is a footgun.
   text-decoration: none;
   display: inline;
   max-width: 100%;
@@ -276,7 +290,7 @@ $cta-secondary-inner-glow-active:
   box-decoration-break: clone;
 
   /* Per-line underline via background strip (clone paints one per fragment) */
-  background-image: linear-gradient(var(--text-primary), var(--text-primary));
+  background-image: linear-gradient(currentColor, currentColor);
   background-position: 0 100%;
   background-size: 100% var(--text-underline-width);
   background-repeat: no-repeat;
@@ -295,7 +309,7 @@ $cta-secondary-inner-glow-active:
     background-image: var(--zip-hover-gradient);
     background-size: 200% var(--text-underline-width);
     background-position: 100% 100%;
-    outline: 2px solid var(--text-primary);
+    outline: 2px solid currentColor;
     outline-offset: 3px;
     border-radius: 2px;
     background-color: var(--secondaryBorderColor);
@@ -310,7 +324,7 @@ $cta-secondary-inner-glow-active:
   }
 
   @media (prefers-reduced-motion: reduce) {
-    background-image: linear-gradient(var(--text-primary), var(--text-primary));
+    background-image: linear-gradient(currentColor, currentColor);
     background-size: 100% var(--text-underline-width);
     background-position: 0 100%;
     transition:
@@ -318,14 +332,14 @@ $cta-secondary-inner-glow-active:
       outline-offset 0.12s ease;
 
     &:focus-visible {
-      background-image: linear-gradient(var(--text-primary), var(--text-primary));
+      background-image: linear-gradient(currentColor, currentColor);
       background-size: 100% var(--text-underline-width);
       background-position: 0 100%;
     }
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        background-image: linear-gradient(var(--text-primary), var(--text-primary));
+        background-image: linear-gradient(currentColor, currentColor);
         background-size: 100% var(--text-underline-width);
         background-position: 0 100%;
       }

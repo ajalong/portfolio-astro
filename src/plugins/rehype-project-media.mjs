@@ -8,7 +8,9 @@
  *   - Captions (the alt text, or the part before " — " in "Caption — Alt") are
  *     placed in the page margin: right margin (col 8) for single images and the
  *     right image of a pair; left margin (col 1) for the left image of a pair.
- *   - .mp4 / .webm / .mov sources render as autoplaying <video> instead of <img>.
+ *   - .mp4 / .webm / .mov sources render as <video data-autoplay-on-view>
+ *     (no native `autoplay` attribute — playback is JS-driven by
+ *     `initMediaAutoplay` so off-screen videos never start) instead of <img>.
  *   - Cloudinary URLs are auto-optimised with f_auto, q_auto, and a width cap.
  *
  * Emits:
@@ -88,10 +90,14 @@ function buildFigure(img) {
       tagName: 'video',
       properties: {
         src: optimizeCloudinaryUrl(src, true),
-        autoplay: true,
+        // No native `autoplay` — initMediaAutoplay starts/stops playback
+        // based on viewport visibility. Visible-on-load videos still start
+        // immediately because IntersectionObserver fires synchronously on
+        // observe() with the current intersection state.
         loop: true,
         muted: true,
         playsInline: true,
+        'data-autoplay-on-view': '',
         'aria-label': altText || undefined,
       },
       children: [],

@@ -37,7 +37,7 @@ let activeObserver: ResizeObserver | null = null;
 const RIM_CYCLE = 10;
 const RIM_FAST_OFFSETS = [0.2, 1.9, 3.7, 5.5, 7.7];
 const RIM_SELECTOR =
-  'a.cta__link, button.u-pill-primary, .project-nav-btn, .pivot-link';
+  'a.cta__link, button.u-pill-primary, .project-nav-btn';
 const rimListenerKey = Symbol('rimSeek');
 
 function seekRimToFastZone(e: Event): void {

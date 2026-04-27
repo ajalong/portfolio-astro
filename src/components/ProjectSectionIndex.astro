@@ -9,6 +9,7 @@
 interface SectionEntry {
   id: string;
   label: string;
+  children?: SectionEntry[];
 }
 
 interface Props {
@@ -19,6 +20,19 @@ const { sections } = Astro.props as Props;
 // "/project/gsk" → "alanlong.design/gsk"
 const slug = Astro.url.pathname.replace(/^\/project\//, '');
 const displayUrl = `alanlong.design/${slug}`;
+
+// Flatten the nested config into render order. Each entry carries its
+// nesting depth so the template can apply indentation. Depth > 0 sets
+// `data-nested` for CSS to indent.
+type FlatEntry = SectionEntry & { depth: number };
+function flatten(items: SectionEntry[], depth = 0, out: FlatEntry[] = []): FlatEntry[] {
+  for (const it of items) {
+    out.push({ id: it.id, label: it.label, depth });
+    if (it.children?.length) flatten(it.children, depth + 1, out);
+  }
+  return out;
+}
+const flatSections = flatten(sections);
 ---
 
 {sections && sections.length > 0 && (
@@ -32,12 +46,13 @@ const displayUrl = `alanlong.design/${slug}`;
       <a class="project-section-index__back" href="/">See all work</a>
     </div>
     <div class="project-section-index__group">
-      {sections.map((s) => (
+      {flatSections.map((s) => (
         <a
           class="project-section-index__link"
           href={`#${s.id}`}
           data-section-id={s.id}
           data-label={s.label}
+          data-depth={s.depth || null}
         >
           {s.label}
         </a>

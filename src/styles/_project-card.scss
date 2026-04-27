@@ -1,47 +1,19 @@
-// Project card — homepage list item with thumbnail overlay.
+// Project card — homepage list item with thumbnail + top-left caption.
+//
+// Title and client always visible at top-left over the thumbnail. Summary
+// fades in beneath them on hover/focus. Card is locked to 16:9 at every
+// breakpoint per the redesign.
 @use "tokens" as *;
+@use "rim" as *;
 
 .item {
   position: relative;
+  display: block;
   width: 100%;
   padding: 0;
   border-radius: var(--radius-card);
   overflow: hidden;
-}
-
-.item-meta {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  margin: 0;
-  padding: 24px;
-  max-width: min(100%, 272px);
-  font-size: var(--type-size);
-  font-weight: 400;
-  line-height: var(--line-height);
-  color: var(--white1);
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.45);
-  text-wrap: pretty;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-.item:focus-visible .item-meta {
-  opacity: 1;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .item:hover .item-meta {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .item-meta {
-    transition: none;
-  }
+  text-decoration: none;
 }
 
 .thumbnail {
@@ -50,12 +22,6 @@
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
-
-  body.home & {
-    @media screen and (max-width: 800px) {
-      aspect-ratio: 4 / 3;
-    }
-  }
 }
 
 .thumbnail img {
@@ -66,59 +32,109 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transform: scale(1);
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
   &.is-loaded {
     opacity: 1;
   }
 }
 
+// Video variant — same fill behaviour as the <img> above. The video's
+// `poster` attribute paints `thumbnailSrc` until the first frame is ready,
+// so the visual is identical until playback starts.
+.thumbnail-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  // Match the still's fade-in so the swap from poster to playing video
+  // doesn't pop. JS adds .is-loaded once the video starts playing.
+  opacity: 0;
+  transform: scale(1);
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &.is-loaded {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover .thumbnail img,
+  .item:hover .thumbnail-video {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbnail img,
+  .thumbnail-video {
+    transition: opacity 0.4s ease;
+  }
+}
+
+// Dark wash so white caption text is readable on any image.
+// Default: soft top-down fade — keeps title/client legible without
+// dominating the image.
+// Hover/focus: stronger fade that extends further down so the summary
+// (which appears beneath the caption) reads clearly.
 .thumbnail::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(
-    circle at 0% 100%,
-    rgb(0 0 0 / 0.6) 0%,
-    rgb(0 0 0 / 0) 100%
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.55) 0%,
+    rgb(0 0 0 / 0) 60%
   );
+  transition: background 0.3s ease;
 }
 
 .item:focus-visible .thumbnail::after {
   background: linear-gradient(
-    to right,
-    rgb(0 0 0 / 0.7) 0%,
-    rgb(0 0 0 / 0.1) 100%
+    to bottom,
+    rgb(0 0 0 / 0.85) 0%,
+    rgb(0 0 0 / 0.25) 100%
   );
 }
 
 @media (hover: hover) and (pointer: fine) {
   .item:hover .thumbnail::after {
     background: linear-gradient(
-      to right,
-      rgb(0 0 0 / 0.7) 0%,
-      rgb(0 0 0 / 0.1) 100%
+      to bottom,
+      rgb(0 0 0 / 0.85) 0%,
+      rgb(0 0 0 / 0.25) 100%
     );
   }
 }
 
+// Caption — top-left of the card.
 .thumbnail-caption {
   position: absolute;
+  top: 0;
   left: 0;
-  bottom: 0;
   z-index: 2;
-  max-width: 85%;
-  padding: 24px;
+  max-width: min(100%, 75%);
+  padding: var(--unit-24);
   text-align: left;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .thumbnail-title {
   margin: 0;
   width: fit-content;
-  max-width: min(100%, 600px);
+  max-width: 100%;
   border-bottom: none;
   font-size: var(--type-size-lg);
   font-weight: var(--weight-regular);
@@ -129,9 +145,85 @@
 .thumbnail-client {
   margin: 0;
   width: fit-content;
-  max-width: min(100%, 600px);
+  max-width: 100%;
   font-size: var(--type-size-lg);
   font-weight: var(--weight-regular);
-  line-height: 1.3;
+  line-height: var(--line-height-tight);
   color: var(--text-inverse-muted);
+}
+
+// Summary — sits beneath title/client, hidden by default; fades in on hover.
+.item-meta {
+  margin: var(--text-spacing-tight) 0 0;
+  max-width: min(100%, 360px);
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height);
+  color: var(--text-inverse);
+  text-wrap: pretty;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+// CTA label — sibling of .item-meta. Mirrors its opacity/transition so the
+// summary and CTA fade in and out together.
+//
+// `display: inline-block` so the underline + zip-hover gradient hug the text
+// (a `display: block` link would stretch the underline across the full card
+// width). Sits on its own line because the previous sibling is a block-level
+// <p>. Colour is inverse so the link is white on the dark card overlay; the
+// zip mixin reads it via currentColor.
+.item-cta {
+  display: inline-block;
+  // .thumbnail-caption is a flex column with default align-items: stretch,
+  // which would stretch this span to full width — killing both the
+  // text-hugging underline and the zip pan animation. Pin to the start of
+  // the cross axis so it shrinks to its content.
+  align-self: flex-start;
+  margin-top: var(--unit-12);
+  color: var(--text-inverse);
+  opacity: 0;
+  @include link-underline-zip;
+  // Override the mixin's transition list to add opacity (otherwise the CTA
+  // snaps in while .item-meta fades, desyncing the two on hover).
+  transition:
+    background-color 0.12s ease,
+    outline-offset 0.12s ease,
+    background-image 0.2s ease,
+    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+}
+
+.item:focus-visible .item-meta,
+.item:focus-visible .item-cta {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover .item-meta,
+  .item:hover .item-cta {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item-meta,
+  .item-cta,
+  .thumbnail::after {
+    transition: none;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .thumbnail-caption {
+    max-width: 100%;
+  }
+
+  .item-meta {
+    opacity: 1;
+  }
+
+  .item-cta {
+    display: none;
+  }
 }

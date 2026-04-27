@@ -3,21 +3,46 @@ interface Props {
   href: string;
   thumbnailSrc: string;
   thumbnailAlt: string;
+  thumbnailVideo?: string;
   projectTitle: string;
   client: string;
   summary: string;
 }
 
-const { href, thumbnailSrc, thumbnailAlt, projectTitle, client, summary } = Astro.props as Props;
+const {
+  href,
+  thumbnailSrc,
+  thumbnailAlt,
+  thumbnailVideo,
+  projectTitle,
+  client,
+  summary,
+} = Astro.props as Props;
 ---
 
 <a class="item" href={href}>
-  <p class="item-meta">{summary}</p>
   <div class="thumbnail">
-    <img alt={thumbnailAlt} src={thumbnailSrc} />
+    {thumbnailVideo ? (
+      <video
+        class="thumbnail-video"
+        src={thumbnailVideo}
+        poster={thumbnailSrc}
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        aria-label={thumbnailAlt}
+        data-thumbnail-video
+        data-autoplay-on-view
+      ></video>
+    ) : (
+      <img alt={thumbnailAlt} src={thumbnailSrc} />
+    )}
     <div class="thumbnail-caption">
       <h3 class="thumbnail-title">{projectTitle}</h3>
       <p class="thumbnail-client">{client}</p>
+      <p class="item-meta">{summary}</p>
+      <span class="item-cta" aria-hidden="true">See the work</span>
     </div>
   </div>
 </a>

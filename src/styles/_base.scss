@@ -26,11 +26,34 @@ section {
   margin: 0 0 60px;
 }
 
-h2,
-h3,
-blockquote {
+/*
+ * Heading scale — clear separation between levels.
+ *   h1: project / page title (size set by .profile-info override → --type-size-lg).
+ *   h2: section title (e.g. "## Show, don't tell") — --type-size-lg, regular weight.
+ *   h3: sub-section title within a section — --type-size-md, medium weight.
+ *   h4: rare; body size with medium weight.
+ * The size + weight pairing means each level reads as distinct without
+ * needing a wide range of sizes to land the hierarchy.
+ */
+h2 {
   font-size: var(--type-size-lg);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
+  color: var(--text-primary);
+  max-width: 600px;
+}
+
+h3 {
+  font-size: var(--type-size-md);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+  max-width: 600px;
+  margin: 0;
+}
+
+h4 {
+  font-size: var(--type-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
   max-width: 600px;
 }
 
@@ -47,19 +70,11 @@ ul {
 
 /* Case-study titles in article use project-page rhythm below; other .page_container h2 keep chunk spacing */
 .page_container h2 {
-  font-size: var(--type-size-lg);
-  color: var(--text-primary);
   margin: 32px 0 16px;
 }
 
 body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
-}
-
-h3 {
-  font-size: var(--type-size-lg);
-  margin: 0;
-  color: var(--text-primary);
 }
 
 h1,
@@ -84,9 +99,9 @@ p {
  */
 .kicker {
   font-size: var(--type-size);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-regular);
   color: var(--text-accent);
-  text-transform: uppercase;
+  // text-transform: uppercase;
 }
 
 :is(p, blockquote, .page_container article li) {
@@ -99,11 +114,39 @@ p {
   }
 }
 
+/*
+ * Quote variants — both share border, indent, and a <cite> attribution slot.
+ * Body-text size is the default so unclassed `> markdown blockquotes`
+ * drop in cleanly inline; .quote-emphasis is the larger display style for
+ * pull-out testimonials at the end of a case study.
+ */
 blockquote {
   padding-inline-start: 1em;
   border-left: 2px solid var(--text-secondary);
   color: var(--text-secondary);
+  font-size: var(--type-size);
+  line-height: var(--line-height);
+  max-width: 600px;
   margin-bottom: 12px;
+
+  cite {
+    display: block;
+    font-style: normal;
+    font-size: var(--type-size);
+    font-weight: var(--weight-medium);
+    color: var(--text-secondary);
+    margin-top: var(--text-spacing-tight);
+  }
+}
+
+blockquote.quote-emphasis {
+  font-size: var(--type-size-lg);
+  line-height: var(--line-height-tight);
+}
+
+blockquote.quote-standard {
+  font-size: var(--type-size);
+  line-height: var(--line-height);
 }
 
 ul {

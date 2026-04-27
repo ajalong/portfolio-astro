@@ -118,6 +118,8 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <slot />
     <script>
       import { initButtonBorderRings } from '../scripts/border-ring';
+      import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';
+      import { initMediaAutoplay } from '../scripts/media-autoplay';
 
       document.addEventListener('astro:after-swap', () => {
         document.body.classList.remove('initial-load');
@@ -132,6 +134,8 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 
       document.addEventListener('astro:page-load', () => {
         initButtonBorderRings();
+        initThumbnailVideoHover();
+        initMediaAutoplay();
 
         document.querySelectorAll<HTMLImageElement>(
           '.media-full img, .media-half img, .thumbnail img'
@@ -142,10 +146,9 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
             img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
           }
         });
-
-        document.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach((v) => {
-          v.play().catch(() => {});
-        });
+        // Note: no manual play() loop here — initMediaAutoplay's
+        // IntersectionObserver fires synchronously on observe() with the
+        // initial state, so visible-on-load videos start immediately.
       });
     </script>
   </body>

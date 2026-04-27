@@ -37,7 +37,7 @@
 
     // Grey track — full height of the group.
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       bottom: 0;
@@ -49,7 +49,7 @@
     // Black indicator — JS sets --active-top and --active-height to the
     // active link's offsetTop/offsetHeight; transitions animate the move.
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       left: calc(-1 * var(--unit-16));
       top: var(--active-top, 0);
@@ -75,9 +75,7 @@
       transition: opacity 0.2s ease;
     }
   }
-
 }
-
 
 .project-section-index__permalink {
   display: block;
@@ -85,6 +83,17 @@
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);
   color: var(--text-primary);
+}
+
+// Plain-text counterpart to __back used on the home page where the second
+// line is the section name ("Portfolio") rather than a back link.
+.project-section-index__site-section {
+  display: block;
+  padding: var(--unit-4) 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  color: var(--text-secondary);
 }
 
 .project-section-index__back {
@@ -99,9 +108,13 @@
   background-origin: content-box;
   background-position: 0 calc(100% + 0.12em);
   @media (hover: hover) and (pointer: fine) {
-    &:hover { background-position: 100% calc(100% + 0.12em); }
+    &:hover {
+      background-position: 100% calc(100% + 0.12em);
+    }
   }
-  &:focus-visible { background-position: 100% calc(100% + 0.12em); }
+  &:focus-visible {
+    background-position: 100% calc(100% + 0.12em);
+  }
 }
 
 .project-section-index__link {
@@ -115,6 +128,15 @@
   text-decoration: none;
   transition: color 0.2s ease;
 
+  // Nested links — indented per nesting level. The active-indicator
+  // bar still sits on the group's left rail; only the text moves right.
+  &[data-depth="1"] {
+    padding-left: var(--unit-12);
+  }
+  &[data-depth="2"] {
+    padding-left: calc(var(--unit-12) * 2);
+  }
+
   &:hover {
     color: var(--text-primary);
   }
@@ -124,7 +146,6 @@
   }
 }
 
-
 .project-section-index__contact-link {
   @include link-underline-zip;
   padding: var(--unit-4) 0;
@@ -132,9 +153,13 @@
   background-origin: content-box;
   background-position: 0 calc(100% + 0.12em);
   @media (hover: hover) and (pointer: fine) {
-    &:hover { background-position: 100% calc(100% + 0.12em); }
+    &:hover {
+      background-position: 100% calc(100% + 0.12em);
+    }
   }
-  &:focus-visible { background-position: 100% calc(100% + 0.12em); }
+  &:focus-visible {
+    background-position: 100% calc(100% + 0.12em);
+  }
 }
 
 // Pull anchored scroll targets down a bit so the section heading doesn't

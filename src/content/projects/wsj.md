@@ -98,8 +98,6 @@ _Design_
 
 ![Animation of the Welcome page (landing page) being scrolled.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/welcome_apstqd.mp4)
 
-![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
-
 _Implementation_
 ## Fast, documented, built to be reused
 
@@ -107,6 +105,8 @@ The deadline was very tight for this project; Eventfinity's platform was technic
 
 - **Utility classes, SCSS and variables.** A well-architected utility class system kept styling consistent and allowed new pages to be built quickly without each one requiring bespoke CSS. Tokens lived as CSS variables, so any change propagated cleanly.
 - **Documented for handoff.** The code was documented as we wrote it, on the assumption that it would outlive the project.
+
+![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
 _Impact_
 ## A huge leap in user experience

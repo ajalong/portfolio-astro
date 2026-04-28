@@ -11,10 +11,10 @@ year: 2021
 sector: Virtual Event
 team:
   - name: Alan Long
-    role: UX/UI Designer & Front-end Developer
+    role: Senior Product Designer & Front-end Developer
     company: Cheerful Twentyfirst
     description: |
-      Responsible for the end-to-end design and led front-end development for the WSJ CEO Council virtual event platform. Due to the tight deadline of this project, developers from Gramercy Tech worked with me to implement my designs. I presented to WSJ stakeholders directly.
+      Designed the WSJ CEO Council virtual event platform and led the front-end development on a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Chris Keirnan
@@ -76,7 +76,7 @@ The Wall Street Journal's CEO Council is one of WSJ's most prestigious events. I
 _Problem_
 ## A demanding audience, a tight deadline, and a brand to protect
 
-Recreating the CEO Council virtually meant designing for an audience with little patience, and translating an event whose most valuable element, networking, into a format that did not naturally support it. Three constraints shaped the project:
+Recreating the CEO Council virtually meant designing for an audience with little patience, and translating an event whose most valuable element was networking into a format that did not naturally support it. Three constraints shaped the project:
 
 - **A time-poor, high-status audience.** Attendees were senior executives whose time was extremely valuable. Reducing friction at every opportunity was critical.
 - **Networking as the centrepiece.** A significant part of why people attended in person was the chance to meet other senior leaders. The virtual edition needed to make that feel like a genuine reason to attend, rather than a weak imitation of the in-person experience.
@@ -88,8 +88,8 @@ _Design_
 "Less but better" was the guiding principle throughout the designs. The audience did not need more features. They needed an experience that respected their time and matched the calibre of the brand. Every design decision adhered to this mantra.
 
 - **Physical metaphor as navigation.** The platform was structured around two named spaces: the Auditorium for talks and Q&A, the Lobby for networking. The names made the structure intuitive without explanation, and quietly carried the sense of occasion the CEO Council brand required.
-- **Page fold was critical.** Above the fold on every page sat the single thing users were most likely to want, whether that was submitting a question in the Auditorium or the live attendee count in the Lobby. Supporting content sat below. The page architecture answered "why am I here right now" before users had to ask it.
-- **Networking worth showing up for.** A hero animation in the Lobby featured attendees' headshots and a live count of users online, paired with a direct call to action. The brief was engagement, and the design treated networking accordingly.
+- **Page fold was critical.** Above the fold on every page sat the single thing a user was most likely to want at that moment: a question-submission form in the Auditorium, or the live attendee count in the Lobby. Supporting content sat below. The page architecture answered "why am I here right now" before users had to ask it.
+- **Networking worth showing up for.** A hero animation in the Lobby featured attendees' headshots and a live count of users online, paired with a direct call to action. The brief was engagement, and networking was given the prominence the brief required.
 - **Co-design with WSJ stakeholders.** Rather than presenting finished work for sign-off, I ran the design process collaboratively with WSJ's team. By the time decisions were made, stakeholders had been part of making them, which meant buy-in with WSJ leadership was less challenging.
 
 ![Wireframe of the Welcome page showing key page elements in relation to the page fold on desktop.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-landing_wireframe.png)
@@ -124,8 +124,8 @@ _Lessons learned_
 The project reinforced a set of principles I have applied to most work since, particularly around designing for senior audiences, working with stakeholders during design rather than presenting to them at the end, and treating handoff as a design problem in its own right.
 
 - **For a time-poor audience, focus and execution are everything.** At the time, most virtual event platforms lacked product direction; many features existed simply because the technology allowed it. The CEO Council worked because it asked "should we" rather than "can we" at every decision point. For an audience whose time is the most valuable thing in the room, that discipline is the project.
-- **Co-design is a delivery tactic, not only a research one.** Bringing WSJ stakeholders into the design process meant sign-off was not a hurdle looming over the process. It was distributed across the project. On a deadline this tight, that compression of the approval cycle made the difference.
-- **Documentation is always more valuable than expected.** Writing code that other developers could pick up turned a one-off project into a platform WSJ reused for years. The work outlived its original brief because handoff was treated as part of the design, not an afterthought.
+- **Co-design is a delivery tactic as well as a research one.** Bringing WSJ stakeholders into the design process meant sign-off was not a hurdle looming over the process. It was distributed across the project. On a deadline this tight, that compression of the approval cycle made the difference.
+- **Documentation is always more valuable than expected.** Writing code that other developers could pick up turned a one-off project into a platform WSJ reused for years. The work outlived its original brief because handoff was treated as part of the design rather than as an afterthought.
 - **Distributed teams need design to carry more of the conversation.** Working with a US-based development team from London meant time zones absorbed most of the synchronous hours. Thorough status updates, documentation, naming, and consistency were vital.
 
 > "A huge thank you for the delivery of yesterday — we are getting endless thanks, high-fives and praise from all parties — internal and external."

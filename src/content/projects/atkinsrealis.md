@@ -11,10 +11,10 @@ year: 2023
 sector: UX Exploration
 team:
   - name: Alan Long
-    role: UX/UI Designer
+    role: Senior Product Designer
     company: Interbrand
     description: |
-      The sole UX/UI designer on the project. I worked in partnership with Jonny Buck (UX Researcher, Interbrand). Together, we ran design sprints and user testing to explore brand expression and accessibility. I delivered low-fidelity mockups of the site illustrating the findings from our research and overall information architecture. I also worked with the broader Interbrand design team to test the accessibility of the in-development brand.
+      Sole product designer on the digital workstream of AtkinsRéalis's ground-up rebrand. Ran design sprints on inclusivity, global reach, and engineering depth, testing each direction with users alongside the UX researcher Jonny Buck. Also led accessibility testing of the in-development brand identity with Interbrand's brand team.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Jonny Buck
@@ -97,7 +97,7 @@ _Design_
 
 ## Show, don't tell
 
-I'm fascinated by the ways an interface can communicate the ideals of an organisation through structure and visual design alone. In essence, show, don't tell. Each design sprint focused on a part of the site and how it could show an international perspective, an inclusive culture, and deep engineering expertise.
+I am interested in the ways an interface can communicate the ideals of an organisation through structure and visual design alone, rather than through stated copy. Each design sprint focused on a part of the site and how it could show an international perspective, an inclusive culture, and deep engineering expertise.
 
 _Project overview_
 
@@ -120,7 +120,7 @@ _Navigation_
 
 ### The full picture
 
-Four navigation variants were tested, ranging from a simple dropdown to mega navs of varying complexity. The winner was a conventional mega nav with the full taxonomy of content exposed. This cut against the more minimal directions we had also tested.
+Four navigation variants were tested, ranging from a simple dropdown to mega navs of varying complexity. The variant that performed best in testing was a conventional mega nav with the full taxonomy of content exposed, which cut against the more minimal directions we had also tested.
 
 AtkinsRéalis users were engineers, project managers and procurement leads who came to the site looking for specific capabilities, and they wanted depth and clarity rather than progressive disclosure.
 
@@ -159,7 +159,7 @@ Within individual case study pages, we tested variants that emphasised different
 >
 > — Testing participant
 
-For a global engineering firm, this was a meaningful finding. Trust in this sector is built on people and relationships, not just capabilities. The project pages needed to lead with both.
+For a global engineering firm, this was a meaningful finding. In this sector, trust is built on people and relationships as much as on capabilities. The project pages needed to lead with both.
 
 ![Page section about services using people imagery — Project page layout with large-format hero image, project title, sector tag, and introductory copy.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338008/alan.design/AtkinsRealis/atkinsrealis-project-spotlight_uu61hn.png)
 ![Page section about a team member using people imagery — Project page layout with team member and partner profiles prominently placed alongside project details.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338007/alan.design/AtkinsRealis/atkinsrealis-project-person_kggre8.png)
@@ -192,6 +192,6 @@ _Lessons learned_
 
 The project taught me a great deal about how to approach exploratory work. Most of these lessons are about what makes research-led design hold up against the realities of complex client engagements.
 
-- **Show, don't tell, is a structural choice as much as a creative one.** The most useful findings on this project were not about how to communicate the brand's values, but about which interactions made those values feel true. A company's values can be illustrated by content and structural choices.
-- **Doing product design in parallel with other workstreams needs a deliberate working method.** Working alongside strategy and brand workstreams that are themselves still being defined is genuinely difficult. The way through is to design at fidelities that honestly reflect how settled the inputs are, and to structure the work as iterative sprints rather than a linear path to a final deliverable.
+- **Show, don't tell, is a structural choice as much as a creative one.** The most useful findings on this project concerned which interactions made the brand's values feel true, rather than how to communicate them. A company's values can be illustrated by content and structural choices.
+- **Doing product design in parallel with other workstreams needs a deliberate working method.** Working alongside strategy and brand workstreams that are themselves still being defined is difficult. The way through is to design at fidelities that honestly reflect how settled the inputs are, and to structure the work as iterative sprints rather than a linear path to a final deliverable.
 - **An exploration project's value goes beyond design insights.** This exploration project led the client to understand their own problem more clearly than they did at the start. AtkinsRéalis ended the engagement with a clearer view of how their website needed to work, even if the timeline did not allow for full implementation immediately.

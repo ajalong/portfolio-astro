@@ -11,10 +11,10 @@ year: 2025
 sector: UX Overhaul
 team:
   - name: Alan Long
-    role: UX/UI Designer
+    role: Senior Product Designer
     company: Interbrand
     description: |
-      Responsible for the end-to-end design on the overhaul of Mercedes-Benz's Media Decision Engine. I collaborated with Niq Curry (UX Researcher, Interbrand) and Laura Harding (Project Manager, Interbrand) in identifying user insights. I participated in workshops with stakeholders from Mercedes-Benz.
+      Redesigned Mercedes-Benz's paid-media analytics platform without access to the client's product design team or their internal design system, working from public brand guidelines and live consumer sites. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints. Partnered with a UX researcher and a PM, and co-facilitated stakeholder workshops with Mercedes-Benz and OMD, the agency that had built the original platform.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Niq Curry
@@ -57,14 +57,14 @@ team:
 _Context_
 ## Overhauling an automotive giant's ad analytics platform
 
-The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a collection of tools to track, measure, and optimise the performance of advertising campaigns across all paid media channels. Originally built by [OMD](https://www.omd.com/), one of Interbrand's sister agencies, the platform had grown in capability over the years without ever having had dedicated product design input. The interface hadn't kept up with what the tool was now being asked to do. On behalf of Interbrand, Laura Harding (Product Manager), Niq Curry (UX Researcher) and myself (UX/UI Designer) overhauled the platform, dramatically improving the user experience.
+The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a collection of tools to track, measure, and optimise the performance of advertising campaigns across all paid media channels. Originally built by [OMD](https://www.omd.com/), one of Interbrand's sister agencies, the platform had grown in capability over the years without ever having had dedicated product design input. The interface hadn't kept up with what the tool was now being asked to do. On behalf of Interbrand, Laura Harding (Product Manager), Niq Curry (UX Researcher) and myself (Senior Product Designer) overhauled the platform, dramatically improving the user experience.
 
 I worked without direct access to Mercedes-Benz's product design team or their internal design system. The visual direction was based on their public brand guidelines and live consumer sites, which set the tone but left a lot of detailed decisions to be made on our side.
 
 _Problem_
 ## A powerful platform obscured by its interface
 
-The Media Decision Engine was capable on paper but hard to use in practice. The underlying data and analytics were solid; the interface that surfaced them wasn't.
+The Media Decision Engine was a capable platform that was hard to use. The underlying data and analytics were solid, but the interface that surfaced them was not.
 
 - **Information architecture.** The platform never properly explained itself. Users struggled to understand what the platform was for at a high level, and once inside, what each individual tool actually did.
 - **Inconsistency across tools.** Each tool had been built in isolation. Flows, interaction patterns, and data visualisation all varied from one tool to the next, so moving between them meant re-learning the interface every time with no shared logic carrying over.
@@ -95,7 +95,7 @@ The original platform was organised around the tools themselves. The redesign or
 
 Tools were regrouped into three stages that mirrored how users actually moved through a media planning decision: looking for market opportunities in existing data; determining the audience and focus of messaging; then setting the overall budget and allocating it across media channels.
 
-Within each stage, tools were laid out section by section down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident — users no longer had to reconstruct the logic of the platform in their heads.
+Within each stage, tools were laid out section by section down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform in their heads.
 
 ![Market Opportunities screen with a graph of vehicle registrations by year; Mercedes and key competitors are plotted. — “Identify Market Trends”: multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-identify_market_trends.png)
 
@@ -105,7 +105,7 @@ _Configuring parameters_
 Users had been re-entering the same data into tool after tool. The redesign separated parameters that needed to be shared across tools from those that were tool-specific, so global settings could be configured once.
 
 - **Global vs. local parameters.** I scoped every parameter as either global (applied across multiple tools) or local (relevant to a single tool). Globals were consolidated into a single Scenario Settings overlay, accessible from anywhere on the platform. Local parameters stayed within their tool, configurable in place.
-- **Pre-populated visualisations.** With globals managed centrally, graphs and other visualisations could update live as users adjusted scenarios — showing them what a parameter did rather than explaining it.
+- **Pre-populated visualisations.** With globals managed centrally, graphs and other visualisations could update live as users adjusted scenarios, showing them what a parameter did rather than explaining it.
 - **Microcopy that lowered cognitive load.** Copy across the platform was rewritten to be short, plain, and approachable, removing friction for the user.
 
 The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discreet tools.
@@ -121,7 +121,7 @@ The first two sprints had done a lot of the onboarding work. A clearer informati
 
 - **A short guided tour on first use.** A brief upfront orientation for new users to the platform's structure and the logic behind it.
 - **Tooltips and nudges, used sparingly.** Used carefully enough to stay useful rather than become noise, with copy kept short and tied to specific moments where users were most likely to need a prompt.
-- **Copy that respected the user's time.** Onboarding copy was plain and approachable making the overall experience more user friendly.
+- **Copy that respected the user's time.** Onboarding copy was plain and approachable, which made the overall experience more user-friendly.
 
 ![Onboarding overlay](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-onboarding_overlay.png)
 
@@ -138,7 +138,7 @@ The original platform's export experience was patchy. Formats varied between too
 _Impact_
 ## A powerful platform that explains itself
 
-Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. Clearer in structure, more consistent in behaviour, and far less reliant on prior knowledge to navigate.
+Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
 
 - Structure that matched how users actually worked.
 - One scenario, applied everywhere.
@@ -152,6 +152,6 @@ _Lessons learned_
 
 A few things became clear over the course of the project. Most of them came down to the fact that overhauling an existing platform is a different discipline from designing one from scratch. The constraints, the history, and the existing user expectations all impact the work you do.
 
-- **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost is time taken; the gain is a redesign that is coherent.
-- **Insights from the original creators are invaluable.** The OMD interviews were the most valuable research input we had; not because they validated decisions, but because they exposed the constraints we'd otherwise have rediscovered the hard way.
+- **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost was time; the gain was a redesign that held together as one product.
+- **Insights from the original creators are invaluable.** The OMD interviews were the most valuable research input we had. They did not validate decisions; they exposed the constraints that we would otherwise have rediscovered the hard way.
 - **Show-don't-tell is vital.** Strong information architecture made the use of tools far easier to understand. Microcopy and tooltips shouldn't be leaned on but can provide additional aid.

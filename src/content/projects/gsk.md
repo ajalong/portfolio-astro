@@ -11,10 +11,10 @@ year: 2024
 sector: Design System
 team:
   - name: Alan Long
-    role: UX/UI design lead
+    role: Product Design Lead
     company: Interbrand
     description: |
-      Responsible for the end-to-end design of GSK's core design system until the initial release. Led workshops with representatives from product teams across GSK to ensure stakeholder buy-in and alignment. Provided adoption support to certain teams. Typically liaised directly with Anna Morrison (Senior Brand Manager, GSK), with creative oversight from Rowan Green (Director, Brand Identity, GSK).
+      Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues at the token level so that adopting teams inherited the fixes by default. Ran the cross-team working group whose buy-in carried the system into each product team at rollout, and partnered with GSK's brand leadership to keep the system aligned with the 2022 rebrand rather than drifting into a parallel visual language.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Damaris Homo
@@ -54,6 +54,7 @@ team:
 ---
 
 _Context_
+
 ## An accessible design system for big biopharma
 
 In 2022 GSK turned to Wolff Olins to rebrand as they spun off their consumer business. The move allows them to wholly dedicate themselves to science and technology. The new brand reflected that, focusing on bold forms and striking scientific imagery.
@@ -70,9 +71,10 @@ This wasn't my first project with GSK. Years of prior work through Interbrand ha
 ![GSK's new brand in action at their London HQ.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/wolffolins/G0168BT_i3cocf.webp)
 
 _Problem_
+
 ## A bold rebrand that didn't work digitally
 
-The rebrand's digital problems weren't just cosmetic. They spanned accessibility, usability for specialist audiences, and a fragmented product landscape that had grown without shared foundations.
+The rebrand's digital problems went beyond the cosmetic. They affected accessibility, usability for specialist audiences, and the cohesion of a product landscape that had grown without shared foundations.
 
 - The new visual identity worked well in brand-led experiences but not those that catered to user groups with specialised needs, like scientists and healthcare professionals.
 - There were accessibility issues when the new visual identity was applied to digital interfaces, particularly around colour.
@@ -80,6 +82,7 @@ The rebrand's digital problems weren't just cosmetic. They spanned accessibility
 - Many of GSK's existing digital touchpoints were not brand aligned.
 
 _Research and strategy_
+
 ## Understanding the brand and the business
 
 An audit of the 2022 rebrand guidelines revealed it lacked the necessary foundations for digital. Rather than adapt the existing guidelines, I rebuilt from the ground up. This system would sit at the core of GSK's brand with print and specialised guidelines radiating from it. I worked closely with GSK's brand team to ensure this new system remained true to the strategic and creative intent of the original rebrand.
@@ -89,13 +92,14 @@ An audit of the 2022 rebrand guidelines revealed it lacked the necessary foundat
 - I ran workshops focused on colour, layout, and typography to surface requirements and build stakeholder buy-in from the outset.
 
 _System architecture_
+
 ## Tokens, accessibility, and brand alignment by default
 
 I designed the system to be adopted, not imposed. Accessibility considerations around colour and typography are handled at the token level, so teams inherit the right defaults with confidence. It scales across web and native platforms while giving product teams flexibility to adapt it to their own contexts. Thorough documentation accompanies every guideline, making the rationale behind each decision clear to anyone working with it.
 
 - Built with design tokens to ensure the system adapts across devices, platforms, and colour modes.
 - Resolved the rebrand's accessibility issues at the token and component level, so every adopting team inherited them by default.
-- Kept the core component set deliberately lean, covering only elements that could be truly generalised across GSK, so teams build on it rather than be confined by it.
+- Kept the core component set lean, covering only elements that could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - Extended the core library with dedicated iOS and Android component sets, giving native teams the building blocks to align GSK products with each platform's UX paradigms.
 
 ![Selection of pages from Getting Started section of design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
@@ -104,6 +108,7 @@ I designed the system to be adopted, not imposed. Accessibility considerations a
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
 
 _Implementation_
+
 ## Shipping, proving, and supporting adoption
 
 Shipping the system was just the start. Real success meant proving it worked on live products, supporting the teams adopting it, and building the shared understanding needed for a token-based approach to take hold across GSK.
@@ -117,6 +122,7 @@ Shipping the system was just the start. Real success meant proving it worked on 
 ![gsk.com updated to reflect the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
 
 _Impact_
+
 ## A strong reception and growing adoption
 
 The system is doing what it was built to do. Accessibility issues are resolved, adoption is spreading across GSK's digital teams, and the response from product and brand teams has been strong.
@@ -127,13 +133,14 @@ The system is doing what it was built to do. Accessibility issues are resolved, 
 - Proved the system in production on gsk.com and GSK Brandhub.
 
 _Lessons learned_
+
 ## Systematising design for a large organisation
 
-A few things became clear over the course of the project. Most of them came down to recognising that a design system is as much an organisational product as a design one — its success depends on how it fits into the company around it, not just how well it's built.
+A few things became clear over the course of the project. Most of them came down to recognising that a design system is as much an organisational product as a design one. Its success depends as much on how it fits into the company around it as on how well it is built.
 
-- **A focus on scope enabled strong adoption.** Fewer, better components gave teams room to build up rather than fight against the system.
+- **A focus on scope enabled strong adoption.** A smaller set of well-considered components gave teams room to build on the system rather than fight against it.
 - **Accessibility has to live at the token layer.** Fixing issues at the root meant every adopting team inherited the fixes without extra work.
-- **Stakeholder workshops are adoption work, not just research.** They built the internal advocacy network that carried the system into each product team at rollout.
+- **Stakeholder workshops are adoption work as much as research.** They built the internal advocacy network that carried the system into each product team at rollout.
 - **Brand and system need to be co-authored.** Working alongside GSK's brand leadership kept the system aligned with the rebrand rather than drifting into a parallel visual language.
 
 > "Receiving so much positive feedback already, people are really impressed with how good all is – Thank you so much Interbrand!"

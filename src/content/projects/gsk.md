@@ -9,12 +9,14 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 1
 year: 2024
 sector: Design System
+roleSummary: |
+  Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues at the token level so that adopting teams inherited the fixes by default. Ran the cross-team working group whose buy-in carried the system into each product team at rollout, and partnered with GSK's brand leadership to keep the system aligned with the 2022 rebrand rather than drifting into a parallel visual language.
 team:
   - name: Alan Long
     role: Product Design Lead
     company: Interbrand
     description: |
-      Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues at the token level so that adopting teams inherited the fixes by default. Ran the cross-team working group whose buy-in carried the system into each product team at rollout, and partnered with GSK's brand leadership to keep the system aligned with the 2022 rebrand rather than drifting into a parallel visual language.
+      Designed and led the adoption of GSK's first company-wide design system, including the core component library, iOS and Android extensions, and accessibility resolved at the token layer. Ran the cross-team working group that carried the system into each product team at rollout.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Damaris Homo

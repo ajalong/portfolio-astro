@@ -12,9 +12,13 @@ interface TeamMember {
 
 interface Props {
   team: TeamMember[];
+  // Senior positioning statement for the inline "My role" card. Falls
+  // back to the lead member's `description` so older content without
+  // a dedicated roleSummary still renders.
+  roleSummary?: string;
 }
 
-const { team } = Astro.props as Props;
+const { team, roleSummary } = Astro.props as Props;
 const panelId = 'project-team-panel';
 
 // Alan Long's entry is always the first member — used for the inline "My role" widget
@@ -62,8 +66,8 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
         <p class="my-role-card__role">{alan.role}</p>
       </div>
     </div>
-    {alan.description && (
-      <p class="my-role-card__bio">{alan.description}</p>
+    {(roleSummary ?? alan.description) && (
+      <p class="my-role-card__bio">{roleSummary ?? alan.description}</p>
     )}
     <div class="my-role-card__cta">
       <span>See everyone that worked on this</span>

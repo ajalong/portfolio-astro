@@ -29,7 +29,7 @@ interface Props {
 
 const { project, otherWork } = Astro.props as Props;
 
-const { title, client, metaDescription, thumbnailImage, year, sector } = project.data;
+const { title, client, metaDescription, thumbnailImage, year, sector, roleSummary } = project.data;
 
 const otherWorkCards = otherWork.map((p) => ({
   href: `/project/${p.slug}`,
@@ -129,6 +129,7 @@ const sectionIndex = parseSectionIndex(project.body, !!project.data.team?.length
   team={project.data.team}
   otherWork={otherWorkCards}
   {sectionIndex}
+  {roleSummary}
 >
   <article>
     <Content />

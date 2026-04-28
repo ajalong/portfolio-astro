@@ -9,12 +9,14 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 3
 year: 2025
 sector: UX Overhaul
+roleSummary: |
+  Redesigned Mercedes-Benz's paid-media analytics platform without access to the client's product design team or their internal design system, working from public brand guidelines and live consumer sites. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints. Partnered with a UX researcher and a PM, and co-facilitated stakeholder workshops with Mercedes-Benz and OMD, the agency that had built the original platform.
 team:
   - name: Alan Long
-    role: Senior Product Designer
+    role: Product Design Lead
     company: Interbrand
     description: |
-      Redesigned Mercedes-Benz's paid-media analytics platform without access to the client's product design team or their internal design system, working from public brand guidelines and live consumer sites. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints. Partnered with a UX researcher and a PM, and co-facilitated stakeholder workshops with Mercedes-Benz and OMD, the agency that had built the original platform.
+      Led end-to-end design across the three sprints, owning information architecture, the global scenario settings model, onboarding and exports. Co-facilitated the stakeholder workshop with Mercedes-Benz and OMD.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Niq Curry

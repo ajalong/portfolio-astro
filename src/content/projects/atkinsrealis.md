@@ -9,12 +9,14 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/ar_16:9,f_auto,q
 order: 5
 year: 2023
 sector: UX Exploration
+roleSummary: |
+  Sole product designer on the digital workstream of AtkinsRéalis's ground-up rebrand. Ran design sprints on inclusivity, global reach, and engineering depth, testing each direction with users alongside the UX researcher Jonny Buck. Also led accessibility testing of the in-development brand identity with Interbrand's brand team.
 team:
   - name: Alan Long
-    role: Senior Product Designer
+    role: Product Design Lead
     company: Interbrand
     description: |
-      Sole product designer on the digital workstream of AtkinsRéalis's ground-up rebrand. Ran design sprints on inclusivity, global reach, and engineering depth, testing each direction with users alongside the UX researcher Jonny Buck. Also led accessibility testing of the in-development brand identity with Interbrand's brand team.
+      Sole product designer on the digital workstream. Ran design sprints with Jonny Buck, delivering low-fidelity mockups that illustrated the research findings and the proposed information architecture. Led accessibility testing of the in-development brand identity alongside Interbrand's brand team.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Jonny Buck

@@ -9,12 +9,14 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 8
 year: 2021
 sector: Virtual Event
+roleSummary: |
+  Designed the WSJ CEO Council virtual event platform and led the front-end development on a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.
 team:
   - name: Alan Long
-    role: Senior Product Designer & Front-end Developer
+    role: UX/UI Designer & Front-end Developer
     company: Cheerful Twentyfirst
     description: |
-      Designed the WSJ CEO Council virtual event platform and led the front-end development on a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.
+      Led design and front-end development of the platform. Worked alongside Gramercy Tech's developers on implementation, and presented to WSJ stakeholders throughout the project.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Chris Keirnan

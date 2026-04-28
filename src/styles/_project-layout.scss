@@ -203,6 +203,85 @@ body.project-page .page_container article section {
   margin: 0;
 }
 
+// Sub-section card — visually groups h3 children under their h2 parent.
+// Visual treatment matches .my-role-card (without the hover state).
+//
+// Mobile: simple padded card.
+// Desktop: section keeps the page grid (cols 1-6) so media captions can still
+// reach col 6 (outside the card on the right). The card visual itself is
+// drawn in cols 2-5 via a grid-placed ::before. Text content is inset 32px
+// from the card edges; media inside spans cols 2-5 flush with the card edges.
+@media screen and (max-width: 800px) {
+  body.project-page article > section[data-parent] {
+    padding: var(--unit-32);
+    border-radius: var(--radius-card);
+    background-color: $bg-card;
+  }
+}
+
+@media screen and (min-width: 801px) {
+  body.project-page article > section[data-parent] {
+    padding-block: var(--unit-32);
+    position: relative;
+  }
+
+  body.project-page article > section[data-parent]::before {
+    content: '';
+    grid-column: 2 / 6;
+    grid-row: 1 / -1;
+    // align-self: stretch overrides the section's `align-items: start`, which
+    // would otherwise collapse this empty box to zero height.
+    align-self: stretch;
+    background-color: $bg-card;
+    border-radius: var(--radius-card);
+    // Bleed into the section's vertical padding so the card covers the full
+    // padded area, not just the content rows.
+    margin-block: calc(var(--unit-32) * -1);
+    z-index: -1;
+  }
+
+  // Inset content from the card edges. Media-blocks (and captions) keep their
+  // default placement so figures stay flush with the card and right captions
+  // sit in col 6. ul and blockquote use margin-inline (not padding) so their
+  // own internal padding for bullets / left border stays intact and the
+  // marker / border lines up with the text inset, not the card edge.
+  body.project-page article > section[data-parent] > :not(.media-block, ul, blockquote) {
+    padding-inline: var(--unit-32);
+  }
+  body.project-page article > section[data-parent] > :is(ul, blockquote) {
+    margin-inline: var(--unit-32);
+  }
+
+  // When media closes a sub-section, drop the card's bottom padding so the
+  // figure reaches the card's bottom edge — matching its horizontal flush
+  // alignment at cols 2-5. The bg's bottom margin-bleed must also be removed
+  // (otherwise the bg extends below the section bottom).
+  body.project-page article > section[data-parent]:has(> .media-block:last-child) {
+    padding-bottom: 0;
+  }
+  body.project-page article > section[data-parent]:has(> .media-block:last-child)::before {
+    margin-bottom: 0;
+  }
+
+  // Round the closing media's bottom corners to match the card. For a single
+  // figure (cols 2-5), both corners. For a pair, the outer corners only — the
+  // inner edges sit inside the card and stay square.
+  $closing: 'body.project-page article > section[data-parent]:has(> .media-block:last-child) > .media-block:last-child';
+  #{$closing}:not(.media-block--pair) > figure.media-full {
+    overflow: hidden;
+    border-bottom-left-radius: var(--radius-card);
+    border-bottom-right-radius: var(--radius-card);
+  }
+  #{$closing}.media-block--pair > figure.media-full:first-child {
+    overflow: hidden;
+    border-bottom-left-radius: var(--radius-card);
+  }
+  #{$closing}.media-block--pair > figure.media-full:nth-child(2) {
+    overflow: hidden;
+    border-bottom-right-radius: var(--radius-card);
+  }
+}
+
 body:not(.project-page) .page_container article section {
   margin: 32px 0;
 }
@@ -285,6 +364,11 @@ $flow: ':is(#{$a}, #{$a} section)';
   .kicker + :is(h1, h2, h3, h4, h5, h6) {
     --flow-space: var(--unit-4);
   }
+
+  // Attribution sits tight below its blockquote — they read as a unit.
+  blockquote + .quote-attr {
+    --flow-space: var(--unit-12);
+  }
 }
 
 #{$a} ul {
@@ -308,7 +392,7 @@ body:not(.project-page) p ~ figure {
 }
 
 #page-permalink-footer .footer-content {
-  padding-top: var(--page-gutter-y);
+  padding-top: var(--unit-128);
 }
 
 #page-permalink-footer .other-work {

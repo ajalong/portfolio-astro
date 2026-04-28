@@ -41,7 +41,7 @@ interface Props {
 }
 
 const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex } = Astro.props as Props;
-const clientWithYear = [client, year].filter(Boolean).join(' – ');
+const clientWithYear = client;
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
 ---

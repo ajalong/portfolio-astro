@@ -42,7 +42,7 @@
     position: absolute;
     inset: 0;
     background: var(--buttonBackground);
-    border: var(--button-rim-width) solid var(--buttonBorder);
+    border: var(--border);
     clip-path: polygon(
       0 0,
       100% 0,

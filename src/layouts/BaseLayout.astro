@@ -121,6 +121,14 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';
       import { initMediaAutoplay } from '../scripts/media-autoplay';
 
+      // Clear stuck focus before a ClientRouter navigation. Without this, a
+      // tap on a project card can leave it in :focus-visible after navigating
+      // back, pinning .item-cta / .item-meta visible on the homepage.
+      document.addEventListener('astro:before-preparation', () => {
+        const active = document.activeElement as HTMLElement | null;
+        if (active && active !== document.body) active.blur();
+      });
+
       document.addEventListener('astro:after-swap', () => {
         document.body.classList.remove('initial-load');
 

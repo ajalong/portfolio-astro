@@ -43,8 +43,8 @@ h2 {
 }
 
 h3 {
-  font-size: var(--type-size-md);
-  font-weight: var(--weight-medium);
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
   color: var(--text-primary);
   max-width: 600px;
   margin: 0;
@@ -128,15 +128,15 @@ blockquote {
   line-height: var(--line-height);
   max-width: 600px;
   margin-bottom: 12px;
+}
 
-  cite {
-    display: block;
-    font-style: normal;
-    font-size: var(--type-size);
-    font-weight: var(--weight-medium);
-    color: var(--text-secondary);
-    margin-top: var(--text-spacing-tight);
-  }
+// Attribution emitted as a sibling after the blockquote (not inside it) so it
+// sits below the left border at the same indent level as surrounding text.
+.quote-attr {
+  font-style: normal;
+  font-size: var(--type-size);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
 }
 
 blockquote.quote-emphasis {

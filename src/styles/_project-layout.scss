@@ -225,16 +225,15 @@ body.project-page .page_container article section {
     position: relative;
   }
 
-  // Card surface — position: absolute removes ::before from grid auto-placement
-  // (so it doesn't claim cells children would auto-place into). `grid-column:
-  // 2 / 6` still pins the horizontal containing-block edges to the page
-  // subgrid; `inset-block: 0` fills the section's padding box top to bottom,
-  // so the card covers the full vertical extent regardless of child count.
+  // Card surface — position: absolute removes ::before from grid auto-placement.
+  // grid-column doesn't size abspos elements, so horizontal extent is set
+  // explicitly: the section spans all 6 equal cols, so one col-width + gap =
+  // (100% + gap) / 6, which is exactly the inset from each side to reach col
+  // lines 2 and 6. inset-block: 0 fills the section's padding box top to bottom.
   body.project-page article > section[data-parent]::before {
     content: '';
     position: absolute;
-    grid-column: 2 / 6;
-    inset-block: 0;
+    inset: 0 calc((100% + var(--grid-gap)) / 6);
     background-color: $bg-card;
     border-radius: var(--radius-card);
     z-index: -1;

@@ -9,3 +9,17 @@
   from = "/project/atikinsrealis"
   to = "/project/atkinsrealis"
   status = 301
+
+# Security headers applied site-wide. CSP and Trusted Types intentionally
+# left out — Astro and Clarity require inline scripts and styles, which
+# would need a nonce-based middleware to pass Lighthouse's strict-CSP
+# audit. The headers below are the no-risk, drop-in wins.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"

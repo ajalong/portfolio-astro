@@ -1,12 +1,12 @@
 ---
 title: Exec Circle
+published: false
 client: Google
 slug: googleexeccircle
 summary: How do you build relationships with your business partners during a pandemic?
 metaDescription: I designed and built the Google Exec Circle platform for Cheerful Twentyfirst — a digital experience helping Google build and maintain relationships with senior business partners during the COVID-19 pandemic.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/alan.design/google/google-thumbnail_alt
 order: 4
-published: false
 year: 2021
 sector: Virtual Event
 team:

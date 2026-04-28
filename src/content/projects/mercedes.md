@@ -154,4 +154,4 @@ A few things became clear over the course of the project. Most of them came down
 
 - **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost was time; the gain was a redesign that held together as one product.
 - **Insights from the original creators are invaluable.** The OMD interviews were the most valuable research input we had. They did not validate decisions; they exposed the constraints that we would otherwise have rediscovered the hard way.
-- **Show-don't-tell is vital.** Strong information architecture made the use of tools far easier to understand. Microcopy and tooltips shouldn't be leaned on but can provide additional aid.
+- **Show, don't tell, is vital.** Strong information architecture made the use of tools far easier to understand. Microcopy and tooltips shouldn't be leaned on, but can provide additional aid.

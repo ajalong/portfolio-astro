@@ -64,6 +64,12 @@
     height: 100%;
     object-fit: cover;
   }
+
+  // Hide on mobile so the bio/CTA text can take the card's full width
+  // instead of being inset by the 52px avatar + 12px gap.
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
 }
 
 .my-role-card__meta {
@@ -95,6 +101,10 @@
   line-height: var(--line-height);
   color: var(--text-secondary);
   white-space: pre-wrap;
+
+  @media screen and (max-width: 1000px) {
+    margin-left: 0;
+  }
 }
 
 .my-role-card__cta {
@@ -110,6 +120,10 @@
   svg {
     flex-shrink: 0;
     opacity: 0.6;
+  }
+
+  @media screen and (max-width: 1000px) {
+    margin-left: 0;
   }
 }
 

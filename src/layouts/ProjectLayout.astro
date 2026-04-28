@@ -91,13 +91,18 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
       </div>
     </footer>
   </div>
+  <dialog class="media-lightbox" data-media-lightbox aria-label="Expanded media">
+    <div class="media-lightbox__content" data-media-lightbox-content></div>
+  </dialog>
   <script>
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
     import { initCaptionFade } from '../scripts/caption-fade';
+    import { initMediaLightbox } from '../scripts/media-lightbox';
     // initMediaAutoplay moved to BaseLayout so home thumbnails benefit too.
     document.addEventListener('astro:page-load', () => {
       initProjectNavFromInternal();
       initCaptionFade();
+      initMediaLightbox();
     });
   </script>
 </BaseLayout>

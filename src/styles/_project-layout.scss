@@ -225,18 +225,18 @@ body.project-page .page_container article section {
     position: relative;
   }
 
+  // Card surface — position: absolute removes ::before from grid auto-placement
+  // (so it doesn't claim cells children would auto-place into). `grid-column:
+  // 2 / 6` still pins the horizontal containing-block edges to the page
+  // subgrid; `inset-block: 0` fills the section's padding box top to bottom,
+  // so the card covers the full vertical extent regardless of child count.
   body.project-page article > section[data-parent]::before {
     content: '';
+    position: absolute;
     grid-column: 2 / 6;
-    grid-row: 1 / -1;
-    // align-self: stretch overrides the section's `align-items: start`, which
-    // would otherwise collapse this empty box to zero height.
-    align-self: stretch;
+    inset-block: 0;
     background-color: $bg-card;
     border-radius: var(--radius-card);
-    // Bleed into the section's vertical padding so the card covers the full
-    // padded area, not just the content rows.
-    margin-block: calc(var(--unit-32) * -1);
     z-index: -1;
   }
 
@@ -254,13 +254,10 @@ body.project-page .page_container article section {
 
   // When media closes a sub-section, drop the card's bottom padding so the
   // figure reaches the card's bottom edge — matching its horizontal flush
-  // alignment at cols 2-5. The bg's bottom margin-bleed must also be removed
-  // (otherwise the bg extends below the section bottom).
+  // alignment at cols 2-5. The bg follows automatically because `inset-block: 0`
+  // is anchored to the (now flush) padding box.
   body.project-page article > section[data-parent]:has(> .media-block:last-child) {
     padding-bottom: 0;
-  }
-  body.project-page article > section[data-parent]:has(> .media-block:last-child)::before {
-    margin-bottom: 0;
   }
 
   // Round the closing media's bottom corners to match the card. For a single

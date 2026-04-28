@@ -239,29 +239,5 @@ export default function rehypeProjectMedia() {
 
     processChildren(tree);
     visit(tree, 'element', processChildren);
-
-    // Sub-section card bg uses ::before with `grid-row: 1 / -1`. Two things
-    // make that work:
-    //   1. The section needs explicit `grid-template-rows` (with implicit
-    //      auto-rows the -1 line resolves to line 2 = one row).
-    //   2. Children must be *explicitly* placed in their rows. Without that,
-    //      auto-placement skips the cells the bg has claimed and pushes
-    //      content into implicit rows below the bg.
-    visit(tree, 'element', (node) => {
-      if (node.tagName !== 'section') return;
-      if (!node.properties || !node.properties['data-parent']) return;
-      const elementChildren = (node.children ?? []).filter((c) => c.type === 'element');
-      const rows = elementChildren.length;
-      if (!rows) return;
-
-      const prev = node.properties.style ? `${node.properties.style}; ` : '';
-      node.properties.style = `${prev}grid-template-rows: repeat(${rows}, auto)`;
-
-      elementChildren.forEach((child, idx) => {
-        if (!child.properties) child.properties = {};
-        const childPrev = child.properties.style ? `${child.properties.style}; ` : '';
-        child.properties.style = `${childPrev}grid-row: ${idx + 1}`;
-      });
-    });
   };
 }

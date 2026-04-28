@@ -94,11 +94,9 @@ _Design_
 - **Networking worth showing up for.** A hero animation in the Lobby featured attendees' headshots and a live count of users online, paired with a direct call to action. The brief was engagement, and networking was given the prominence the brief required.
 - **Co-design with WSJ stakeholders.** Rather than presenting finished work for sign-off, I ran the design process collaboratively with WSJ's team. By the time decisions were made, stakeholders had been part of making them, which meant buy-in with WSJ leadership was less challenging.
 
-![Wireframe of the Welcome page showing key page elements in relation to the page fold on desktop.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-landing_wireframe.png)
+![The Welcome page architecture, prioritising the user's most likely need above the fold.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-landing_wireframe.png)
 
 ![Animation of the Welcome page (landing page) being scrolled.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/welcome_apstqd.mp4)
-
-![Wireframe of the Lobby page showing key page elements in relation to the page fold on desktop.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-lobby_wireframe.png)
 
 ![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
@@ -108,15 +106,12 @@ _Implementation_
 The deadline was very tight for this project; Eventfinity's platform was technically robust but had no UI scaffolding out of the box. This was a double-edged sword: whilst it empowered me to design from a blank canvas, it meant a lot more work was required to implement the design. I led front-end development alongside John Speck at Gramercy Tech, drawing on patterns I had refined across Cheerful Twentyfirst's previous virtual events. Gramercy Tech also provided back-end development resources.
 
 - **Utility classes, SCSS and variables.** A well-architected utility class system kept styling consistent and allowed new pages to be built quickly without each one requiring bespoke CSS. Tokens lived as CSS variables, so any change propagated cleanly.
-- **Documented for handoff.** The code was documented as we wrote it, on the assumption that it would outlive the project. That assumption proved correct. WSJ went on to reuse the designs and code for subsequent events.
-- **Built on prior work.** By this point I had built several event sites for Cheerful Twentyfirst and was fast at it. The CEO Council benefited from patterns and decisions that had already been pressure-tested on smaller events.
+- **Documented for handoff.** The code was documented as we wrote it, on the assumption that it would outlive the project.
 
 _Impact_
 ## A huge leap in user experience
 
 The event landed well. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in. The platform went on to be reused for further WSJ events, including the CFO & COO Council and the Technology Council.
-
-![Wireframe of the Auditorium page showing key page elements in relation to the page fold on desktop.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-auditorium_wireframe.png)
 
 ![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
 
@@ -125,10 +120,9 @@ _Lessons learned_
 
 The project reinforced a set of principles I have applied to most work since, particularly around designing for senior audiences, working with stakeholders during design rather than presenting to them at the end, and treating handoff as a design problem in its own right.
 
-- **For a time-poor audience, focus and execution are everything.** At the time, most virtual event platforms lacked product direction; many features existed simply because the technology allowed it. The CEO Council worked because it asked "should we" rather than "can we" at every decision point. For an audience whose time is the most valuable thing in the room, that discipline is the project.
+- **For a time-poor audience, focus and execution are everything.** At the time, most virtual event platforms lacked product direction; many features existed simply because the technology allowed it. The CEO Council worked because it asked "should we" rather than "can we" at every decision point.
 - **Co-design is a delivery tactic as well as a research one.** Bringing WSJ stakeholders into the design process meant sign-off was not a hurdle looming over the process. It was distributed across the project. On a deadline this tight, that compression of the approval cycle made the difference.
-- **Documentation is always more valuable than expected.** Writing code that other developers could pick up turned a one-off project into a platform WSJ reused for years. The work outlived its original brief because handoff was treated as part of the design rather than as an afterthought.
-- **Distributed teams need design to carry more of the conversation.** Working with a US-based development team from London meant time zones absorbed most of the synchronous hours. Thorough status updates, documentation, naming, and consistency were vital.
+- **Documentation is always more valuable than expected.** Writing code that other developers could pick up turned a one-off project into a platform WSJ reused for years, because handoff was treated as part of the design rather than as an afterthought.
 
 > "A huge thank you for the delivery of yesterday — we are getting endless thanks, high-fives and praise from all parties — internal and external."
 >

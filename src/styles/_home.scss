@@ -89,11 +89,15 @@ body.home .about {
 
   p {
     margin: 0;
-    max-width: 38ch;
+    max-width: 600px;
     font-size: var(--type-size);
     font-weight: var(--weight-regular);
     line-height: var(--line-height);
     color: var(--text-primary);
+  }
+
+  p + p {
+    margin-top: var(--text-spacing-standard);
   }
 
   a {

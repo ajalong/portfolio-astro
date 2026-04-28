@@ -11,7 +11,7 @@
 }
 
 /*
- * Page grid — 6 equal cols (≥801px).
+ * Page grid — 6 equal cols (≥1001px).
  *
  *   col 1      : left margin
  *   cols 2–5   : main content — header, body copy, team card, images
@@ -21,7 +21,7 @@
  * main spans all 6 cols as a subgrid so article content can address col 1
  * and col 6 for margin captions.
  */
-@media screen and (min-width: 801px) {
+@media screen and (min-width: 1001px) {
   body.project-page .page_container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -76,7 +76,7 @@
  *   col 1    : left margin (reserved)
  *   col 6    : right caption (single image or both captions of a pair)
  */
-@media screen and (min-width: 801px) {
+@media screen and (min-width: 1001px) {
   body.project-page article,
   body.project-page article > section {
     display: grid;
@@ -152,11 +152,11 @@
 }
 
 /*
- * Mobile media (≤800px) — captions sit below their images instead of in
+ * Mobile media (≤1000px) — captions sit below their images instead of in
  * a margin column. Pairs stay side-by-side as a 2-col row, with their
  * "(Left)" and "(Right)" captions in a matching 2-col row beneath.
  */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   // Pair: 2-col grid — figures on row 1, caption group on row 2.
   .media-block--pair {
     display: grid;
@@ -211,7 +211,7 @@ body.project-page .page_container article section {
 // reach col 6 (outside the card on the right). The card visual itself is
 // drawn in cols 2-5 via a grid-placed ::before. Text content is inset 32px
 // from the card edges; media inside spans cols 2-5 flush with the card edges.
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   body.project-page article > section[data-parent] {
     padding: var(--unit-32);
     border-radius: var(--radius-card);
@@ -219,7 +219,7 @@ body.project-page .page_container article section {
   }
 }
 
-@media screen and (min-width: 801px) {
+@media screen and (min-width: 1001px) {
   body.project-page article > section[data-parent] {
     padding-block: var(--unit-32);
     position: relative;
@@ -303,7 +303,7 @@ body:not(.project-page) .page_container article section {
 body.project-page .page_container > header {
   margin-bottom: var(--section-spacing);
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1000px) {
     margin-bottom: var(--unit-56);
   }
 }
@@ -404,7 +404,7 @@ body:not(.project-page) p ~ figure {
   grid-template-columns: 1fr;
   gap: var(--grid-gap);
 
-  @media screen and (min-width: 801px) {
+  @media screen and (min-width: 1001px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }

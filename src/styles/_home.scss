@@ -4,7 +4,7 @@
 // Cols 2–5   : header (h1 + intro) and project list
 // Col 6      : sticky section-index nav (HomeSectionIndex)
 //
-// Mobile (≤800px): the grid collapses to a single stacked column. The
+// Mobile (≤1000px): the grid collapses to a single stacked column. The
 // sticky nav's first two groups (the "alanlong.design / Portfolio" header
 // and the project jump-links) are hidden — visitors scroll directly through
 // the cards. The contact + social groups stay visible inline at the bottom.
@@ -27,7 +27,7 @@ body.home .page_container {
   padding: var(--page-gutter-y) var(--page-gutter-x) var(--unit-88);
 }
 
-@media screen and (min-width: 801px) {
+@media screen and (min-width: 1001px) {
   body.home .page_container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -63,7 +63,7 @@ body.home header {
   // Match the section-spacing rhythm used between project sections.
   padding-bottom: var(--section-spacing);
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1000px) {
     padding-bottom: 0;
   }
 }
@@ -128,7 +128,7 @@ body.home .about {
 
 // ─────────── Mobile ───────────
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   body.home .page_container {
     display: flex;
     flex-direction: column;

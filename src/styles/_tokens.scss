@@ -126,8 +126,8 @@ $bg-card-hover-gradient:
   --page-gutter-x:      var(--unit-16);  /* space from viewport left/right to grid */
 }
 
-/* Mobile re-tune — tokens shift at 800px so per-rule media queries are unnecessary */
-@media screen and (max-width: 800px) {
+/* Mobile re-tune — tokens shift at 1000px so per-rule media queries are unnecessary */
+@media screen and (max-width: 1000px) {
   :root {
     --text-spacing-tight: var(--unit-24);
     --text-spacing-standard:       var(--unit-32);

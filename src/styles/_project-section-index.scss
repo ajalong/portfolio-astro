@@ -1,7 +1,7 @@
 // Jump-to-section nav for project case studies.
 //
-// Desktop/tablet (≥801px): placed in col 6, stacks vertically and sticks.
-// Mobile (≤800px): hidden entirely.
+// Desktop/tablet (≥1001px): placed in col 6, stacks vertically and sticks.
+// Mobile (≤1000px): hidden entirely.
 @use "tokens" as *;
 @use "rim" as *;
 
@@ -18,7 +18,7 @@
   // sits in a padding channel, flush with the nav's left edge.
   padding-left: var(--unit-16);
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1000px) {
     display: none;
   }
 }

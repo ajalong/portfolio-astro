@@ -13,7 +13,7 @@
   padding: 0;
   max-width: none;
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1000px) {
     grid-template-columns: 1fr;
     gap: var(--text-spacing-tight);
   }

@@ -43,7 +43,7 @@ button.u-pill-primary,
   gap: 10px;
   width: 100%;
 
-  @media screen and (min-width: 801px) {
+  @media screen and (min-width: 1001px) {
     > a {
       align-self: flex-start;
     }
@@ -153,7 +153,7 @@ button.u-pill-primary,
     margin-right: 0;
   }
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 1000px) {
     position: static;
 
     .cta-stack {
@@ -226,7 +226,7 @@ button.u-pill-primary {
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   button.u-pill-primary {
     @include cta-pill-primary-mobile;
   }

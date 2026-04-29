@@ -47,14 +47,16 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
     <meta name="msapplication-TileColor" content="#222222" />
     <!--
-      theme-color intentionally omitted. The page background is a layered
-      gradient mesh; pinning the iOS Safari chrome to any single colour
-      created a visible hard line at the top and bottom of the viewport.
-      Without theme-color, mobile Safari renders translucent chrome with
-      a backdrop blur, so the gradient flows continuously into the
-      browser UI. Android Chrome and PWAs fall back to white, which is
-      acceptable for this site's usage profile.
+      theme-color is set to #fff to match the page's top white wash
+      (--top-white-solid-end is solid #fff for ~50px before the gradient
+      kicks in). iOS Safari was rendering opaque white chrome by default
+      anyway when theme-color was omitted, so making it explicit at
+      least eliminates the cut at the top of the viewport. The bottom
+      toolbar still meets the gradient page bottom, but Safari hides
+      the toolbar on scroll-down and renders it translucent on scroll-up
+      in current iOS, which softens that boundary in practice.
     -->
+    <meta name="theme-color" content="#ffffff" />
 
     <meta property="og:title" content={pageTitle} />
     <meta property="og:type" content="website" />

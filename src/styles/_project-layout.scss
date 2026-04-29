@@ -225,15 +225,18 @@ body.project-page .page_container article section {
     position: relative;
   }
 
-  // Card surface — position: absolute removes ::before from grid auto-placement.
-  // grid-column doesn't size abspos elements, so horizontal extent is set
-  // explicitly: the section spans all 6 equal cols, so one col-width + gap =
-  // (100% + gap) / 6, which is exactly the inset from each side to reach col
-  // lines 2 and 6. inset-block: 0 fills the section's padding box top to bottom.
+  // Card surface — anchored to the subgrid's column tracks instead of computed
+  // from `100%`. Per CSS Grid Level 1, an absolutely-positioned child of a
+  // grid container with explicit grid-column gets that grid area as its
+  // containing block; `inset: 0` then fills it exactly. This is more robust
+  // than the prior `calc((100% + gap) / 6)` approach, which was vulnerable
+  // to subpixel rounding and depended on `--grid-gap` staying in sync with
+  // the actual gap.
   body.project-page article > section[data-parent]::before {
     content: '';
     position: absolute;
-    inset: 0 calc((100% + var(--grid-gap)) / 6);
+    grid-column: 2 / 6;
+    inset: 0;
     background-color: $bg-card;
     border-radius: var(--radius-card);
     z-index: -1;

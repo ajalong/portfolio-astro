@@ -16,7 +16,7 @@ team:
     role: Product Design Lead
     company: Interbrand
     description: |
-      Sole product designer on the digital workstream. Ran design sprints with Jonny Buck, delivering low-fidelity mockups that illustrated the research findings and the proposed information architecture. Led accessibility testing of the in-development brand identity alongside Interbrand's brand team.
+      Sole product designer on the digital workstream. Ran design sprints with Jonny Buck, delivering mockups that illustrated the research findings and the proposed information architecture. Led accessibility testing of the in-development brand identity alongside Interbrand's brand team.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Jonny Buck
@@ -71,7 +71,7 @@ In 2023, SNC-Lavalin contracted Interbrand for a ground-up rebrand. The result w
 
 [For context on the 2023 rebrand, see Creative Pool's coverage.](https://creativepool.com/interbrandlondon/projects/atkinsrealis-for-atkinsrealis)
 
-While the wider Interbrand team developed the new brand, Jonny Buck (UX Researcher), Lisa Pink (Project Manager) and I were tasked with exploring how AtkinsRéalis's new corporate strategy could be expressed through their corporate site. The deliverable was a research-led report with low-fidelity mockups, illustrating tested directions, rather than a final site.
+While the wider Interbrand team developed the new brand, Jonny Buck (UX Researcher), Lisa Pink (Project Manager) and I were tasked with exploring how AtkinsRéalis's new corporate strategy could be expressed through their corporate site. The deliverable was a research-led report with mockups, illustrating tested directions, rather than a final site.
 
 ![High-fidelity mock-up of what the homepage could look like with the team's UX recommendations incorporated — Navy hero, headline and About CTA left; portrait and teal arcs right; below, editorial and project cards in a grid.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-visual_identity_exploration.png)
 
@@ -89,17 +89,17 @@ _Approach_
 
 ## Designing in parallel with the rebrand
 
-The UX workstream ran in parallel with strategy, brand identity and CX; each workstream was entwined. Much of our work was downstream from strategy and identity, so working in an effective manner was challenging.
+The UX workstream ran in parallel with strategy, brand identity and CX; each workstream interlocked with the others. Much of our work was downstream from strategy and identity, so working in an effective manner was challenging.
 
 - **Design sprints and testing.** We structured the UX work as a series of design sprints, generally focused on how a strategic objective could be expressed through design.
 - **Working with the brand workstream as their identity took shape.** The brand identity was being designed in parallel by Adam Johnson's team. We tested how well their ideas worked in digital contexts, and provided broader accessibility guidance, helping them understand the constraints digital use would place on the identity they were developing.
-- **Establishing what product design was inside Interbrand.** The digital solutions team had previously been a separate agency within Omnicom, Interbrand's parent group, and had only recently merged into Interbrand. This was the first project in which the team operated as part of Interbrand directly. Part of this project served to show our new colleagues the value of product design and UX thinking in relation to brand strategy.
+- **Establishing product design inside Interbrand.** The digital solutions team had recently merged into Interbrand, and this was the first project in which it operated as part of the wider agency. Part of the work was demonstrating to new colleagues what product design contributed to brand strategy.
 
 _Design_
 
 ## Show, don't tell
 
-I am interested in the ways an interface can communicate the ideals of an organisation through structure and visual design alone, rather than through stated copy. Each design sprint focused on a part of the site and how it could show an international perspective, an inclusive culture, and deep engineering expertise.
+Brand values are most credibly communicated on a corporate site through what the site does, not what it says. A company can state that it values its people, or it can embed them prominently in its case studies. The first costs nothing to write; the second costs the company something to do. AtkinsRéalis wanted to be seen as internationally minded, inclusive, and technically expert, and each design sprint focused on how the site's structure could carry one of these values.
 
 _Project overview_
 
@@ -116,7 +116,7 @@ An obvious place to showcase the international nature of AtkinsRéalis's work wa
 
 We found users struggled to use the map. It presented a less conventional interaction model and added friction to the experience. The grid view won decisively for usability. A hybrid view was then tested: its hero featured a world map with case studies animating in and out, with the preferred grid view sitting above the fold beneath it. This design tested well, with users finding it easy to use whilst emphasising the international nature of AtkinsRéalis's business.
 
-![A variant of the search homepage used for testing, highlighting the international nature of the business — World map with location pins, headline, search bar, project count by region.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-international.png)
+![A variant of the projects overview page tested with users, leading with a world map to highlight the international nature of the business. — World map with location pins, headline, search bar, project count by region.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-international.png)
 
 _Navigation_
 
@@ -130,7 +130,7 @@ AtkinsRéalis users were engineers, project managers and procurement leads who c
 >
 > — Testing participant
 
-![Final navigation showing the full taxonomy of markets, created based on feedback from user testing. — AtkinsRéalis mega-nav open, showing columns of labelled sector and service links spanning the full viewport width against a white background.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777331681/alan.design/AtkinsRealis/atkinsrealis-navigation-full_taxonomy_ylg1nj.png)
+![Final navigation mockup showing the full taxonomy of markets, created based on feedback from user testing. — AtkinsRéalis mega-nav open, showing columns of labelled sector and service links spanning the full viewport width against a white background.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777331681/alan.design/AtkinsRealis/atkinsrealis-navigation-full_taxonomy_ylg1nj.png)
 
 _Homepage_
 
@@ -149,24 +149,24 @@ A poll embedded in the homepage was tested separately and was unanimously well-r
 >
 > — Testing participant
 
-![Final homepage showing a brand message and content types above the fold, created based on feedback from user testing. — AtkinsRéalis homepage with a bold brand statement hero, editorial and project cards surfaced immediately below the fold, and a poll prompt embedded in the layout.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777334486/alan.design/AtkinsRealis/atkinsrealis-home-final_ctqrrx.png)
+![Final homepage mockup showing a brand message and content types above the fold, created based on feedback from user testing. — AtkinsRéalis homepage with a bold brand statement hero, editorial and project cards surfaced immediately below the fold, and a poll prompt embedded in the layout.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777334486/alan.design/AtkinsRealis/atkinsrealis-home-final_ctqrrx.png)
 
 _Project page_
 
 ### Spotlight people and partners
 
-Within individual case study pages, we tested variants that emphasised different aspects of the work: the technical achievement, the strategic outcome, the people and partners involved. Variants foregrounding partners and team members performed strongest. Participants consistently described these as more legitimate, trustworthy and human.
+Within individual case study pages, we tested variants that emphasised different aspects of the work: the technical achievement, the strategic outcome, or the people and partners involved. Variants foregrounding partners and team members performed strongest. Participants consistently described these as more legitimate, trustworthy and human.
 
 > "I like how they have included the partners and the team, it makes it more legitimate and real."
 >
 > — Testing participant
 
-For a global engineering firm, this was a meaningful finding. In this sector, trust is built on people and relationships as much as on capabilities. The project pages needed to lead with both.
+For a global engineering firm, this was a meaningful finding. In this sector, trust is built on people and relationships as well as on capabilities.
 
-![Page section about services using people imagery — Project page layout with large-format hero image, project title, sector tag, and introductory copy.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338008/alan.design/AtkinsRealis/atkinsrealis-project-spotlight_uu61hn.png)
-![Page section about a team member using people imagery — Project page layout with team member and partner profiles prominently placed alongside project details.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338007/alan.design/AtkinsRealis/atkinsrealis-project-person_kggre8.png)
+![A services page section variant that gave prominence to the people delivering the work. — Project page layout with large-format hero image, project title, sector tag, and introductory copy.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338008/alan.design/AtkinsRealis/atkinsrealis-project-spotlight_uu61hn.png)
+![A team member section variant that surfaced the individuals behind a project. — Project page layout with team member and partner profiles prominently placed alongside project details.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338007/alan.design/AtkinsRealis/atkinsrealis-project-person_kggre8.png)
 
-![The final project page design, based on user testing findings — Full project case study page with hero image, structured project overview, and integrated team and partner section.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338005/alan.design/AtkinsRealis/atkinsrealis-project-final_yqrqgf.png)
+![The final project page mockup, based on user testing findings. — Full project case study page with hero image, structured project overview, and integrated team and partner section.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338005/alan.design/AtkinsRealis/atkinsrealis-project-final_yqrqgf.png)
 
 _Typography_
 
@@ -192,8 +192,8 @@ _Lessons learned_
 
 ## What the project taught me about exploratory work
 
-The project taught me a great deal about how to approach exploratory work. Most of these lessons are about what makes research-led design hold up against the realities of complex client engagements.
+Most of these lessons are about what makes research-led design hold up against the realities of complex client engagements.
 
-- **Show, don't tell, is a structural choice as much as a creative one.** The most useful findings on this project concerned which interactions made the brand's values feel true, rather than how to communicate them. A company's values can be illustrated by content and structural choices.
+- **Brand values land through structural choices, not decorative ones.** The variants that performed best in testing were those where the site's structure required something of the company itself — leading with named partners, embedding a poll that committed the company to listening. Variants that gestured at values through copy or styling alone did not test as well.
 - **Doing product design in parallel with other workstreams needs a deliberate working method.** Working alongside strategy and brand workstreams that are themselves still being defined is difficult. The way through is to design at fidelities that honestly reflect how settled the inputs are, and to structure the work as iterative sprints rather than a linear path to a final deliverable.
 - **An exploration project's value goes beyond design insights.** This exploration project led the client to understand their own problem more clearly than they did at the start. AtkinsRéalis ended the engagement with a clearer view of how their website needed to work, even if the timeline did not allow for full implementation immediately.

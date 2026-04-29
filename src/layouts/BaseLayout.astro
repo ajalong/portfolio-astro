@@ -46,9 +46,15 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
     <meta name="msapplication-TileColor" content="#222222" />
-    <!-- Same hex as --browser-chrome-hairline (global.scss): Safari’s toolbar isn’t #fff; this tints UI to meet the page -->
-    <meta name="theme-color" content="#ebebeb" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#ebebeb" />
+    <!--
+      theme-color intentionally omitted. The page background is a layered
+      gradient mesh; pinning the iOS Safari chrome to any single colour
+      created a visible hard line at the top and bottom of the viewport.
+      Without theme-color, mobile Safari renders translucent chrome with
+      a backdrop blur, so the gradient flows continuously into the
+      browser UI. Android Chrome and PWAs fall back to white, which is
+      acceptable for this site's usage profile.
+    -->
 
     <meta property="og:title" content={pageTitle} />
     <meta property="og:type" content="website" />

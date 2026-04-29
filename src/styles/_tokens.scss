@@ -65,8 +65,9 @@ $bg-card-hover-gradient:
   --text-underline-width: 1px;
   --secondaryBorderColor: #f2f2f2;
   /*
-   * Safari's own chrome is ~this grey — keep theme-color in BaseLayout in the same family.
-   * The page paint uses #fff at the top (see --top-white-solid-end); the UI chrome is separate.
+   * Hairline grey used between page edge and any UI chrome that needs it.
+   * (theme-color is intentionally not set in BaseLayout — see the comment
+   * there for why.)
    */
   --browser-chrome-hairline: #ebebeb;
 

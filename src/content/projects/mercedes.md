@@ -10,7 +10,7 @@ order: 3
 year: 2025
 sector: UX Overhaul
 roleSummary: |
-  Redesigned Mercedes-Benz's paid-media analytics platform without access to the client's product design team or their internal design system, working from public brand guidelines and live consumer sites. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints. Partnered with a UX researcher and a PM, and co-facilitated stakeholder workshops with Mercedes-Benz and OMD, the agency that had built the original platform.
+  Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:
   - name: Alan Long
     role: Product Design Lead
@@ -59,9 +59,9 @@ team:
 _Context_
 ## Overhauling an automotive giant's ad analytics platform
 
-The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a collection of tools to track, measure, and optimise the performance of advertising campaigns across all paid media channels. Originally built by [OMD](https://www.omd.com/), one of Interbrand's sister agencies, the platform had grown in capability over the years without ever having had dedicated product design input. The interface hadn't kept up with what the tool was now being asked to do. On behalf of Interbrand, Laura Harding (Product Manager), Niq Curry (UX Researcher) and myself (Senior Product Designer) overhauled the platform, dramatically improving the user experience.
+The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a collection of tools to track, measure, and optimise the performance of advertising campaigns across all paid media channels. Originally built by [OMD](https://www.omd.com/), one of Interbrand's sister agencies, the platform had grown in capability over the years without ever having had dedicated product design input. Interbrand was brought in to overhaul it.
 
-I worked without direct access to Mercedes-Benz's product design team or their internal design system. The visual direction was based on their public brand guidelines and live consumer sites, which set the tone but left a lot of detailed decisions to be made on our side.
+The visual direction was based on Mercedes-Benz's public brand guidelines and live consumer sites, since we worked without direct access to their internal design system.
 
 _Problem_
 ## A powerful platform obscured by its interface
@@ -75,18 +75,12 @@ The Media Decision Engine was a capable platform that was hard to use. The under
 _Research_
 ## Understanding the users, the existing tools, and the thinking behind them
 
-Before redesigning anything, we needed two things: a clear picture of who used the platform and what they were trying to do with it, and a proper understanding of the existing tools we'd be building upon. Niq Curry led the research; collectively we derived insights and I explored design solutions.
-
-- Niq led user research to understand the needs of the platform's users, developing a set of personas that would anchor the redesign. I took part in selected interviews and worked with Niq and Laura to analyse the findings.
-- We interviewed stakeholders from OMD, the team behind the original platform, to understand the rationale for the existing tools and how they'd come to be structured the way they were.
-- I co-facilitated a day-long workshop in London with Mercedes-Benz's team, who flew in from Stuttgart. Niq designed exercises that walked the group through the personas, user needs, and pain points before opening up to ideation on solutions.
+Before redesigning anything, we needed a clear picture of who used the platform, what they were trying to do with it, and the rationale behind how the existing tools had been built. Niq Curry led user research with the platform's users and developed a set of personas that anchored the redesign. We also interviewed stakeholders from OMD, the team behind the original platform, to understand the constraints and decisions that had shaped it. I co-facilitated a day-long workshop in London with Mercedes-Benz's team, who flew in from Stuttgart, walking the group through the personas, user needs, and pain points before opening up to ideation.
 
 _Design sprints_
 ## Three sprints in series
 
 The three problem areas were tackled as separate design sprints, run in series so each could build on the last. Information architecture came first as the foundation. Settings control built on top. Onboarding came last, layering on top of an interface that was now far more intuitive.
-
-A thread ran through all three: where the original platform leaned on explanation, the redesign leaned on demonstration. Wherever possible, we showed users what a tool did rather than describing it.
 
 Exporting data sat slightly apart from the three sprints and was wrapped into the final designs.
 
@@ -99,7 +93,7 @@ Tools were regrouped into three stages that mirrored how users actually moved th
 
 Within each stage, tools were laid out section by section down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform in their heads.
 
-![Market Opportunities screen with a graph of vehicle registrations by year; Mercedes and key competitors are plotted. — “Identify Market Trends”: multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-identify_market_trends.png)
+![The Market Opportunities stage of the IA, showing tools laid out in the order users move through them. — “Identify Market Trends”: multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-identify_market_trends.png)
 
 _Configuring parameters_
 ### Global settings, adjustable anywhere
@@ -108,13 +102,13 @@ Users had been re-entering the same data into tool after tool. The redesign sepa
 
 - **Global vs. local parameters.** I scoped every parameter as either global (applied across multiple tools) or local (relevant to a single tool). Globals were consolidated into a single Scenario Settings overlay, accessible from anywhere on the platform. Local parameters stayed within their tool, configurable in place.
 - **Pre-populated visualisations.** With globals managed centrally, graphs and other visualisations could update live as users adjusted scenarios, showing them what a parameter did rather than explaining it.
-- **Microcopy that lowered cognitive load.** Copy across the platform was rewritten to be short, plain, and approachable, removing friction for the user.
+- **Microcopy rewritten platform-wide.** All in-product copy was rewritten to be short and plain, lowering cognitive load and making the relationships between tools more legible.
 
-The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discreet tools.
+The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discrete tools.
 
-![Scenario Settings overlay open with global controls impacting data visualisation across the site — Modal over chart: Scenario tab, dropdowns (market, model, competitors, segment, fuel, timeframe), saved scenario cards, Reset and Update.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-scenario_settings.png)
+![The Scenario Settings overlay. Adjusting any global parameter updates visualisations across every tool live. — Modal over chart: Scenario tab, dropdowns (market, model, competitors, segment, fuel, timeframe), saved scenario cards, Reset and Update.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-scenario_settings.png)
 
-![Channel Optimisation screen with a graph and controls for showing spend vs impact of different marketing channels, for instance radio or TV — Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-channel_optimisation.png)
+![Channel Optimisation: spend versus impact across paid media channels, with budget allocation in the right rail. — Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-channel_optimisation.png)
 
 _Onboarding_
 ### A guided introduction for less experienced users
@@ -123,11 +117,11 @@ The first two sprints had done a lot of the onboarding work. A clearer informati
 
 - **A short guided tour on first use.** A brief upfront orientation for new users to the platform's structure and the logic behind it.
 - **Tooltips and nudges, used sparingly.** Used carefully enough to stay useful rather than become noise, with copy kept short and tied to specific moments where users were most likely to need a prompt.
-- **Copy that respected the user's time.** Onboarding copy was plain and approachable, which made the overall experience more user-friendly.
+- **Copy pitched to the audience.** Onboarding copy assumed a working knowledge of media analytics and avoided the explanatory hand-holding that often makes onboarding feel patronising to expert users.
 
-![Onboarding overlay](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-onboarding_overlay.png)
+![The first-use orientation, kept short because the IA had already done most of the work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-onboarding_overlay.png)
 
-![Dismissible onboarding tooltips](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-tooltips.png)
+![Tooltips appear on first use at the moment a user is most likely to need a prompt, then disappear once dismissed.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-tooltips.png)
 
 _Exporting_
 ### Consistency and batch operations
@@ -142,12 +136,9 @@ _Impact_
 
 Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
 
-- Structure that matched how users actually worked.
-- One scenario, applied everywhere.
-- The platform shows, rather than tells how it's used.
-- Consistent exports across the platform.
+The information architecture was reorganised around the user's process, scenario settings consolidated into a single global model, and exports made consistent across every tool.
 
-![Login – Text explains who and what this platform is for](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-login.png)
+![The login screen sets expectations for who the platform is for, before the user has logged in.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-login.png)
 
 _Lessons learned_
 ## Redesigning inside a working product
@@ -156,4 +147,3 @@ A few things became clear over the course of the project. Most of them came down
 
 - **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost was time; the gain was a redesign that held together as one product.
 - **Insights from the original creators are invaluable.** The OMD interviews were the most valuable research input we had. They did not validate decisions; they exposed the constraints that we would otherwise have rediscovered the hard way.
-- **Show, don't tell, is vital.** Strong information architecture made the use of tools far easier to understand. Microcopy and tooltips shouldn't be leaned on, but can provide additional aid.

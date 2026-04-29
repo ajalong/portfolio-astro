@@ -23,6 +23,9 @@ const projects = defineCollection({
     published: z.boolean().optional(),
     year: z.number().optional(),
     sector: z.string().optional(),
+    // Heading text shown above the inline "My role" card. Defaults to
+    // "Product Design Lead" in the component when omitted.
+    roleTitle: z.string().optional(),
     // Senior positioning statement shown in the inline "My role" card.
     // The lead member's `description` is rendered separately in the team
     // panel as a shorter scope-focused collaborator entry.

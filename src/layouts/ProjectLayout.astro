@@ -38,10 +38,11 @@ interface Props {
   year?: number;
   sector?: string;
   sectionIndex?: SectionIndexEntry[];
+  roleTitle?: string;
   roleSummary?: string;
 }
 
-const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex, roleSummary } = Astro.props as Props;
+const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex, roleTitle, roleSummary } = Astro.props as Props;
 const clientWithYear = client;
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
@@ -61,7 +62,7 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     </header>
     {showSectionIndex && <ProjectSectionIndex sections={sectionIndex} />}
     <main>
-      {showTeamPanel && <ProjectTeamPanel team={team} {roleSummary} />}
+      {showTeamPanel && <ProjectTeamPanel team={team} {roleTitle} {roleSummary} />}
       <slot />
     </main>
     <footer id="page-permalink-footer">

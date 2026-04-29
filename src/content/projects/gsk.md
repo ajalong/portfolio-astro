@@ -10,7 +10,7 @@ order: 1
 year: 2024
 sector: Design System
 roleSummary: |
-  Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues at the token level so that adopting teams inherited the fixes by default. Ran the cross-team working group whose buy-in carried the system into each product team at rollout, and partnered with GSK's brand leadership to keep the system aligned with the 2022 rebrand rather than drifting into a parallel visual language.
+  Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues. Ran the cross-team working group whose buy-in carried the system into each product team at rollout.
 team:
   - name: Alan Long
     role: Product Design Lead
@@ -80,31 +80,30 @@ The rebrand's digital problems went beyond the cosmetic. They affected accessibi
 
 - The new visual identity worked well in brand-led experiences but not those that catered to user groups with specialised needs, like scientists and healthcare professionals.
 - There were accessibility issues when the new visual identity was applied to digital interfaces, particularly around colour.
-- GSK's digital products and services lacked a shared design system, leading to a poor user experience through limited product cohesion.
-- Many of GSK's existing digital touchpoints were not brand aligned.
+- GSK's digital products and services lacked a shared design system, leaving them inconsistent with each other and with the brand.
 
 _Research and strategy_
 
 ## Understanding the brand and the business
 
-An audit of the 2022 rebrand guidelines revealed it lacked the necessary foundations for digital. Rather than adapt the existing guidelines, I rebuilt from the ground up. This system would sit at the core of GSK's brand with print and specialised guidelines radiating from it. I worked closely with GSK's brand team to ensure this new system remained true to the strategic and creative intent of the original rebrand.
+An audit of the 2022 rebrand guidelines revealed it lacked the necessary foundations for digital. Rather than adapt the existing guidelines, I rebuilt from the ground up. This system would sit at the core of GSK's brand with print and specialised guidelines radiating from it.
 
 - I mapped the spectrum of digital products and services GSK currently provides. These range from expressive public-facing brand content to dense scientific tools for healthcare professionals.
-- I formed a working group of representatives from GSK's digital product teams to ensure the system reflected real needs across the business. Having worked with many of these teams before, the group came together quickly and with a level of trust already in place.
+- I formed a working group of representatives from GSK's digital product teams to ensure the system reflected real needs across the business. Having worked with many of these teams before, the group was assembled quickly.
 - I ran workshops focused on colour, layout, and typography to surface requirements and build stakeholder buy-in from the outset.
 
 _System architecture_
 
 ## Tokens, accessibility, and brand alignment by default
 
-I designed the system to be adopted, not imposed. Accessibility considerations around colour and typography are handled at the token level, so teams inherit the right defaults with confidence. It scales across web and native platforms while giving product teams flexibility to adapt it to their own contexts. Thorough documentation accompanies every guideline, making the rationale behind each decision clear to anyone working with it.
+I designed the system from the perspective of the teams who would adopt it. Documentation accompanies every guideline, making the rationale behind each decision available to anyone working with the system. The result was a system that scales across platforms with accessibility built into its foundations.
 
 - Built with design tokens to ensure the system adapts across devices, platforms, and colour modes.
 - Resolved the rebrand's accessibility issues at the token and component level, so every adopting team inherited them by default.
 - Kept the core component set lean, covering only elements that could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - Extended the core library with dedicated iOS and Android component sets, giving native teams the building blocks to align GSK products with each platform's UX paradigms.
 
-![Selection of pages from Getting Started section of design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
+![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
 
 ![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_general_components.mp4)
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
@@ -119,7 +118,7 @@ Shipping the system was just the start. Real success meant proving it worked on 
 - Supported product teams hands-on as they integrated the system. Adoption was smoother because many of these teams had helped shape the system through working group sessions, so buy-in was built in from the start.
 - Ran workshops to demystify tokens and multi-layered system architecture for teams new to the approach, helping them see the value.
 
-![GSK's internal brand guidelines hub created using the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
+![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
 
 ![gsk.com updated to reflect the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
 
@@ -131,7 +130,6 @@ The system is doing what it was built to do. Accessibility issues are resolved, 
 
 - Accessibility issues resolved, unblocking digital adoption of the 2022 rebrand.
 - Rolling out company-wide across GSK's digital teams following the initial release.
-- Strong reception from product teams and enthusiastic endorsement from GSK's brand team.
 - Proved the system in production on gsk.com and GSK Brandhub.
 
 _Lessons learned_
@@ -143,7 +141,7 @@ A few things became clear over the course of the project. Most of them came down
 - **A focus on scope enabled strong adoption.** A smaller set of well-considered components gave teams room to build on the system rather than fight against it.
 - **Accessibility has to live at the token layer.** Fixing issues at the root meant every adopting team inherited the fixes without extra work.
 - **Stakeholder workshops are adoption work as much as research.** They built the internal advocacy network that carried the system into each product team at rollout.
-- **Brand and system need to be co-authored.** Working alongside GSK's brand leadership kept the system aligned with the rebrand rather than drifting into a parallel visual language.
+- **Brand and design system work is best done together.** Co-authoring the system with GSK's brand leadership meant decisions were made collaboratively throughout the project, rather than reviewed only at the point of sign-off.
 
 > "Receiving so much positive feedback already, people are really impressed with how good all is – Thank you so much Interbrand!"
 >

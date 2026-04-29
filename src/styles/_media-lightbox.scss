@@ -76,14 +76,17 @@ dialog.media-lightbox[open] {
     width: auto;
     height: auto;
     object-fit: contain;
+    // Solid grey backing so media with transparent regions (e.g. PNGs with
+    // alpha) doesn't show the dark backdrop bleeding through.
+    background: var(--grey-media);
     cursor: default;
     will-change: transform;
   }
 }
 
-// White caption card below the media. Fades in after the FLIP completes
-// (delay = DURATION_MS) so the user's eye lands on the media first; on
-// close the .is-closing class fades it out alongside the FLIP.
+// White caption card below the media. Fades in alongside the FLIP so
+// the open animation mirrors the close — both directions move media,
+// backdrop and caption together rather than staging the caption.
 .media-lightbox__caption {
   margin: 0;
   padding: var(--unit-12) var(--unit-20);
@@ -96,7 +99,7 @@ dialog.media-lightbox[open] {
   text-align: center;
   border-radius: var(--radius-card);
   opacity: 1;
-  transition: opacity 220ms ease 320ms;
+  transition: opacity 200ms ease;
 }
 
 @starting-style {

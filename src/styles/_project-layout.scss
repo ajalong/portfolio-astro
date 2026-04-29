@@ -41,6 +41,7 @@
     grid-row: 2;
     display: grid;
     grid-template-columns: subgrid;
+    column-gap: var(--grid-gap);
   }
 
   // Non-article direct children of main (e.g. team panel) sit in the content area.
@@ -81,6 +82,14 @@
   body.project-page article > section {
     display: grid;
     grid-template-columns: subgrid;
+    // Explicit column-gap rather than relying on subgrid's spec-defined
+    // inheritance from the parent grid. Safari has a known issue where
+    // setting any gap property on a subgrid (here `row-gap: 0`) can break
+    // column-gap inheritance silently, leaving children aligned to a
+    // 0-gap subgrid while sibling visual gaps still render correctly. The
+    // sub-section card bg ::before then misaligns from the rest of the
+    // page grid by the equivalent of one gap accumulated across columns.
+    column-gap: var(--grid-gap);
     row-gap: 0;
     align-items: start;
   }

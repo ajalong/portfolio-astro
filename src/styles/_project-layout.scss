@@ -161,12 +161,13 @@
 }
 
 /*
- * Mobile media (≤1000px) — captions sit below their images instead of in
- * a margin column. Pairs stay side-by-side as a 2-col row, with their
- * "(Left)" and "(Right)" captions in a matching 2-col row beneath.
+ * Mobile media (≤1000px) — in-flow captions are hidden. The full descriptive
+ * alt text is still on the <img>/<video> for screen readers, and the
+ * lightbox (`.media-lightbox__caption`) renders the caption when the user
+ * taps to expand. Pairs stay side-by-side as a 2-col row.
  */
 @media screen and (max-width: 1000px) {
-  // Pair: 2-col grid — figures on row 1, caption group on row 2.
+  // Pair: 2-col grid — figures on row 1.
   .media-block--pair {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -180,25 +181,11 @@
   .media-block--pair > figure.media-full:first-child  { grid-column: 1; }
   .media-block--pair > figure.media-full:nth-child(2) { grid-column: 2; }
 
-  // Caption group: spans the row, splits into matching 2 sub-cols
-  // so each "(Left)"/"(Right)" caption sits beneath its image.
-  .media-block--pair > .media-caption-group {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: var(--grid-gap);
-    max-width: none;
-  }
-  .media-block--pair > .media-caption-group > .media-caption {
-    margin: 0;
-    max-width: none;
-  }
-
-  // Single image: caption follows the image in normal flow.
-  .media-block:not(.media-block--pair) > .media-caption {
-    margin-top: var(--unit-8);
-    max-width: none;
+  // Hide in-flow captions on mobile. The lightbox caption uses a different
+  // class (.media-lightbox__caption) so this doesn't affect it.
+  .media-block .media-caption,
+  .media-block .media-caption-group {
+    display: none;
   }
 
   // "(Left) " / "(Right) " prefix is redundant once captions sit beneath

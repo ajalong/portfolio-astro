@@ -202,14 +202,53 @@ body.project-page .page_container article section {
 // Sub-section card — visually groups h3 children under their h2 parent.
 // Visual treatment matches .my-role-card (without the hover state).
 //
-// Mobile: simple padded card.
-// Desktop: section keeps the page grid (cols 1-6) so media captions can still
-// reach col 6 (outside the card on the right). The card visual itself is
-// drawn in cols 2-5 via a grid-placed ::before. Text content is inset 32px
-// from the card edges; media inside spans cols 2-5 flush with the card edges.
+// At every breakpoint the section has only block padding; text/heading
+// children are inset 32px via padding-inline (or margin-inline for
+// ul/blockquote so their own internal padding stays intact). Media-blocks
+// receive no inline inset so they reach the card edges at every breakpoint.
+//
+// Mobile: the section element itself paints the card bg + radius.
+// Desktop: the section keeps the page grid (cols 1-6) so right-margin
+// captions can sit in col 6 outside the card; the card visual is drawn
+// in cols 2-5 via a grid-placed ::before.
+body.project-page article > section[data-parent] {
+  padding-block: var(--unit-32);
+}
+
+body.project-page article > section[data-parent] > :not(.media-block, ul, blockquote) {
+  padding-inline: var(--unit-32);
+}
+body.project-page article > section[data-parent] > :is(ul, blockquote) {
+  margin-inline: var(--unit-32);
+}
+
+// When media closes a sub-section, drop the card's bottom padding so the
+// figure reaches the card's bottom edge — matching its horizontal flush
+// alignment at the card edges.
+body.project-page article > section[data-parent]:has(> .media-block:last-child) {
+  padding-bottom: 0;
+}
+
+// Round the closing media's bottom corners to match the card. For a single
+// figure, both corners. For a pair, the outer corners only — the inner
+// edges sit inside the card and stay square.
+$closing: 'body.project-page article > section[data-parent]:has(> .media-block:last-child) > .media-block:last-child';
+#{$closing}:not(.media-block--pair) > figure.media-full {
+  overflow: hidden;
+  border-bottom-left-radius: var(--radius-card);
+  border-bottom-right-radius: var(--radius-card);
+}
+#{$closing}.media-block--pair > figure.media-full:first-child {
+  overflow: hidden;
+  border-bottom-left-radius: var(--radius-card);
+}
+#{$closing}.media-block--pair > figure.media-full:nth-child(2) {
+  overflow: hidden;
+  border-bottom-right-radius: var(--radius-card);
+}
+
 @media screen and (max-width: 1000px) {
   body.project-page article > section[data-parent] {
-    padding: var(--unit-32);
     border-radius: var(--radius-card);
     background-color: $bg-card;
   }
@@ -217,17 +256,13 @@ body.project-page .page_container article section {
 
 @media screen and (min-width: 1001px) {
   body.project-page article > section[data-parent] {
-    padding-block: var(--unit-32);
     position: relative;
   }
 
-  // Card surface — anchored to the subgrid's column tracks instead of computed
-  // from `100%`. Per CSS Grid Level 1, an absolutely-positioned child of a
-  // grid container with explicit grid-column gets that grid area as its
-  // containing block; `inset: 0` then fills it exactly. This is more robust
-  // than the prior `calc((100% + gap) / 6)` approach, which was vulnerable
-  // to subpixel rounding and depended on `--grid-gap` staying in sync with
-  // the actual gap.
+  // Card surface anchored to the subgrid's column tracks. Per CSS Grid
+  // Level 1, an absolutely-positioned child of a grid container with
+  // explicit grid-column gets that grid area as its containing block;
+  // inset: 0 then fills it exactly.
   body.project-page article > section[data-parent]::before {
     content: '';
     position: absolute;
@@ -236,44 +271,6 @@ body.project-page .page_container article section {
     background-color: $bg-card;
     border-radius: var(--radius-card);
     z-index: -1;
-  }
-
-  // Inset content from the card edges. Media-blocks (and captions) keep their
-  // default placement so figures stay flush with the card and right captions
-  // sit in col 6. ul and blockquote use margin-inline (not padding) so their
-  // own internal padding for bullets / left border stays intact and the
-  // marker / border lines up with the text inset, not the card edge.
-  body.project-page article > section[data-parent] > :not(.media-block, ul, blockquote) {
-    padding-inline: var(--unit-32);
-  }
-  body.project-page article > section[data-parent] > :is(ul, blockquote) {
-    margin-inline: var(--unit-32);
-  }
-
-  // When media closes a sub-section, drop the card's bottom padding so the
-  // figure reaches the card's bottom edge — matching its horizontal flush
-  // alignment at cols 2-5. The bg follows automatically because `inset-block: 0`
-  // is anchored to the (now flush) padding box.
-  body.project-page article > section[data-parent]:has(> .media-block:last-child) {
-    padding-bottom: 0;
-  }
-
-  // Round the closing media's bottom corners to match the card. For a single
-  // figure (cols 2-5), both corners. For a pair, the outer corners only — the
-  // inner edges sit inside the card and stay square.
-  $closing: 'body.project-page article > section[data-parent]:has(> .media-block:last-child) > .media-block:last-child';
-  #{$closing}:not(.media-block--pair) > figure.media-full {
-    overflow: hidden;
-    border-bottom-left-radius: var(--radius-card);
-    border-bottom-right-radius: var(--radius-card);
-  }
-  #{$closing}.media-block--pair > figure.media-full:first-child {
-    overflow: hidden;
-    border-bottom-left-radius: var(--radius-card);
-  }
-  #{$closing}.media-block--pair > figure.media-full:nth-child(2) {
-    overflow: hidden;
-    border-bottom-right-radius: var(--radius-card);
   }
 }
 

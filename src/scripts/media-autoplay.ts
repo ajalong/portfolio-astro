@@ -55,17 +55,13 @@ export function initMediaAutoplay(): () => void {
   // After the page has settled, escalate every video's preload from
   // "metadata" to "auto" so the browser fetches frame data in the
   // background. By the time the user scrolls a card into view, the
-  // first frames are already buffered and the video starts cleanly
-  // instead of popping in. requestIdleCallback waits for genuine idle
-  // time so we don't compete with the initial paint or layout.
+  // first frames are already buffered. Setting the attribute alone is
+  // enough — calling .load() resets the video and forces a re-fetch,
+  // which races multiple videos against Safari's concurrent-media
+  // limits and can leave one of them stuck.
   const preload = () => {
     for (const v of videos) {
-      if (v.preload !== 'auto') {
-        v.preload = 'auto';
-        // Trigger a fresh resource selection so the browser picks up
-        // the new preload hint. Safari requires an explicit load() call.
-        try { v.load(); } catch {}
-      }
+      if (v.preload !== 'auto') v.preload = 'auto';
     }
   };
   if ('requestIdleCallback' in window) {

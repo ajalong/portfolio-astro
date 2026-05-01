@@ -184,14 +184,18 @@
   color: var(--text-inverse);
   opacity: 0;
   @include link-underline-zip;
-  // Override the mixin's transition list to add opacity (otherwise the CTA
-  // snaps in while .item-meta fades, desyncing the two on hover).
+  // Override the mixin's transition list. Drop `background-image` — Safari
+  // has a long-standing bug where transitioning between two gradient values
+  // silently drops other transitions in the same list, so the CTA failed to
+  // animate its opacity back out on hover-end. background-image gradient
+  // swaps render fine instantly anyway. Keep background-position for the
+  // hover zip animation, and add opacity so the CTA fades in/out with
+  // .item-meta rather than snapping.
   transition:
+    opacity 0.2s ease,
     background-color 0.12s ease,
     outline-offset 0.12s ease,
-    background-image 0.2s ease,
-    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.2s ease;
+    background-position 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .item:focus-visible .item-meta,

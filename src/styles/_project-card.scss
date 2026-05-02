@@ -183,6 +183,11 @@
   margin-top: var(--unit-12);
   color: var(--text-inverse);
   opacity: 0;
+  // Safari renders the opacity transition unreliably when the element
+  // also has a multi-property transition list and a CSS gradient
+  // background — `will-change: opacity` forces a dedicated compositor
+  // layer so the fade in/out always animates cleanly.
+  will-change: opacity;
   @include link-underline-zip;
   // Override the mixin's transition list. Drop `background-image` — Safari
   // has a long-standing bug where transitioning between two gradient values

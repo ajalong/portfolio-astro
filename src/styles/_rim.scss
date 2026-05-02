@@ -277,24 +277,40 @@ $cta-secondary-inner-glow-active:
 // that hugs the text width so the underline doesn't stretch past the
 // content, and still allows top margin.
 @mixin link-underline-zip {
-  // Intentionally no `color` declaration — colour comes from context via the
-  // cascade. Global `a { color: inherit }` defeats UA link blue; spans
-  // inherit naturally. Setting colour here would override consumer
-  // declarations made before `@include`, which is a footgun.
-  text-decoration: none;
+  // The static underline is drawn with text-decoration so it's anchored
+  // to the text baseline (via text-underline-offset) — this makes the
+  // gap from text to underline consistent across every line-height
+  // context, which the previous padding-bottom + background-position
+  // approach couldn't do (it anchored to the line-box bottom, which
+  // grows with line-height).
+  //
+  // The zip-hover effect still uses the background-image trick so the
+  // gradient can animate across the link. On mouseover/focus the static
+  // text-decoration colour fades to transparent and the gradient takes
+  // over. They land at slightly different positions on tall-line-height
+  // contexts (background is anchored to padding-box bottom, decoration
+  // to baseline) but the 0.55s zip animation masks the hand-off.
+  //
+  // Intentionally no `color` declaration — colour comes from context via
+  // the cascade. Global `a { color: inherit }` defeats UA link blue.
+  text-decoration: underline;
+  text-decoration-thickness: var(--text-underline-width);
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.12em;
   display: inline;
   max-width: 100%;
-  padding-bottom: 0.12em;
   vertical-align: baseline;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 
-  /* Per-line underline via background strip (clone paints one per fragment) */
-  background-image: linear-gradient(currentColor, currentColor);
+  // Hover gradient strip — invisible at rest (transparent gradient), and
+  // sized to 100% / underline-width so size matches the static decoration.
+  background-image: linear-gradient(transparent, transparent);
   background-position: 0 100%;
   background-size: 100% var(--text-underline-width);
   background-repeat: no-repeat;
   transition:
+    text-decoration-color 0.12s ease,
     background-color 0.12s ease,
     outline-offset 0.12s ease,
     background-image 0.2s ease,
@@ -306,6 +322,7 @@ $cta-secondary-inner-glow-active:
   }
 
   &:focus-visible {
+    text-decoration-color: transparent;
     background-image: var(--zip-hover-gradient);
     background-size: 200% var(--text-underline-width);
     background-position: 100% 100%;
@@ -317,6 +334,7 @@ $cta-secondary-inner-glow-active:
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
+      text-decoration-color: transparent;
       background-image: var(--zip-hover-gradient);
       background-size: 200% var(--text-underline-width);
       background-position: 100% 100%;
@@ -324,22 +342,25 @@ $cta-secondary-inner-glow-active:
   }
 
   @media (prefers-reduced-motion: reduce) {
-    background-image: linear-gradient(currentColor, currentColor);
+    background-image: linear-gradient(transparent, transparent);
     background-size: 100% var(--text-underline-width);
     background-position: 0 100%;
     transition:
+      text-decoration-color 0.12s ease,
       background-color 0.12s ease,
       outline-offset 0.12s ease;
 
     &:focus-visible {
-      background-image: linear-gradient(currentColor, currentColor);
+      text-decoration-color: currentColor;
+      background-image: linear-gradient(transparent, transparent);
       background-size: 100% var(--text-underline-width);
       background-position: 0 100%;
     }
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        background-image: linear-gradient(currentColor, currentColor);
+        text-decoration-color: currentColor;
+        background-image: linear-gradient(transparent, transparent);
         background-size: 100% var(--text-underline-width);
         background-position: 0 100%;
       }

@@ -220,21 +220,49 @@ body.project-page .page_container article section {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: var(--unit-24);
+  padding: var(--text-spacing-standard);
   border: none;
-  border-radius: var(--radius-card);
   background-color: $bg-card;
   color: var(--text-primary);
   font: inherit;
   text-align: left;
   cursor: pointer;
+  overflow: hidden;
 }
 
 // These overrides are scoped to beat the page-wide
 // `article :is(h1…h6,p,ul,…) { margin-block: 0 }` reset that zeros
 // every element's vertical margin and which sits later in this file.
 // The reset is (0,2,3) so the card overrides need (0,3,3) or higher.
+//
+// Card layout (per the screenshot reference): image at the top, kicker
+// + heading + an excerpt paragraph below. The excerpt clamps to 3
+// lines so cards stay a predictable height even with longer prose.
 body.project-page .page_container article {
+  // Preview image at the top — full width of the card's content area.
+  // No media-block wrapper because it's a direct child of the button,
+  // not inside a <p>; rehype-project-media only transforms <img> nodes
+  // wrapped in image-only paragraphs.
+  .sub-section-card > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background-color: var(--grey-media);
+    // Pull the image out of the card's content padding so it goes
+    // edge-to-edge across the card. Card has overflow: hidden so the
+    // image can't visually escape past the border.
+    margin: calc(var(--text-spacing-standard) * -1)
+            calc(var(--text-spacing-standard) * -1)
+            0;
+    width: calc(100% + (var(--text-spacing-standard) * 2));
+  }
+
+  .sub-section-card > img + .kicker {
+    margin-top: var(--text-spacing-standard);
+  }
+
   .sub-section-card .kicker {
     margin: 0;
   }
@@ -245,17 +273,17 @@ body.project-page .page_container article {
     max-width: none;
   }
 
-  // Preview image. No media-block wrapper because it's a direct child of
-  // the button, not inside a <p>; rehype-project-media only transforms
-  // <img> nodes wrapped in image-only paragraphs.
-  .sub-section-card > img {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin-top: var(--text-spacing-standard);
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    background-color: var(--grey-media);
+  .sub-section-card .sub-section-card__excerpt {
+    display: -webkit-box;
+    margin: var(--text-spacing-tight) 0 0;
+    max-width: none;
+    color: var(--text-secondary);
+    // Cap the excerpt at 3 lines with an ellipsis so cards stay an
+    // even height regardless of how much body text the source has.
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 

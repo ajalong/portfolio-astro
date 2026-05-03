@@ -50,11 +50,13 @@ _Problem_
 
 The brief was to design a light mode for the onboarding flow. The existing dark-mode design system used colour values directly rather than abstracted into primitive tokens, which meant a light mode could either be built ad-hoc by inverting values screen by screen, or by rebuilding the colour foundation as primitives that both modes could derive from. The first option would have been faster but would not have scaled. The second would extend as the system grew.
 
-_Design_
+_Design & UX audit_
 
-## The system, refined and extended
+## The design system, refined and extended
 
-A design system is delivered but never finished. The brief here was light mode for onboarding, but the same primitive tokens that made light mode systematic also made everything that followed straightforward to integrate. Form-state logic, a relocated progress bar, a different single-select pattern: each was an extension of the foundation rather than a departure from it.
+The initial brief was to implement light mode for onboarding. Tradu were impressed with the work delivered and extended the brief to cover a broader UX audit of the product onboarding and the corporate site.
+
+I establishing a token based approach to the design system allowing for a smooth adoption of a light mode without compromising the existing dark mode.Then In conducting the UX audit, I walked through the designs systematically, identifying refinements that would improve usability and reduce friction across onboarding and the corporate site.
 
 _Light mode_
 
@@ -73,12 +75,6 @@ The first concerned Tangerine, Tradu's primary accent colour. The brand guidelin
 The second concerned selected states. A direct dark-to-light inversion left selected states under-distinguished from default states in light mode. Rather than copy the dark-mode treatment, I proposed using Tangerine to mark selection across radio buttons, multi-select buttons, and text fields. The accent did clearer work in light mode than the equivalent dark-mode treatment, where the dark surrounds had given a subtle indicator enough definition.
 
 ![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](/placeholder-16x9.svg)
-
-_UX audit_
-
-## Findings from a systematic walkthrough
-
-After the light mode work, Tradu commissioned a UX audit of the onboarding flow. I walked through it systematically, identifying refinements that would improve usability and reduce friction across the flow.
 
 _Form-state distinction_
 
@@ -114,13 +110,12 @@ Concerns had been raised about the visibility of top app bar actions. I research
 
 _Corporate site_
 
-## Further scope: the corporate site
+### The corporate site
 
 The engagement expanded further with a UX audit of the corporate site. The work surfaced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
 
-![An annotated frame from the corporate site UX audit, with recommended changes to typography, button sizing, and contrast called out on top of the existing design.](/placeholder-16x9.svg)
-
-![Multiple homepage variants explored as part of the corporate site audit, testing different approaches to typography, contrast, and content hierarchy.](/placeholder-16x9.svg)
+![An annotated frame from the corporate site UX audit, with recommended changes to typography, button sizing, and contrast called out on top of the existing design.](/placeholder-1x1.svg)
+![Multiple homepage variants explored as part of the corporate site audit, testing different approaches to typography, contrast, and content hierarchy.](/placeholder-1x1.svg)
 
 _Impact_
 

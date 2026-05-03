@@ -9,6 +9,7 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 8
 year: 2021
 sector: Virtual Event
+roleTitle: Product Design Lead & Front-end Developer
 roleSummary: |
   Designed the WSJ CEO Council virtual event platform and led the front-end development on a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.
 team:
@@ -71,11 +72,13 @@ team:
 ---
 
 _Context_
+
 ## WSJ's now virtual flagship event, done on a deadline
 
 The Wall Street Journal's CEO Council is one of WSJ's most prestigious events. It's an exclusive forum where senior business leaders and policy makers gather to discuss the issues of the day, traditionally hosted in Davos and other in-person venues. COVID had made that impossible. Cheerful Twentyfirst, who had run the in-person event prior to COVID, was asked to oversee the virtual edition for summer 2021. I led the design and front-end development of the platform.
 
 _Problem_
+
 ## A demanding audience, a tight deadline, and a brand to protect
 
 Recreating the CEO Council virtually meant designing for an audience with little patience, and translating an event whose most valuable element was networking into a format that did not naturally support it. Three constraints shaped the project:
@@ -85,6 +88,7 @@ Recreating the CEO Council virtually meant designing for an audience with little
 - **WSJ-grade polish.** This was one of WSJ's flagship events. Existing virtual event platforms, designed for trade shows and webinars, could not carry the brand, and a generic experience would have read as a downgrade rather than a substitute.
 
 _Design_
+
 ## Less but better
 
 "Less but better" was the guiding principle throughout the designs. The audience did not need more features. They needed an experience that respected their time and matched the calibre of the brand. Every design decision adhered to this mantra.
@@ -99,6 +103,7 @@ _Design_
 ![Animation of the Welcome page (landing page) being scrolled.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/welcome_apstqd.mp4)
 
 _Implementation_
+
 ## Fast, documented, built to be reused
 
 The deadline was very tight for this project; Eventfinity's platform was technically robust but had no UI scaffolding out of the box. This was a double-edged sword: whilst it empowered me to design from a blank canvas, it meant a lot more work was required to implement the design. I led front-end development alongside John Speck at Gramercy Tech, drawing on patterns I had refined across Cheerful Twentyfirst's previous virtual events. Gramercy Tech also provided back-end development resources.
@@ -109,6 +114,7 @@ The deadline was very tight for this project; Eventfinity's platform was technic
 ![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
 _Impact_
+
 ## A huge leap in user experience
 
 The event landed well. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in. The platform went on to be reused for further WSJ events, including the CFO & COO Council and the Technology Council.
@@ -116,6 +122,7 @@ The event landed well. Engagement from attendees was strong, and WSJ noted it wa
 ![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
 
 _Lessons learned_
+
 ## Restraint, co-design, and documentation
 
 The project reinforced a set of principles I have applied to most work since, particularly around designing for senior audiences, working with stakeholders during design rather than presenting to them at the end, and treating handoff as a design problem in its own right.

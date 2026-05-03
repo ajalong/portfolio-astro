@@ -56,6 +56,29 @@ function findFirstImage(nodes) {
   return null;
 }
 
+// Find the first body-text paragraph (skipping the kicker and any
+// image-only paragraphs). Used for the card excerpt.
+function findFirstBodyParagraph(nodes) {
+  for (const node of nodes) {
+    if (node.type !== 'paragraph') continue;
+    // Skip the kicker (italic-only paragraph injected by this plugin).
+    if (node.data?.hProperties?.className?.includes?.('kicker')) continue;
+    // Skip image-only paragraphs.
+    if (node.children.length === 1 && node.children[0].type === 'image') continue;
+    if (
+      node.children.every(
+        (c) =>
+          (c.type === 'image') ||
+          (c.type === 'text' && /^\s*$/.test(c.value)),
+      )
+    ) {
+      continue;
+    }
+    return node;
+  }
+  return null;
+}
+
 function buildPreviewImage(imageNode) {
   if (!imageNode) return null;
   return {
@@ -71,6 +94,25 @@ function buildPreviewImage(imageNode) {
     },
     children: [],
   };
+}
+
+function buildPreviewExcerpt(paraNode) {
+  if (!paraNode) return null;
+  const cloned = structuredClone(paraNode);
+  // Render as <span>, not <p>: <button> only accepts phrasing content,
+  // and a <p> inside a button gets silently corrected by Chromium to
+  // `display: flow-root`, which kills the -webkit-box line-clamp on
+  // the excerpt. <span> is valid phrasing content and accepts the
+  // line-clamp display value cleanly.
+  cloned.data = {
+    ...(cloned.data || {}),
+    hName: 'span',
+    hProperties: {
+      ...(cloned.data?.hProperties || {}),
+      className: ['sub-section-card__excerpt'],
+    },
+  };
+  return cloned;
 }
 
 function buildCloseButton() {
@@ -113,11 +155,25 @@ export default function remarkProjectSections() {
 
     const flushSub = () => {
       if (!currentSub) return;
-      // The first image inside the sub-section content becomes the
-      // preview thumbnail on the card. Walk the dialog's collected
-      // content to find one; if none, the card stays text-only.
-      const preview = buildPreviewImage(findFirstImage(currentSub.children));
-      if (preview && currentSubButton) currentSubButton.children.push(preview);
+      if (currentSubButton) {
+        // Card layout: image (top), then kicker + heading already in the
+        // button, then an excerpt paragraph below. Rebuild the button's
+        // children list in that visual order so CSS doesn't have to
+        // reorder anything.
+        const contentNodes =
+          currentSub.children[currentSub.children.length - 1].children;
+        const previewImage = buildPreviewImage(findFirstImage(contentNodes));
+        const previewExcerpt = buildPreviewExcerpt(
+          findFirstBodyParagraph(contentNodes),
+        );
+        const [kickerNode, headingNode] = currentSubButton.children;
+        currentSubButton.children = [
+          ...(previewImage ? [previewImage] : []),
+          kickerNode,
+          headingNode,
+          ...(previewExcerpt ? [previewExcerpt] : []),
+        ];
+      }
       pendingDialogs.push(currentSub);
       currentSub = null;
       currentSubButton = null;

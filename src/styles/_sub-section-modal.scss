@@ -98,24 +98,21 @@ dialog.sub-section-modal[open] {
   width: 100%;
   max-width: 880px;
   margin: var(--block-spacing) auto;
-  padding: var(--unit-88) var(--unit-32) var(--unit-88);
+  padding: var(--unit-32);
   background: var(--white1);
   cursor: default;
 
-  @media screen and (max-width: 1000px) {
-    padding: var(--unit-72) var(--unit-16) var(--unit-40);
-  }
-
-  > * + * {
-    margin-top: var(--text-spacing-standard);
-  }
-
+  // Flow spacing — the page-wide `article :is(h*,p,…) { margin-block: 0 }`
+  // reset has specificity (0,2,3) and zeroes the margin on every paragraph
+  // and heading inside the modal, so plain `> * + * { margin-top: … }`
+  // rules lose. Reuse the page's --flow-space variable system but write
+  // the margin-top rule scoped under article so it ties on specificity
+  // and wins on cascade order. The per-pair --flow-space setters in
+  // _project-layout.scss (`.kicker + heading { --flow-space: --unit-4 }`,
+  // etc.) are descendant selectors that already apply to elements inside
+  // the modal — only the margin-top rule needs scoping.
   > .kicker {
     margin: 0;
-  }
-
-  > h3 + * {
-    margin-top: var(--text-spacing-tight);
   }
 
   // Reset the page-grid-aware media block layout — inside the modal there's
@@ -124,7 +121,6 @@ dialog.sub-section-modal[open] {
   // in normal flow rather than in a margin column.
   .media-block {
     display: block;
-    margin-block: var(--block-spacing);
   }
 
   .media-block--pair {
@@ -152,4 +148,14 @@ dialog.sub-section-modal[open] {
   .media-caption__side {
     display: none;
   }
+}
+
+// Apply the page's flow rhythm to direct children of the modal content
+// panel. The article-scoped `--flow-space` setters in _project-layout.scss
+// (`.kicker + heading`, `:is(h*…) + *`, `.media-block + *`, etc.) are
+// descendant selectors so they already set the right --flow-space value
+// on elements inside the modal — this rule just consumes it. Selector
+// specificity (0,3,3) beats the (0,2,3) margin-block: 0 reset.
+body.project-page .page_container article .sub-section-modal__content > * + *:not(dialog) {
+  margin-top: var(--flow-space, var(--text-spacing-standard));
 }

@@ -163,10 +163,10 @@ Within individual case study pages, we tested variants that emphasised different
 
 For a global engineering firm, this was a meaningful finding. In this sector, trust is built on people and relationships as well as on capabilities.
 
+![The final project page mockup, based on user testing findings. — Full project case study page with hero image, structured project overview, and integrated team and partner section.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338005/alan.design/AtkinsRealis/atkinsrealis-project-final_yqrqgf.png)
+
 ![A services page section variant that gave prominence to the people delivering the work. — Project page layout with large-format hero image, project title, sector tag, and introductory copy.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338008/alan.design/AtkinsRealis/atkinsrealis-project-spotlight_uu61hn.png)
 ![A team member section variant that surfaced the individuals behind a project. — Project page layout with team member and partner profiles prominently placed alongside project details.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338007/alan.design/AtkinsRealis/atkinsrealis-project-person_kggre8.png)
-
-![The final project page mockup, based on user testing findings. — Full project case study page with hero image, structured project overview, and integrated team and partner section.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338005/alan.design/AtkinsRealis/atkinsrealis-project-final_yqrqgf.png)
 
 _Typography_
 

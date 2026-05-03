@@ -255,7 +255,6 @@ body.project-page .page_container article {
     margin-top: var(--text-spacing-standard);
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: var(--radius-card);
     background-color: var(--grey-media);
   }
 }
@@ -303,8 +302,10 @@ $flow: ':is(#{$a}, #{$a} section)';
   --flow-space: initial;
 }
 
-// Single flow rule — distributes rhythm at any depth.
-#{$flow} > * + * {
+// Single flow rule — distributes rhythm at any depth. Dialogs are
+// excluded: they're absolutely-positioned overlays, not flow content,
+// and any margin would offset them away from inset: 0.
+#{$flow} > * + *:not(dialog) {
   margin-top: var(--flow-space, var(--text-spacing-standard));
 }
 

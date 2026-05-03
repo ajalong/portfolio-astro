@@ -97,15 +97,12 @@ dialog.sub-section-modal[open] {
 .sub-section-modal__content {
   width: 100%;
   max-width: 880px;
-  margin: var(--unit-32) auto;
+  margin: var(--block-spacing) auto;
   padding: var(--unit-88) var(--unit-32) var(--unit-88);
   background: var(--white1);
   cursor: default;
-  border-radius: var(--radius-card);
 
   @media screen and (max-width: 1000px) {
-    border-radius: 0;
-    margin: 0;
     padding: var(--unit-72) var(--unit-16) var(--unit-40);
   }
 

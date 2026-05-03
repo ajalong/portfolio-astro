@@ -1,5 +1,5 @@
 ---
-title: Onboarding light mode and UX audit
+title: Onboarding UX refinement
 client: Tradu
 slug: tradu
 summary: A token-driven light mode and UX refinements for a fintech onboarding flow.
@@ -62,17 +62,17 @@ _Light mode_
 
 I rebuilt the colour foundation as a set of primitive tokens, working back from the existing dark mode to identify the values in use and abstract them into a base scale from black to white, alongside primitive tokens for the brand accents. The existing dark mode was then mapped to these primitives, and a light mode was derived as the inverse: surfaces moved from dark tones to light tones, text from light to dark, and so on. The systematic approach meant the light mode was internally consistent rather than the result of value-by-value judgement calls. The work covered the full onboarding flow, ultimately converting 19 screens and 46 component states from dark to light mode.
 
-![The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.](/placeholder-4x3.svg)
+![The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.](/placeholder-16x9.svg)
 
 Two specific decisions sat on top of the systematic inversion.
 
 The first concerned Tangerine, Tradu's primary accent colour. The brand guidelines specified a slightly darker shade of Tangerine for use in light mode, intended to support accessibility. The alternative shade still passed AA contrast against white text, but only by a narrow margin, and the result was a less visually consistent system across modes. I recommended retaining the standard Tangerine in both modes, with black text used over it consistently to meet AA contrast. The accessibility outcome was stronger and the system stayed unified across modes.
 
-![Comparison of the standard Tangerine shade and the lighter Tangerine shade specified for light mode, showing both passing AA contrast against black text but the lighter shade only marginally.](/placeholder-4x3.svg)
+![Comparison of the standard Tangerine shade and the lighter Tangerine shade specified for light mode, showing both passing AA contrast against black text but the lighter shade only marginally.](/placeholder-16x9.svg)
 
 The second concerned selected states. A direct dark-to-light inversion left selected states under-distinguished from default states in light mode. Rather than copy the dark-mode treatment, I proposed using Tangerine to mark selection across radio buttons, multi-select buttons, and text fields. The accent did clearer work in light mode than the equivalent dark-mode treatment, where the dark surrounds had given a subtle indicator enough definition.
 
-![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](/placeholder-4x3.svg)
+![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](/placeholder-16x9.svg)
 
 _UX audit_
 
@@ -86,7 +86,7 @@ _Form-state distinction_
 
 Field states across the flow had been treated inconsistently between modes, with default, selected, filled, and disabled states using visual treatments that did not always read as distinct. I redesigned the state set so each was unambiguous in both light and dark mode. The changes were defined as system tokens so they propagated across the flow.
 
-![Field states in dark and light mode, showing the four treatments (default, selected, filled, disabled) redesigned to be unambiguously distinct from each other.](/placeholder-4x3.svg)
+![Field states in dark and light mode, showing the four treatments (default, selected, filled, disabled) redesigned to be unambiguously distinct from each other.](/placeholder-16x9.svg)
 
 _Progress bar relocation_
 
@@ -94,7 +94,7 @@ _Progress bar relocation_
 
 The progress bar sat inside the top app bar, competing with navigation controls and adding visual complexity to the area users looked to for orientation. I explored several alternative positions and treatments, ultimately recommending the progress bar be placed alongside the primary action button at the bottom of the screen. The change simplified the top app bar and grouped the progress signal with the action that advanced it.
 
-![Seven progress bar variants explored, from compact top-of-screen treatments to placements grouped with the primary action button at the bottom.](/placeholder-4x3.svg)
+![Seven progress bar variants explored, from compact top-of-screen treatments to placements grouped with the primary action button at the bottom.](/placeholder-16x9.svg)
 
 _Single-select pattern_
 
@@ -102,7 +102,7 @@ _Single-select pattern_
 
 The existing single-select lists used radio buttons that required a confirmation tap on a separate button. This added an unnecessary tap on every single-select question in the onboarding flow. I recommended a pattern where tapping the option itself advanced the flow, removing the confirmation step. The change removed an unnecessary step on a long flow.
 
-![The existing single-select pattern using radio buttons and a confirmation tap, compared with a proposed pattern where tapping the option itself advances the flow.](/placeholder-4x3.svg)
+![The existing single-select pattern using radio buttons and a confirmation tap, compared with a proposed pattern where tapping the option itself advances the flow.](/placeholder-16x9.svg)
 
 _Top app bar actions_
 
@@ -110,7 +110,7 @@ _Top app bar actions_
 
 Concerns had been raised about the visibility of top app bar actions. I researched comparable patterns on Android Material 3 and iOS, then proposed a Tradu top app bar that drew from Material 3 conventions for icon spacing and sizing while remaining within the existing system. The result improved action visibility without breaking platform conventions.
 
-![Three top app bar treatments compared: the existing design, an action backgrounds variant, and a Material 3-inspired variant with revised icon spacing and sizing.](/placeholder-4x3.svg)
+![Three top app bar treatments compared: the existing design, an action backgrounds variant, and a Material 3-inspired variant with revised icon spacing and sizing.](/placeholder-16x9.svg)
 
 _Corporate site_
 
@@ -118,9 +118,9 @@ _Corporate site_
 
 The engagement expanded further with a UX audit of the corporate site. The work surfaced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
 
-![An annotated frame from the corporate site UX audit, with recommended changes to typography, button sizing, and contrast called out on top of the existing design.](/placeholder-4x3.svg)
+![An annotated frame from the corporate site UX audit, with recommended changes to typography, button sizing, and contrast called out on top of the existing design.](/placeholder-16x9.svg)
 
-![Multiple homepage variants explored as part of the corporate site audit, testing different approaches to typography, contrast, and content hierarchy.](/placeholder-4x3.svg)
+![Multiple homepage variants explored as part of the corporate site audit, testing different approaches to typography, contrast, and content hierarchy.](/placeholder-16x9.svg)
 
 _Impact_
 

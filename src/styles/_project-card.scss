@@ -162,6 +162,10 @@
   color: var(--text-inverse);
   text-wrap: pretty;
   opacity: 0;
+  // Match .item-cta below so Safari composites both through the same
+  // opacity-layer pipeline; without this, the two fade-outs run at
+  // slightly different times and the CTA disappears before the meta.
+  will-change: opacity;
   transition: opacity 0.2s ease;
 }
 

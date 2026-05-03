@@ -4,6 +4,14 @@
 // frosted-glass treatment so all three overlay surfaces feel consistent.
 @use "tokens" as *;
 
+// While a sub-section modal is open, lock the underlying page so the
+// dialog's scroll is the only scroll. The class is toggled by the
+// init script in src/scripts/sub-section-modal.ts.
+html.sub-section-modal-open,
+html.sub-section-modal-open body {
+  overflow: hidden;
+}
+
 .sub-section-modal {
   padding: 0;
   border: 0;
@@ -15,6 +23,10 @@
   inset: 0;
   margin: 0;
   cursor: zoom-out;
+  // Scroll happens on the dialog itself rather than on an inner panel.
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 
   &::backdrop {
     background: rgb(0 0 0 / 0.2);
@@ -44,11 +56,11 @@
 
 // position: fixed pins the dialog to the viewport. UA's `dialog:modal[open]`
 // is (0,2,1) so we tie specificity with the tag selector and win on order.
+// display: block so the dialog itself becomes the scroll container — no
+// inner viewport-bound panel, the whole overlay surface scrolls.
 dialog.sub-section-modal[open] {
-  display: flex;
+  display: block;
   position: fixed;
-  align-items: stretch;
-  justify-content: center;
 }
 
 .sub-section-modal__close {
@@ -79,26 +91,21 @@ dialog.sub-section-modal[open] {
   }
 }
 
-// The scrollable surface. Sits inside the dialog and holds the full
-// sub-section content — the dialog itself doesn't scroll because Safari
-// has bugs with overflow on dialog elements.
+// Content panel — fills a comfortable reading width centred inside the
+// scrolling dialog. Doesn't have its own overflow; the dialog above
+// handles scroll so the whole overlay surface moves together.
 .sub-section-modal__content {
   width: 100%;
   max-width: 880px;
-  margin: 0 auto;
+  margin: var(--unit-32) auto;
   padding: var(--unit-88) var(--unit-32) var(--unit-88);
   background: var(--white1);
-  overflow-y: auto;
   cursor: default;
-
-  // Generous scrollable area; gradient backdrop is visible on either side
-  // of the content panel on wider viewports.
   border-radius: var(--radius-card);
-  margin-block: var(--unit-32);
 
   @media screen and (max-width: 1000px) {
     border-radius: 0;
-    margin-block: 0;
+    margin: 0;
     padding: var(--unit-72) var(--unit-16) var(--unit-40);
   }
 

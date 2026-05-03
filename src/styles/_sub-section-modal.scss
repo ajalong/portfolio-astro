@@ -1,0 +1,151 @@
+// Modal overlay for sub-section content. Triggered by .sub-section-card
+// clicks; opened with dialog.showModal() so iOS Safari handles ESC and
+// focus trap natively. Backdrop matches the team-panel and media-lightbox
+// frosted-glass treatment so all three overlay surfaces feel consistent.
+@use "tokens" as *;
+
+.sub-section-modal {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  inset: 0;
+  margin: 0;
+  cursor: zoom-out;
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.2);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    transition: opacity 240ms ease, backdrop-filter 240ms ease;
+  }
+
+  @starting-style {
+    &[open]::backdrop {
+      opacity: 0;
+      backdrop-filter: blur(0);
+      -webkit-backdrop-filter: blur(0);
+    }
+  }
+
+  &.is-closing::backdrop {
+    opacity: 0;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+  }
+
+  &:not([open]) {
+    display: none;
+  }
+}
+
+// position: fixed pins the dialog to the viewport. UA's `dialog:modal[open]`
+// is (0,2,1) so we tie specificity with the tag selector and win on order.
+dialog.sub-section-modal[open] {
+  display: flex;
+  position: fixed;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.sub-section-modal__close {
+  position: fixed;
+  top: max(var(--unit-16), env(safe-area-inset-top, 0px));
+  right: max(var(--unit-16), env(safe-area-inset-right, 0px));
+  z-index: 2; // above the modal content
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--white1);
+  color: var(--text-primary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-pill);
+
+  > span {
+    display: block;
+    margin-top: -3px; // visual centering of the × glyph
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+}
+
+// The scrollable surface. Sits inside the dialog and holds the full
+// sub-section content — the dialog itself doesn't scroll because Safari
+// has bugs with overflow on dialog elements.
+.sub-section-modal__content {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--unit-88) var(--unit-32) var(--unit-88);
+  background: var(--white1);
+  overflow-y: auto;
+  cursor: default;
+
+  // Generous scrollable area; gradient backdrop is visible on either side
+  // of the content panel on wider viewports.
+  border-radius: var(--radius-card);
+  margin-block: var(--unit-32);
+
+  @media screen and (max-width: 1000px) {
+    border-radius: 0;
+    margin-block: 0;
+    padding: var(--unit-72) var(--unit-16) var(--unit-40);
+  }
+
+  > * + * {
+    margin-top: var(--text-spacing-standard);
+  }
+
+  > .kicker {
+    margin: 0;
+  }
+
+  > h3 + * {
+    margin-top: var(--text-spacing-tight);
+  }
+
+  // Reset the page-grid-aware media block layout — inside the modal there's
+  // no subgrid for it to align to. Single figures fill the modal panel
+  // width; pairs become a 2-col flex row; captions sit below their images
+  // in normal flow rather than in a margin column.
+  .media-block {
+    display: block;
+    margin-block: var(--block-spacing);
+  }
+
+  .media-block--pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--grid-gap);
+    row-gap: var(--unit-8);
+  }
+
+  .media-block > figure.media-full,
+  .media-block--pair > figure.media-full {
+    grid-column: auto;
+    margin: 0;
+  }
+
+  .media-block > .media-caption,
+  .media-block > .media-caption-group {
+    grid-column: auto;
+    margin-top: var(--unit-8);
+    margin-inline: 0;
+    max-width: none;
+    text-align: left;
+  }
+
+  .media-caption__side {
+    display: none;
+  }
+}

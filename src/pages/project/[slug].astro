@@ -60,60 +60,29 @@ function slugify(s: string) {
     .replace(/^-|-$/g, '');
 }
 function parseSectionIndex(body: string, hasTeam: boolean): SectionEntry[] | undefined {
-  // Two authoring forms are supported during migration:
-  //   New (preferred): `_Kicker_` italic line followed by `##`/`###` heading.
-  //   Legacy:          `<section id="…" data-parent="…"> <p class="kicker">…</p>`.
-  // Walk the body in document order matching either, so nav order is preserved.
-  const flat: Array<{ id: string; label: string; parent?: string }> = [];
-  let lastTopId: string | undefined;
-
-  const newRe = /^_([^_\n]+)_\s*\n+(#{2,3})\s+/gm;
+  // Section index lists only top-level h2 sections. h3 sub-sections are
+  // surfaced as cards-and-modal-overlays inside their parent section, not
+  // as nav targets, so they're intentionally excluded here.
+  const newRe = /^_([^_\n]+)_\s*\n+##\s+/gm;
   const legacyRe = /<section\s+([^>]+)>\s*\n+\s*<p class="kicker">([^<]+)<\/p>/g;
 
-  type Hit = { idx: number; id: string; label: string; depth: 2 | 3; parentAttr?: string };
+  type Hit = { idx: number; id: string; label: string };
   const hits: Hit[] = [];
   let m: RegExpExecArray | null;
   while ((m = newRe.exec(body))) {
     const label = m[1].trim();
-    hits.push({
-      idx: m.index,
-      id: slugify(label),
-      label,
-      depth: m[2].length === 3 ? 3 : 2,
-    });
+    hits.push({ idx: m.index, id: slugify(label), label });
   }
   while ((m = legacyRe.exec(body))) {
     const attrs = m[1];
+    if (attrs.includes('data-parent=')) continue; // skip legacy h3
     const id = attrs.match(/id="([^"]+)"/)?.[1];
     if (!id) continue;
-    hits.push({
-      idx: m.index,
-      id,
-      label: m[2].trim(),
-      depth: attrs.includes('data-parent=') ? 3 : 2,
-      parentAttr: attrs.match(/data-parent="([^"]+)"/)?.[1],
-    });
+    hits.push({ idx: m.index, id, label: m[2].trim() });
   }
   hits.sort((a, b) => a.idx - b.idx);
-  for (const h of hits) {
-    const parent = h.parentAttr ?? (h.depth === 3 ? lastTopId : undefined);
-    flat.push({ id: h.id, label: h.label, parent });
-    if (h.depth === 2) lastTopId = h.id;
-  }
-  if (flat.length < 2) return undefined;
-  const byId = new Map<string, SectionEntry>(
-    flat.map((s) => [s.id, { id: s.id, label: s.label }])
-  );
-  const roots: SectionEntry[] = [];
-  for (const s of flat) {
-    const node = byId.get(s.id)!;
-    if (s.parent && byId.has(s.parent)) {
-      const parent = byId.get(s.parent)!;
-      (parent.children ??= []).push(node);
-    } else {
-      roots.push(node);
-    }
-  }
+  if (hits.length < 2) return undefined;
+  const roots: SectionEntry[] = hits.map((h) => ({ id: h.id, label: h.label }));
   if (hasTeam) roots.unshift({ id: 'my-role', label: 'My role' });
   return roots;
 }

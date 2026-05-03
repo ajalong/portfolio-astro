@@ -199,78 +199,59 @@ body.project-page .page_container article section {
   margin: 0;
 }
 
-// Sub-section card — visually groups h3 children under their h2 parent.
-// Visual treatment matches .my-role-card (without the hover state).
-//
-// At every breakpoint the section has only block padding; text/heading
-// children are inset 32px via padding-inline (or margin-inline for
-// ul/blockquote so their own internal padding stays intact). Media-blocks
-// receive no inline inset so they reach the card edges at every breakpoint.
-//
-// Mobile: the section element itself paints the card bg + radius.
-// Desktop: the section keeps the page grid (cols 1-6) so right-margin
-// captions can sit in col 6 outside the card; the card visual is drawn
-// in cols 2-5 via a grid-placed ::before.
-body.project-page article > section[data-parent] {
-  padding-block: var(--unit-32);
-}
+// Sub-section preview cards — clicked to open the full content in a
+// modal overlay (see _sub-section-modal.scss for the dialog itself).
+// Each card shows kicker, heading, and the first image found inside
+// the corresponding sub-section's content. Cards sit in the parent
+// section's content area (cols 2-5 on desktop) in a 2-col grid; on
+// mobile the grid collapses to a single column.
+.sub-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap);
 
-body.project-page article > section[data-parent] > :not(.media-block, ul, blockquote) {
-  padding-inline: var(--unit-32);
-}
-body.project-page article > section[data-parent] > :is(ul, blockquote) {
-  margin-inline: var(--unit-32);
-}
-
-// When media closes a sub-section, drop the card's bottom padding so the
-// figure reaches the card's bottom edge — matching its horizontal flush
-// alignment at the card edges.
-body.project-page article > section[data-parent]:has(> .media-block:last-child) {
-  padding-bottom: 0;
-}
-
-// Round the closing media's bottom corners to match the card. For a single
-// figure, both corners. For a pair, the outer corners only — the inner
-// edges sit inside the card and stay square.
-$closing: 'body.project-page article > section[data-parent]:has(> .media-block:last-child) > .media-block:last-child';
-#{$closing}:not(.media-block--pair) > figure.media-full {
-  overflow: hidden;
-  border-bottom-left-radius: var(--radius-card);
-  border-bottom-right-radius: var(--radius-card);
-}
-#{$closing}.media-block--pair > figure.media-full:first-child {
-  overflow: hidden;
-  border-bottom-left-radius: var(--radius-card);
-}
-#{$closing}.media-block--pair > figure.media-full:nth-child(2) {
-  overflow: hidden;
-  border-bottom-right-radius: var(--radius-card);
-}
-
-@media screen and (max-width: 1000px) {
-  body.project-page article > section[data-parent] {
-    border-radius: var(--radius-card);
-    background-color: $bg-card;
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: 1fr;
   }
 }
 
-@media screen and (min-width: 1001px) {
-  body.project-page article > section[data-parent] {
-    position: relative;
+.sub-section-card {
+  @include surface-hover-strong;
+  display: flex;
+  flex-direction: column;
+  gap: var(--unit-12);
+  width: 100%;
+  padding: var(--unit-24);
+  border: none;
+  border-radius: var(--radius-card);
+  background-color: $bg-card;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  .kicker {
+    margin: 0;
   }
 
-  // Card surface anchored to the subgrid's column tracks. Per CSS Grid
-  // Level 1, an absolutely-positioned child of a grid container with
-  // explicit grid-column gets that grid area as its containing block;
-  // inset: 0 then fills it exactly.
-  body.project-page article > section[data-parent]::before {
-    content: '';
-    position: absolute;
-    grid-column: 2 / 6;
-    inset: 0;
-    background-color: $bg-card;
+  h3 {
+    margin: 0;
+    max-width: none; // override the global h3 max-width inside cards
+  }
+
+  // Preview image (the first image found inside the sub-section). Has
+  // no media-block wrapper because it's a direct child of the button,
+  // not inside a <p>; rehype-project-media only transforms <img> nodes
+  // wrapped in image-only paragraphs, so this stays as a plain <img>.
+  > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: auto; // push image to bottom if card has variable text height
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
     border-radius: var(--radius-card);
-    z-index: -1;
+    background-color: var(--grey-media);
   }
 }
 

@@ -222,6 +222,7 @@ body.project-page .page_container article section {
   width: 100%;
   padding: var(--text-spacing-standard);
   border: none;
+  border-radius: var(--radius-lg);
   background-color: $bg-card;
   color: var(--text-primary);
   font: inherit;

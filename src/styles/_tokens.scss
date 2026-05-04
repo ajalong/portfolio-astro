@@ -72,10 +72,11 @@ $bg-card-hover-gradient:
   --browser-chrome-hairline: #ebebeb;
 
   /* ─────────── Radii ─────────── */
-  --radius-panel: 20px;   /* modals, sheets, team panel */
-  --radius-card: 16px;    /* content cards */
-  --radius-inset: 8px;    /* thumbnails, media, inputs inside a card */
-  --radius-pill: 200px;   /* all buttons & chips */
+  /* Two-step scale, applied only to clickable elements.
+   * Round icon-only buttons use `border-radius: 50%` directly — circles
+   * aren't a third variant, they're a different shape concept. */
+  --radius-sm: 8px;   /* small clickable: list rows, link rows */
+  --radius-lg: 20px;  /* large clickable: cards, surface-hover-strong */
 
   /* ─────────── Spacing primitives (4px grid) ─────────── */
   --unit-2:   2px;  /* nudge — not a 4px multiple, kept for micro-gaps */

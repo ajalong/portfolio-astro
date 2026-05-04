@@ -1,9 +1,11 @@
 // Three-layer animated case-study background.
 //
-// Layer 1 (bg__base, z -3) — horizontal OKLCH gradient with a 100vw-period
-// pattern (light/dark/light/dark/light) on a 200vw-wide element. Translated
-// horizontally on the GPU; the period matches the translation so the loop
-// is seamless.
+// Layer 1 (bg__base, z -3) — horizontal OKLCH gradient. The pattern's
+// wavelength is `max(100vw, 600px)` (so very narrow viewports keep a
+// 600px minimum wavelength and don't get a frantic stripe). The element
+// is 2× the wavelength wide and the animation translates by exactly one
+// wavelength, so the loop is seamless. Direction: animation runs L→R
+// (translate goes from -W to 0), so colour appears to flow left-to-right.
 // Layer 2/3 (bg__fg, z -1) — two stacked whites: linear top→bottom
 // 1.0→0.5 alpha, plus radial origin top-centre 1.0→0.5. These wash the
 // base out so colour only reads as a tint at the page edges.
@@ -49,7 +51,11 @@ html {
   position: absolute;
   top: 0;
   left: 0;
-  width: 200vw;
+  // Element is 2× the pattern wavelength so the viewport is always covered
+  // during the slide (translate goes -W → 0; element extents -W..+W at start,
+  // 0..2W at end). Wavelength has a 600px floor so narrow viewports don't
+  // shrink the colour bands into a busy stripe.
+  width: max(200vw, 1200px);
   height: 100%;
   z-index: -3;
   background: linear-gradient(
@@ -91,8 +97,8 @@ html {
 }
 
 @keyframes bg-slide {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-100vw, 0, 0); }
+  from { transform: translate3d(calc(-1 * max(100vw, 600px)), 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

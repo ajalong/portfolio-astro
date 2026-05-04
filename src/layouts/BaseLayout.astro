@@ -64,39 +64,9 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     </script>
   </head>
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
-    <svg
-      width="1"
-      height="1"
-      aria-hidden="true"
-      focusable="false"
-      style="position: fixed; left: -9999px; top: 0; overflow: hidden"
-    >
-      <defs>
-        <linearGradient
-          id="btn-border-ring-iridescent"
-          gradientUnits="objectBoundingBox"
-          x1="0"
-          y1="1"
-          x2="1"
-          y2="0"
-        >
-          <stop offset="0%" stop-color="#f6f7f8" />
-          <stop offset="11%" stop-color="#ebe7f3" />
-          <stop offset="22%" stop-color="#ddd2ea" />
-          <stop offset="33%" stop-color="#e2c8d8" />
-          <stop offset="44%" stop-color="#d4c0c8" />
-          <stop offset="55%" stop-color="#a894a8" />
-          <stop offset="66%" stop-color="#8f7488" />
-          <stop offset="77%" stop-color="#9b86ac" />
-          <stop offset="88%" stop-color="#e2e0ee" />
-          <stop offset="100%" stop-color="#f6f7f8" />
-        </linearGradient>
-      </defs>
-    </svg>
     <Background light={gradientLight} dark={gradientDark} />
     <slot />
     <script>
-      import { initButtonBorderRings } from '../scripts/border-ring';
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';
       import { initMediaAutoplay } from '../scripts/media-autoplay';
 
@@ -120,12 +90,11 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       });
 
       document.addEventListener('astro:page-load', () => {
-        initButtonBorderRings();
         initThumbnailVideoHover();
         initMediaAutoplay();
 
         document.querySelectorAll<HTMLImageElement>(
-          '.media-full img, .media-half img, .thumbnail img'
+          '.media-full img, .thumbnail img'
         ).forEach((img) => {
           if (img.complete) {
             img.classList.add('is-loaded');

@@ -1,6 +1,4 @@
 ---
-import ButtonBorderRing from './ButtonBorderRing.astro';
-
 interface Props {
   href?: string;
   ariaLabel?: string;
@@ -23,7 +21,6 @@ const {
   aria-label={ariaLabel}
   data-internal-entry-only={internalEntryOnly ? '' : undefined}
 >
-  <ButtonBorderRing />
   <svg
     class="project-nav-btn__icon"
     width="24"

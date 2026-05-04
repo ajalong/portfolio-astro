@@ -239,7 +239,7 @@ html.project-team-panel-open {
   box-sizing: border-box;
   @include pill-button-interaction;
 
-  svg:not(.btn-border-ring) {
+  svg {
     position: relative;
     z-index: 1;
     width: 20px;

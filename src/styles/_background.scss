@@ -69,16 +69,24 @@ html {
   position: absolute;
   inset: 0;
   z-index: -1;
+  // Both layers hold solid white through ~half of their travel before fading
+  // to 50%, so the upper portion of the viewport stays pure white at every
+  // aspect ratio and colour only emerges near the bottom edges. Using
+  // `farthest-corner` for the radial keeps the geometry consistent in
+  // landscape and portrait — the gradient always reaches the same colour at
+  // the corners regardless of viewport shape.
   background:
     radial-gradient(
-      circle max(100vw, 100vh) at 50% 0%,
+      circle farthest-corner at 50% 0%,
       rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 25%,
       rgba(255, 255, 255, 0.5) 100%
     ),
     linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 1),
-      rgba(255, 255, 255, 0.5)
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 25%,
+      rgba(255, 255, 255, 0.5) 100%
     );
 }
 

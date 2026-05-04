@@ -25,8 +25,9 @@
 }
 
 // Smooth swap when the homepage observer sets new values on :root.
+// ease-out lands the new colour quickly without snapping.
 :root {
-  transition: --c-light 600ms ease, --c-dark 600ms ease;
+  transition: --c-light 250ms ease-out, --c-dark 250ms ease-out;
 }
 
 html {

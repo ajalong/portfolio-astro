@@ -7,6 +7,11 @@ interface Props {
   projectTitle: string;
   client: string;
   summary: string;
+  // Below-fold cards get fetchpriority="low" so the browser still loads them
+  // eagerly but behind LCP-relevant requests. Avoids the visible pop-in that
+  // `loading="lazy"` causes when scrolling reaches a card before its poster
+  // has fetched.
+  belowFold?: boolean;
 }
 
 const {
@@ -17,7 +22,10 @@ const {
   projectTitle,
   client,
   summary,
+  belowFold = false,
 } = Astro.props as Props;
+
+const fetchPriority = belowFold ? 'low' : undefined;
 ---
 
 <a class="item" href={href}>
@@ -31,12 +39,13 @@ const {
         muted
         playsinline
         preload="metadata"
+        fetchpriority={fetchPriority}
         aria-label={thumbnailAlt}
         data-thumbnail-video
         data-autoplay-on-view
       ></video>
     ) : (
-      <img alt={thumbnailAlt} src={thumbnailSrc} />
+      <img alt={thumbnailAlt} src={thumbnailSrc} fetchpriority={fetchPriority} />
     )}
     <div class="thumbnail-caption">
       <h3 class="thumbnail-title">{projectTitle}</h3>

@@ -34,7 +34,22 @@ const CLOUDINARY_VIDEO_RE = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/video\/upl
 
 const CLOUDINARY_TRANSFORM_PREFIX = /^(?:a|ar|b|bo|c|co|dpr|e|f|fl|g|h|l|o|q|r|t|u|w|x|y|z)_/;
 
-function optimizeCloudinaryUrl(src, isVideo) {
+// srcset widths cover small-mobile through retina-desktop. Browsers pick the
+// lightest viable file based on the `sizes` attribute and DPR.
+const IMAGE_SRCSET_WIDTHS = [480, 800, 1200, 1800];
+// Single-src width — used for the `src` fallback and as the LCP-eligible URL.
+const IMAGE_DEFAULT_WIDTH = 1200;
+const VIDEO_DEFAULT_WIDTH = 1600;
+
+// `sizes` attribute by layout context. Values are the rendered CSS width.
+// Single full-width image: cols 2–5 of a 6-col article grid on ≥1000 px,
+// full-bleed minus page padding on mobile.
+const SIZES_FULL = '(min-width: 1000px) 60vw, 92vw';
+// Pair: half of the article grid on ≥1000 px, half-viewport on mobile (the
+// pair stays 2-col at all sizes per `_project-layout.scss`).
+const SIZES_PAIR = '(min-width: 1000px) 30vw, 46vw';
+
+function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
   const re = isVideo ? CLOUDINARY_VIDEO_RE : CLOUDINARY_IMAGE_RE;
   if (!re.test(src)) return src;
 
@@ -54,7 +69,14 @@ function optimizeCloudinaryUrl(src, isVideo) {
     }
   }
 
-  const existingParams = transformSegments.join(',');
+  // When a width is explicitly requested (per srcset entry), drop any pre-set
+  // width / c_limit so we replace them. Other transforms (f_*, q_*, fl_*,
+  // e_*, b_*, etc.) are preserved.
+  const segments = widthOverride !== undefined
+    ? transformSegments.filter((s) => !/^w_\d/.test(s) && s !== 'c_limit')
+    : transformSegments;
+
+  const existingParams = segments.join(',');
   const publicId = parts.slice(publicIdStart).join('/');
   const isGif = /\.gif$/i.test(publicId);
 
@@ -64,16 +86,31 @@ function optimizeCloudinaryUrl(src, isVideo) {
   // Animated GIFs need fl_animated so Cloudinary preserves animation when
   // converting to WebP/AVIF via f_auto.
   if (isGif && !/\bfl_animated\b/.test(existingParams)) missing.push('fl_animated');
-  if (!isVideo && !/\b[wc]_\d/.test(existingParams)) missing.push('c_limit', 'w_1800');
+  if (widthOverride !== undefined) {
+    missing.push('c_limit', 'w_' + widthOverride);
+  } else if (!isVideo && !/\b[wc]_\d/.test(existingParams)) {
+    // Backward-compat: legacy single-src callers with no width hint still
+    // get a sensible cap.
+    missing.push('c_limit', 'w_' + IMAGE_DEFAULT_WIDTH);
+  }
 
   if (!missing.length) return src;
 
-  const allTransforms = [...transformSegments, ...missing].filter(Boolean);
+  const allTransforms = [...segments, ...missing].filter(Boolean);
   return prefix + allTransforms.join(',') + '/' + publicId;
 }
 
+// Build a Cloudinary srcset for a markdown image. Returns null for
+// non-Cloudinary URLs (so the figure falls back to a plain <img src>).
+function buildCloudinarySrcset(src) {
+  if (!CLOUDINARY_IMAGE_RE.test(src)) return null;
+  return IMAGE_SRCSET_WIDTHS
+    .map((w) => `${optimizeCloudinaryUrl(src, false, w)} ${w}w`)
+    .join(', ');
+}
+
 // Returns { figure, captionText } — caption is placed in the page margin, not inside figure.
-function buildFigure(img) {
+function buildFigure(img, { isPair = false } = {}) {
   const src = img.properties?.src ?? '';
   const alt = img.properties?.alt ?? '';
   const isVideo = VIDEO_EXT.test(src);
@@ -89,7 +126,7 @@ function buildFigure(img) {
       type: 'element',
       tagName: 'video',
       properties: {
-        src: optimizeCloudinaryUrl(src, true),
+        src: optimizeCloudinaryUrl(src, true, VIDEO_DEFAULT_WIDTH),
         // No native `autoplay` — initMediaAutoplay starts/stops playback
         // based on viewport visibility. Visible-on-load videos still start
         // immediately because IntersectionObserver fires synchronously on
@@ -103,11 +140,14 @@ function buildFigure(img) {
       children: [],
     };
   } else {
+    const srcset = buildCloudinarySrcset(src);
     mediaChild = {
       ...img,
       properties: {
         ...img.properties,
-        src: optimizeCloudinaryUrl(src, false),
+        src: optimizeCloudinaryUrl(src, false, IMAGE_DEFAULT_WIDTH),
+        srcset: srcset || undefined,
+        sizes: srcset ? (isPair ? SIZES_PAIR : SIZES_FULL) : undefined,
         alt: altText,
         draggable: false,
       },
@@ -209,19 +249,20 @@ export default function rehypeProjectMedia() {
         }
 
         if (imgs.length === 1) {
-          const { figure, captionText } = buildFigure(imgs[0]);
+          const { figure, captionText } = buildFigure(imgs[0], { isPair: false });
           const captions = captionText ? [makeCaptionEl(captionText, 'right')] : [];
           next.push(makeMediaBlock([figure], captions, false));
         } else {
           // 2+ images in same paragraph → pairs; odd trailing → full-width.
           for (let k = 0; k < imgs.length; k += 2) {
-            const left = buildFigure(imgs[k]);
             const rightImg = imgs[k + 1];
+            const isPair = !!rightImg;
+            const left = buildFigure(imgs[k], { isPair });
             if (!rightImg) {
               const captions = left.captionText ? [makeCaptionEl(left.captionText, 'right')] : [];
               next.push(makeMediaBlock([left.figure], captions, false));
             } else {
-              const right = buildFigure(rightImg);
+              const right = buildFigure(rightImg, { isPair: true });
               const innerCaptions = [
                 ...(left.captionText ? [makePairCaptionEl('Left', left.captionText)] : []),
                 ...(right.captionText ? [makePairCaptionEl('Right', right.captionText)] : []),

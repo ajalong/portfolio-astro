@@ -43,7 +43,7 @@ const subtitle = getLastUpdatedLabel();
     <main>
       <ul class="project-list" id="work">
         {
-          projects.map((project) => (
+          projects.map((project, i) => (
             <li
               id={`project-${project.slug}`}
               data-bg-section
@@ -60,6 +60,7 @@ const subtitle = getLastUpdatedLabel();
                 projectTitle={project.data.title}
                 client={project.data.client}
                 summary={project.data.summary}
+                belowFold={i > 0}
               />
             </li>
           ))

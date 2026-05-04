@@ -10,8 +10,8 @@ order: 3
 year: 2025
 sector: UX Overhaul
 gradient:
-  light: oklch(0.526 0.139 250.3)
-  dark: oklch(0 0 0)
+  light: '#176DB7'
+  dark: '#000000'
 roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:

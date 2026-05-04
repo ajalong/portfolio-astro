@@ -8,16 +8,20 @@
 // 1.0→0.5 alpha, plus radial origin top-centre 1.0→0.5. These wash the
 // base out so colour only reads as a tint at the page edges.
 
+// Initial values are hex (not OKLCH) so the @property fallback survives in
+// browsers that can't parse oklch() — the inline frontmatter values are also
+// hex, and the `in oklch` interpolation hint below upgrades the blend on
+// modern engines without needing OKLCH stops.
 @property --c-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(0.95 0.04 80);
+  initial-value: #fdecd1;
 }
 
 @property --c-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(0.85 0.10 80);
+  initial-value: #f0c781;
 }
 
 // Smooth swap when the homepage observer sets new values on :root.

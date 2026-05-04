@@ -10,8 +10,8 @@ order: 5
 year: 2023
 sector: UX Exploration
 gradient:
-  light: oklch(0.922 0.200 124.7)
-  dark: oklch(0.863 0.201 144.3)
+  light: '#C8FB50'
+  dark: '#72F377'
 roleSummary: |
   Sole product designer on the digital workstream of AtkinsRéalis's ground-up rebrand. Ran design sprints on inclusivity, global reach, and engineering depth, testing each direction with users alongside the UX researcher Jonny Buck. Also led accessibility testing of the in-development brand identity with Interbrand's brand team.
 team:

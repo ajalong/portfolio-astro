@@ -10,8 +10,8 @@ order: 1
 year: 2024
 sector: Design System
 gradient:
-  light: oklch(0.823 0.171 79.5)
-  dark: oklch(0.680 0.185 39.2)
+  light: '#FFB600'
+  dark: '#F36633'
 roleSummary: |
   Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues. Ran the cross-team working group whose buy-in carried the system into each product team at rollout.
 team:

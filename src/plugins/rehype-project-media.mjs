@@ -49,6 +49,12 @@ const SIZES_FULL = '(min-width: 1000px) 60vw, 92vw';
 // pair stays 2-col at all sizes per `_project-layout.scss`).
 const SIZES_PAIR = '(min-width: 1000px) 30vw, 46vw';
 
+// `widthOverride` semantics:
+//   number    — replace any existing width with this one (used per srcset entry)
+//   null      — don't add any width transform; preserve original dimensions
+//               (needed for animated GIFs — Cloudinary 400s on any resize over
+//               its 50 MP-across-all-frames quota)
+//   undefined — legacy default: cap to IMAGE_DEFAULT_WIDTH if no width present
 function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
   const re = isVideo ? CLOUDINARY_VIDEO_RE : CLOUDINARY_IMAGE_RE;
   if (!re.test(src)) return src;
@@ -69,10 +75,13 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
     }
   }
 
-  // When a width is explicitly requested (per srcset entry), drop any pre-set
-  // width / c_limit so we replace them. Other transforms (f_*, q_*, fl_*,
-  // e_*, b_*, etc.) are preserved.
-  const segments = widthOverride !== undefined
+  const hasExplicitWidth = typeof widthOverride === 'number';
+  const skipWidth = widthOverride === null;
+
+  // When a width is explicitly requested (per srcset entry) or explicitly
+  // skipped, drop any pre-set width / c_limit so we control them. Other
+  // transforms (f_*, q_*, fl_*, e_*, b_*, etc.) are preserved.
+  const segments = (hasExplicitWidth || skipWidth)
     ? transformSegments.filter((s) => !/^w_\d/.test(s) && s !== 'c_limit')
     : transformSegments;
 
@@ -86,9 +95,9 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
   // Animated GIFs need fl_animated so Cloudinary preserves animation when
   // converting to WebP/AVIF via f_auto.
   if (isGif && !/\bfl_animated\b/.test(existingParams)) missing.push('fl_animated');
-  if (widthOverride !== undefined) {
+  if (hasExplicitWidth) {
     missing.push('c_limit', 'w_' + widthOverride);
-  } else if (!isVideo && !/\b[wc]_\d/.test(existingParams)) {
+  } else if (!skipWidth && !isVideo && !/\b[wc]_\d/.test(existingParams)) {
     // Backward-compat: legacy single-src callers with no width hint still
     // get a sensible cap.
     missing.push('c_limit', 'w_' + IMAGE_DEFAULT_WIDTH);
@@ -101,9 +110,15 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
 }
 
 // Build a Cloudinary srcset for a markdown image. Returns null for
-// non-Cloudinary URLs (so the figure falls back to a plain <img src>).
+// non-Cloudinary URLs (so the figure falls back to a plain <img src>) and
+// for animated GIFs — Cloudinary's free/standard plans cap animated
+// transforms at 50 MP across all frames, so any per-width resize on a long
+// GIF returns 400. We deliver animated GIFs at original dimensions instead;
+// `f_auto` alone still converts to animated WebP/AVIF (~60% smaller) which
+// is enough.
 function buildCloudinarySrcset(src) {
   if (!CLOUDINARY_IMAGE_RE.test(src)) return null;
+  if (/\.gif$/i.test(src)) return null;
   return IMAGE_SRCSET_WIDTHS
     .map((w) => `${optimizeCloudinaryUrl(src, false, w)} ${w}w`)
     .join(', ');
@@ -140,12 +155,19 @@ function buildFigure(img, { isPair = false } = {}) {
       children: [],
     };
   } else {
+    const isGif = /\.gif$/i.test(src);
     const srcset = buildCloudinarySrcset(src);
+    // Animated GIFs can't be resized via Cloudinary (50 MP cap), so emit a
+    // single src at original dimensions. f_auto alone still serves animated
+    // WebP/AVIF when the browser supports it.
+    const srcUrl = isGif
+      ? optimizeCloudinaryUrl(src, false, null)
+      : optimizeCloudinaryUrl(src, false, IMAGE_DEFAULT_WIDTH);
     mediaChild = {
       ...img,
       properties: {
         ...img.properties,
-        src: optimizeCloudinaryUrl(src, false, IMAGE_DEFAULT_WIDTH),
+        src: srcUrl,
         srcset: srcset || undefined,
         sizes: srcset ? (isPair ? SIZES_PAIR : SIZES_FULL) : undefined,
         alt: altText,

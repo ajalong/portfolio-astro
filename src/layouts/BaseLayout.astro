@@ -1,6 +1,7 @@
 ---
 import '../styles/global.scss';
 import { ClientRouter } from 'astro:transitions';
+import Background from '../components/Background.astro';
 
 interface Props {
   title: string;
@@ -8,9 +9,11 @@ interface Props {
   image?: string;
   url?: string;
   bodyClass?: string;
+  gradientLight?: string;
+  gradientDark?: string;
 }
 
-const { title, description, image, url, bodyClass } = Astro.props as Props;
+const { title, description, image, url, bodyClass, gradientLight, gradientDark } = Astro.props as Props;
 
 const siteName = 'Alan Long';
 const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
@@ -19,15 +22,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
 ---
 <html lang="en">
   <head>
-    <!-- Safari only: mesh without SVG filter (see `.safari-mesh-fallback` in global.scss). iOS Chrome has “Safari” in UA too — exclude Chromium family. -->
-    <script is:inline>
-      (function () {
-        var ua = navigator.userAgent;
-        if (!/safari/i.test(ua)) return;
-        if (/chrom(e|ium)|crios|fxios|edg\/|opr\/|opr\s|android.*wv/i.test(ua)) return;
-        document.documentElement.classList.add('safari-mesh-fallback');
-      })();
-    </script>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -46,16 +40,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#222222" />
     <meta name="msapplication-TileColor" content="#222222" />
-    <!--
-      theme-color is set to #fff to match the page's top white wash
-      (--top-white-solid-end is solid #fff for ~50px before the gradient
-      kicks in). iOS Safari was rendering opaque white chrome by default
-      anyway when theme-color was omitted, so making it explicit at
-      least eliminates the cut at the top of the viewport. The bottom
-      toolbar still meets the gradient page bottom, but Safari hides
-      the toolbar on scroll-down and renders it translucent on scroll-up
-      in current iOS, which softens that boundary in practice.
-    -->
     <meta name="theme-color" content="#ffffff" />
 
     <meta property="og:title" content={pageTitle} />
@@ -88,18 +72,6 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       style="position: fixed; left: -9999px; top: 0; overflow: hidden"
     >
       <defs>
-        <!-- Grain via displacement (no feBlend — it was re-compositing SourceGraphic and killing dither). -->
-        <!-- Region 0/0/1/1 = full bbox (objectBoundingBox). Keep scale modest — large values + clip-path can blank WebKit. -->
-        <filter id="page-mesh-grain" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.88"
-            numOctaves="3"
-            stitchTiles="stitch"
-            result="grain"
-          />
-          <feDisplacementMap in="SourceGraphic" in2="grain" scale="52" xChannelSelector="R" />
-        </filter>
         <linearGradient
           id="btn-border-ring-iridescent"
           gradientUnits="objectBoundingBox"
@@ -121,8 +93,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
         </linearGradient>
       </defs>
     </svg>
-    <!-- Fixed top white wash: must be real DOM (not html::after) so it stacks above <main> inside body’s isolated context. -->
-    <div class="page-top-fade" aria-hidden="true"></div>
+    <Background light={gradientLight} dark={gradientDark} />
     <slot />
     <script>
       import { initButtonBorderRings } from '../scripts/border-ring';

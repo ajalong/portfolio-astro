@@ -1,0 +1,20 @@
+---
+// Three-layer animated case-study background.
+// - .bg__base holds the per-project OKLCH gradient pair and slides horizontally.
+// - .bg__fg is two stacked white washes (radial top-centre + linear top→bottom)
+//   that sit over the base so colour reads as a soft tint behind the page.
+// Colours come from CSS custom properties (--c-light / --c-dark) so the
+// homepage observer can swap them without remounting the layer.
+interface Props {
+  light?: string;
+  dark?: string;
+}
+const { light, dark } = Astro.props;
+const styleAttr = light && dark
+  ? `--c-light: ${light}; --c-dark: ${dark};`
+  : undefined;
+---
+<div class="bg" style={styleAttr} aria-hidden="true">
+  <div class="bg__base"></div>
+  <div class="bg__fg"></div>
+</div>

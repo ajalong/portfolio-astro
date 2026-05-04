@@ -154,14 +154,7 @@ $bg-card-hover-gradient:
   --brand-linkedin: rgb(10, 102, 194);
   --brand-dribbble: #ea4c89;
 
-  /*
-   * Solid white band below the safe area so the top edge reads as pure #fff full width before
-   * the fade — avoids grey hairline + mesh showing through as horizontal banding.
-   */
-  --top-white-solid-end: max(44px, calc(env(safe-area-inset-top, 0px) + 28px));
-  /* Sits above `body > * { z-index: 1 }` so the top white fade isn't painted under <main>. */
-  --z-top-fade: 2;
-  /* Safe-area: mesh + document bg bleed past layout into notch / home indicator (viewport-fit=cover) */
+  /* Safe-area: page bg bleeds past layout into notch / home indicator (viewport-fit=cover) */
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);

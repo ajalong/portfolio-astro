@@ -31,6 +31,10 @@ const projects = defineCollection({
     // panel as a shorter scope-focused collaborator entry.
     roleSummary: z.string().optional(),
     team: z.array(projectTeamMemberSchema).optional(),
+    gradient: z.object({
+      light: z.string(),
+      dark: z.string(),
+    }).optional(),
   }),
 });
 

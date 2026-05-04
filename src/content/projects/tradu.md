@@ -9,6 +9,9 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 2
 year: 2025
 sector: Fintech
+gradient:
+  light: oklch(0.691 0.160 341.5)
+  dark: oklch(0.643 0.156 303.2)
 roleTitle: Product Design Lead
 roleSummary: |
   Sole external designer on Tradu's onboarding flow, working independently from their in-house team. Designed a light mode for the flow, built on a primitive token foundation. After the light mode work, scope expanded into a UX audit of the onboarding flow and the corporate site.

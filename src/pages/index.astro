@@ -44,7 +44,12 @@ const subtitle = getLastUpdatedLabel();
       <ul class="project-list" id="work">
         {
           projects.map((project) => (
-            <li id={`project-${project.slug}`}>
+            <li
+              id={`project-${project.slug}`}
+              data-bg-section
+              data-light={project.data.gradient?.light}
+              data-dark={project.data.gradient?.dark}
+            >
               <ProjectCard
                 href={`/project/${project.slug}`}
                 thumbnailSrc={project.data.thumbnailImage}
@@ -62,4 +67,10 @@ const subtitle = getLastUpdatedLabel();
       </ul>
     </main>
   </div>
+  <script>
+    import { initBackgroundObserver } from '../scripts/bg-observer';
+    document.addEventListener('astro:page-load', () => {
+      initBackgroundObserver();
+    });
+  </script>
 </BaseLayout>

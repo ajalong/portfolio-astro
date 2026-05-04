@@ -103,13 +103,11 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
     import { initCaptionFade } from '../scripts/caption-fade';
     import { initMediaLightbox } from '../scripts/media-lightbox';
-    import { initSubSectionModals } from '../scripts/sub-section-modal';
     // initMediaAutoplay moved to BaseLayout so home thumbnails benefit too.
     document.addEventListener('astro:page-load', () => {
       initProjectNavFromInternal();
       initCaptionFade();
       initMediaLightbox();
-      initSubSectionModals();
     });
   </script>
 </BaseLayout>

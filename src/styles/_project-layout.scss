@@ -85,10 +85,7 @@
     // Explicit column-gap rather than relying on subgrid's spec-defined
     // inheritance from the parent grid. Safari has a known issue where
     // setting any gap property on a subgrid (here `row-gap: 0`) can break
-    // column-gap inheritance silently, leaving children aligned to a
-    // 0-gap subgrid while sibling visual gaps still render correctly. The
-    // sub-section card bg ::before then misaligns from the rest of the
-    // page grid by the equivalent of one gap accumulated across columns.
+    // column-gap inheritance silently.
     column-gap: var(--grid-gap);
     row-gap: 0;
     align-items: start;
@@ -197,95 +194,6 @@
 
 body.project-page .page_container article section {
   margin: 0;
-}
-
-// Sub-section preview cards — clicked to open the full content in a
-// modal overlay (see _sub-section-modal.scss for the dialog itself).
-// Each card shows kicker, heading, and the first image found inside
-// the corresponding sub-section's content. Cards sit in the parent
-// section's content area (cols 2-5 on desktop) in a 2-col grid; on
-// mobile the grid collapses to a single column.
-.sub-section-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--grid-gap);
-
-  @media screen and (max-width: 1000px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.sub-section-card {
-  @include surface-hover-strong;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: var(--text-spacing-standard);
-  border: none;
-  border-radius: var(--radius-lg);
-  background-color: $bg-card;
-  color: var(--text-primary);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-// These overrides are scoped to beat the page-wide
-// `article :is(h1…h6,p,ul,…) { margin-block: 0 }` reset that zeros
-// every element's vertical margin and which sits later in this file.
-// The reset is (0,2,3) so the card overrides need (0,3,3) or higher.
-//
-// Card layout (per the screenshot reference): image at the top, kicker
-// + heading + an excerpt paragraph below. The excerpt clamps to 3
-// lines so cards stay a predictable height even with longer prose.
-body.project-page .page_container article {
-  // Preview image at the top — full width of the card's content area.
-  // No media-block wrapper because it's a direct child of the button,
-  // not inside a <p>; rehype-project-media only transforms <img> nodes
-  // wrapped in image-only paragraphs.
-  .sub-section-card > img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    background-color: var(--grey-media);
-    // Pull the image out of the card's content padding so it goes
-    // edge-to-edge across the card. Card has overflow: hidden so the
-    // image can't visually escape past the border.
-    margin: calc(var(--text-spacing-standard) * -1)
-            calc(var(--text-spacing-standard) * -1)
-            0;
-    width: calc(100% + (var(--text-spacing-standard) * 2));
-  }
-
-  .sub-section-card > img + .kicker {
-    margin-top: var(--text-spacing-standard);
-  }
-
-  .sub-section-card .kicker {
-    margin: 0;
-  }
-
-  .sub-section-card h3 {
-    // Match the rest of the page's kicker → heading rhythm.
-    margin: var(--unit-4) 0 0;
-    max-width: none;
-  }
-
-  .sub-section-card .sub-section-card__excerpt {
-    display: -webkit-box;
-    margin: var(--text-spacing-tight) 0 0;
-    max-width: none;
-    color: var(--text-secondary);
-    // Cap the excerpt at 3 lines with an ellipsis so cards stay an
-    // even height regardless of how much body text the source has.
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
 }
 
 body:not(.project-page) .page_container article section {

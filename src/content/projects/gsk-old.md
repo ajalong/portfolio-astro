@@ -1,7 +1,8 @@
 ---
 title: Core Design System
 client: GSK
-slug: gsk
+slug: gsk-old
+published: false
 summary: A company-wide design system to make GSK's bold new brand accessible across all digital products.
 metaDescription: In response to accessibility and technical challenges with GSK's 2022 rebrand, I designed a core digital design system that could be adopted across the company, balancing expressive brand content with dense tools for healthcare professionals.
 thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_16_hfms2k.jpg
@@ -62,32 +63,51 @@ _Context_
 
 ## An accessible design system for big biopharma
 
-In 2022 GSK rebranded with Wolff Olins as they spun off their consumer business, focusing on bold forms and striking scientific imagery. As a FTSE 100 biopharma with digital touchpoints spanning brand sites, scientific tools for healthcare professionals, and internal platforms, GSK needed a design system that could carry the new identity across all of them.
+In 2022 GSK turned to Wolff Olins to rebrand as they spun off their consumer business. The move allows them to wholly dedicate themselves to science and technology. The new brand reflected that, focusing on bold forms and striking scientific imagery.
 
+[For further context on the 2022 rebrand, see Wolff Olins's case study.](https://www.wolffolins.com/work/gsk)
+
+GSK is a FTSE 100 biopharma with digital touchpoints spanning public-facing brand sites, scientific tools for healthcare professionals, and internal platforms used across the business. Any design system would need to serve all of them.
+
+This wasn't my first project with GSK. Years of prior work through Interbrand had built the trust and internal relationships that opened the door to leading their first company-wide design system.
+
+![New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/image/upload/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb.gif)
 ![GSK employees on the Living Gradient created by Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg)
+
+![GSK's new brand in action at their London HQ.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/wolffolins/G0168BT_i3cocf.webp)
 
 _Problem_
 
 ## A bold rebrand that didn't work digitally
 
-The rebrand's digital problems went beyond the cosmetic.
+The rebrand's digital problems went beyond the cosmetic. They affected accessibility, usability for specialist audiences, and the cohesion of a product landscape that had grown without shared foundations.
 
-- The new identity worked for brand-led experiences but not for specialist tools used by scientists and healthcare professionals.
-- Accessibility issues with the new identity, particularly around colour.
-- No shared design system across GSK's digital products, leaving them inconsistent with each other and with the brand.
+- The new visual identity worked well in brand-led experiences but not those that catered to user groups with specialised needs, like scientists and healthcare professionals.
+- There were accessibility issues when the new visual identity was applied to digital interfaces, particularly around colour.
+- GSK's digital products and services lacked a shared design system, leaving them inconsistent with each other and with the brand.
+
+_Research and strategy_
+
+## Understanding the brand and the business
+
+An audit of the 2022 rebrand guidelines revealed it lacked the necessary foundations for digital. Rather than adapt the existing guidelines, I rebuilt from the ground up. This system would sit at the core of GSK's brand with print and specialised guidelines radiating from it.
+
+- I mapped the spectrum of digital products and services GSK currently provides. These range from expressive public-facing brand content to dense scientific tools for healthcare professionals.
+- I formed a working group of representatives from GSK's digital product teams to ensure the system reflected real needs across the business. Having worked with many of these teams before, the group was assembled quickly.
+- I ran workshops focused on colour, layout, and typography to surface requirements and build stakeholder buy-in from the outset.
 
 _System architecture_
 
 ## Tokens, accessibility, and brand alignment by default
 
-An audit of the 2022 rebrand guidelines revealed they lacked the necessary foundations for digital. Rather than adapt them, I rebuilt the system from the ground up, sitting at the core of GSK's brand with print and specialised guidelines radiating from it. The system was designed from the perspective of the teams who would adopt it: documentation accompanies every guideline, and accessibility is built into its foundations.
+I designed the system from the perspective of the teams who would adopt it. Documentation accompanies every guideline, making the rationale behind each decision available to anyone working with the system. The result was a system that scales across platforms with accessibility built into its foundations.
 
-- **Built on design tokens** so the system adapts across devices, platforms and colour modes.
-- **Accessibility resolved at the token and component level**, so every adopting team inherited it by default.
-- **A lean core component set** covering only what could be truly generalised across GSK, so teams build on it rather than be confined by it.
-- **Native iOS and Android extensions** of the core library, giving native teams the building blocks to align with each platform's UX paradigms.
+- Built with design tokens to ensure the system adapts across devices, platforms, and colour modes.
+- Resolved the rebrand's accessibility issues at the token and component level, so every adopting team inherited them by default.
+- Kept the core component set lean, covering only elements that could be truly generalised across GSK, so teams build on it rather than be confined by it.
+- Extended the core library with dedicated iOS and Android component sets, giving native teams the building blocks to align GSK products with each platform's UX paradigms.
 
-![The system's token hierarchy: primitive tokens at the base, semantic tokens mapping intent, components built from semantic tokens. Accessibility is resolved at the primitive layer so every adopting team inherits it by default.](https://placeholder.invalid/TODO-token-hierarchy-diagram.png)
+![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
 
 ![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_general_components.mp4)
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
@@ -96,15 +116,15 @@ _Implementation_
 
 ## Shipping, proving, and supporting adoption
 
-Shipping the system was just the start. The work that followed was making sure it took hold across GSK's product teams.
+Shipping the system was just the start. Real success meant proving it worked on live products, supporting the teams adopting it, and building the shared understanding needed for a token-based approach to take hold across GSK.
 
-- **Designed Brandhub from the new system**, GSK's internal brand site, as the system's flagship application. The system also informed updates to gsk.com as it rolled out across the corporate site.
-- **A working group of product team representatives** shaped requirements during research and drove adoption inside their teams during rollout.
-- **Workshops** to surface requirements during research and demystify tokens during rollout, helping teams new to the approach work with the system.
+- Applied the system to gsk.com and GSK Brandhub (GSK's digital asset management and brand site) as early proof points, with mockups extending the vision to data-rich interfaces and native platforms.
+- Supported product teams hands-on as they integrated the system. Adoption was smoother because many of these teams had helped shape the system through working group sessions, so buy-in was built in from the start.
+- Ran workshops to demystify tokens and multi-layered system architecture for teams new to the approach, helping them see the value.
 
 ![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
 
-![gsk.com refined through the new system as it rolled out across the corporate site.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
+![gsk.com updated to reflect the design system](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
 
 _Impact_
 

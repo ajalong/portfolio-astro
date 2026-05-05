@@ -48,12 +48,15 @@ async function runWipe(href: string): Promise<void> {
   // keeps its WAAPI animation running through the swap.
   const navPromise = navigate(href);
 
-  // Cover: white wash ramps down to half (1 → 0.5) so brand colour reads
-  // a bit more strongly without taking over; foreground content fades out
-  // in parallel.
+  // Cover: lift the white wash by tightening the gradient's half-opacity
+  // stop from 100% to 40% — the drop-off steepens so more brand colour
+  // shows through near the bottom while the top stays fully washed.
+  // Foreground content fades out in parallel.
   await Promise.all([
     fg.animate(
-      [{ opacity: 1 }, { opacity: 0.5 }],
+      // Cast: TS DOM lib doesn't model custom-property keyframes, but
+      // WAAPI accepts them when the property is @property-registered.
+      [{ ['--fg-fade-stop']: '100%' } as any, { ['--fg-fade-stop']: '40%' } as any],
       { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
     ).finished,
     oldContainer
@@ -72,11 +75,12 @@ async function runWipe(href: string): Promise<void> {
   const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: white wash ramps back up (0.5 → 1); new content fades in.
+  // Reveal: lower the white wash back into place — half-opacity stop
+  // moves from 40% back to 100%; new content fades in.
   await Promise.all([
     newFg
       ? newFg.animate(
-          [{ opacity: 0.5 }, { opacity: 1 }],
+          [{ ['--fg-fade-stop']: '40%' } as any, { ['--fg-fade-stop']: '100%' } as any],
           { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
         ).finished
       : Promise.resolve(),
@@ -89,7 +93,7 @@ async function runWipe(href: string): Promise<void> {
   ]);
 
   // Reset for next time — clear inline styles so CSS defaults take over.
-  if (newFg) newFg.style.opacity = '';
+  if (newFg) newFg.style.removeProperty('--fg-fade-stop');
   if (newContainer) newContainer.style.opacity = '';
   wiping = false;
 }

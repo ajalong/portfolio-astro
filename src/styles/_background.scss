@@ -57,28 +57,37 @@ html {
     --brand-secondary 250ms ease-out;
 }
 
+// Position of the half-opacity stop on the white wash gradients. Lower
+// values steepen the drop-off (the wash "lifts up", exposing more brand
+// colour in the lower portion). Animated by the page-wipe transition.
+@property --fg-fade-stop {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 100%;
+}
+
 .bg__fg {
   position: absolute;
   inset: 0;
   z-index: -1;
-  // Both layers hold solid white through ~half of their travel before fading
-  // to 50%, so the upper portion of the viewport stays pure white at every
-  // aspect ratio and colour only emerges near the bottom edges. Using
-  // `farthest-corner` for the radial keeps the geometry consistent in
-  // landscape and portrait — the gradient always reaches the same colour at
-  // the corners regardless of viewport shape.
+  // Both layers hold solid white through 25% of their travel, then ramp to
+  // 50% white by --fg-fade-stop (default 100% — bottom of gradient). During
+  // the page transition, --fg-fade-stop animates down to ~40% so the
+  // half-opacity stop moves up the gradient and the bottom of the viewport
+  // exposes more of the brand-coloured base. Using `farthest-corner` for
+  // the radial keeps the geometry consistent in landscape and portrait.
   background:
     radial-gradient(
       circle farthest-corner at 50% 0%,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 1) 25%,
-      rgba(255, 255, 255, 0.5) 100%
+      rgba(255, 255, 255, 0.5) var(--fg-fade-stop)
     ),
     linear-gradient(
       to bottom,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 1) 25%,
-      rgba(255, 255, 255, 0.5) 100%
+      rgba(255, 255, 255, 0.5) var(--fg-fade-stop)
     );
 }
 

@@ -54,22 +54,22 @@ async function runWipe(href: string): Promise<void> {
   // Simultaneously shrink the radial spotlight (--fg-radial-scale 1 → 0)
   // so the bright top-centre dome contracts to a point. Foreground
   // content fades out in parallel.
+  const coverFg = fg.animate(
+    // Cast: TS DOM lib doesn't model custom-property keyframes, but
+    // WAAPI accepts them when the property is @property-registered.
+    [
+      { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
+      { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
+    ],
+    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
+  );
+  const coverContainer = oldContainer?.animate(
+    [{ opacity: 1 }, { opacity: 0 }],
+    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
+  );
   await Promise.all([
-    fg.animate(
-      // Cast: TS DOM lib doesn't model custom-property keyframes, but
-      // WAAPI accepts them when the property is @property-registered.
-      [
-        { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
-        { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
-      ],
-      { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
-    ).finished,
-    oldContainer
-      ? oldContainer.animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
-        ).finished
-      : Promise.resolve(),
+    coverFg.finished,
+    coverContainer?.finished ?? Promise.resolve(),
   ]);
 
   // If the network was slower than the cover anim, wait — otherwise this is
@@ -82,25 +82,31 @@ async function runWipe(href: string): Promise<void> {
 
   // Reveal: lower the white wash back into place and grow the radial
   // spotlight back from 0 to 1; new content fades in.
+  const revealFg = newFg?.animate(
+    [
+      { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
+      { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
+    ],
+    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+  );
+  const revealContainer = newContainer?.animate(
+    [{ opacity: 0 }, { opacity: 1 }],
+    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+  );
   await Promise.all([
-    newFg
-      ? newFg.animate(
-          [
-            { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
-            { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
-          ],
-          { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
-        ).finished
-      : Promise.resolve(),
-    newContainer
-      ? newContainer.animate(
-          [{ opacity: 0 }, { opacity: 1 }],
-          { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
-        ).finished
-      : Promise.resolve(),
+    revealFg?.finished ?? Promise.resolve(),
+    revealContainer?.finished ?? Promise.resolve(),
   ]);
 
-  // Reset for next time — clear inline styles so CSS defaults take over.
+  // Cancel all WAAPI animations and clear inline styles so the elements
+  // return to their natural compositing state. fill:'forwards' alone keeps
+  // the animation in the active list, which can hold the element on its
+  // own GPU layer — that has been observed to break backdrop-filter on
+  // overlays (e.g. the project team panel) painted later.
+  coverFg.cancel();
+  coverContainer?.cancel();
+  revealFg?.cancel();
+  revealContainer?.cancel();
   if (newFg) {
     newFg.style.removeProperty('--fg-fade-stop');
     newFg.style.removeProperty('--fg-radial-scale');

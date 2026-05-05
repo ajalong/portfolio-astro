@@ -1,10 +1,20 @@
 // Page-wipe overlay for home → case-study navigation.
 //
 // Reads the destination project's brand colours from the clicked card's
-// [data-bg-section] ancestor (set by the homepage list), animates a
-// fixed-position gradient overlay 100% → 0% (cover from bottom), drives
-// the navigation manually via astro:transitions/client `navigate()`,
-// then animates 0% → -100% (reveal as it slides off the top).
+// [data-bg-section] ancestor, runs a soft-edged gradient overlay across
+// the viewport, drives the navigation manually via navigate() from
+// astro:transitions/client, then exits.
+//
+// The overlay (.page-wipe) is 200 vh tall with transparent top/bottom
+// 20 % and an opaque 60 % middle (see _page-wipe.scss). The opaque band
+// is 120 vh — comfortably larger than the viewport — so peak coverage
+// fully hides the swap.
+//
+// Element-position keyframes (translateY values, in vh):
+//   start (off-screen below):  +100
+//   peak coverage / swap:       -50  (opaque band centred on viewport)
+//   end (off-screen above):    -200
+// Total travel: 300 vh, split evenly across the cover + reveal phases.
 //
 // We hijack the click instead of using astro:before-swap because the
 // framework doesn't await replaced event.swap promises, so deferring the
@@ -14,8 +24,8 @@
 // untouched.
 import { navigate } from 'astro:transitions/client';
 
-const COVER_DURATION = 350;
-const REVEAL_DURATION = 350;
+const COVER_DURATION = 500;
+const REVEAL_DURATION = 500;
 const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 function shouldWipe(toPath: string): boolean {
@@ -39,9 +49,10 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   wipe.style.setProperty('--wipe-primary', primary);
   wipe.style.setProperty('--wipe-secondary', secondary);
 
-  // Cover from bottom.
+  // Cover: rise from off-screen below to peak coverage (opaque band
+  // centred on viewport).
   await wipe.animate(
-    [{ transform: 'translateY(100%)' }, { transform: 'translateY(0%)' }],
+    [{ transform: 'translateY(100vh)' }, { transform: 'translateY(-50vh)' }],
     { duration: COVER_DURATION, easing: EASING, fill: 'forwards' },
   ).finished;
 
@@ -49,14 +60,14 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   // attribute on .page-wipe keeps our overlay in place across the swap.
   await navigate(href);
 
-  // Reveal off the top.
+  // Reveal: continue past peak and exit off the top.
   await wipe.animate(
-    [{ transform: 'translateY(0%)' }, { transform: 'translateY(-100%)' }],
+    [{ transform: 'translateY(-50vh)' }, { transform: 'translateY(-200vh)' }],
     { duration: REVEAL_DURATION, easing: EASING, fill: 'forwards' },
   ).finished;
 
   // Reset to off-screen below for the next time.
-  wipe.style.transform = 'translateY(100%)';
+  wipe.style.transform = 'translateY(100vh)';
   wiping = false;
 }
 

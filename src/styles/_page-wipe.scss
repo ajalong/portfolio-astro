@@ -1,18 +1,29 @@
 // Page-wipe overlay for home → case-study navigation. JS (page-wipe.ts)
 // drives the animation via the Web Animations API; this stylesheet just
 // sets the resting state and the gradient.
+//
+// Element is 200 vh tall with a vertical gradient that ramps in and out
+// through transparency: top 20 % fades transparent → primary, bottom 20 %
+// fades secondary → transparent, middle 60 % (= 120 vh, > one viewport
+// height) is fully opaque. As the wipe rises across the screen, you see
+// a soft band of brand colour build to peak then ebb away rather than a
+// hard slab. Peak coverage lands when the opaque centre is roughly
+// aligned with the viewport — see page-wipe.ts for the keyframe maths.
 .page-wipe {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200vh;
   z-index: 9999;
   pointer-events: none;
-  // Off-screen below the viewport at rest. JS animates 100% → 0% (cover)
-  // then 0% → -100% (reveal) on home → /project/* navigation.
-  transform: translateY(100%);
+  transform: translateY(100vh);
   background: linear-gradient(
     180deg,
-    var(--wipe-primary, var(--brand-primary)),
-    var(--wipe-secondary, var(--brand-secondary))
+    transparent 0%,
+    var(--wipe-primary, var(--brand-primary)) 20%,
+    var(--wipe-secondary, var(--brand-secondary)) 80%,
+    transparent 100%
   );
   will-change: transform;
 }

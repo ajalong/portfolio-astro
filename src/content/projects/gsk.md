@@ -96,8 +96,8 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 
 ![The system's token hierarchy: primitive tokens at the base, semantic tokens mapping intent, components built from semantic tokens. Accessibility is resolved at the primitive layer so every adopting team inherits it by default.](https://placeholder.invalid/TODO-token-hierarchy-diagram.png)
 
-![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,e_boomerang/alan.design/gsk/gskdesignsystem_general_components.mp4)
-![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,e_boomerang/alan.design/gsk/gskdesignsystem_podcasts.mp4)
+![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_general_components.mp4)
+![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_podcasts.mp4)
 
 _Implementation_
 

@@ -77,7 +77,7 @@ _Problem_
 
 Bold colour, striking imagery, and expressive typography landed well in consumer-facing marketing material, however across the rest of GSK's digital landscape it presented challenges.
 
-- There were accessibility issues with the new identity, particularly around colour.
+- There were accessibility issues with the new identity, the biggest one being GSK shade of orange failed WCAG AA in some contexts.
 - The new identity worked for brand-led experiences but not for specialist tools used by scientists and healthcare professionals.
 - There was no existing core design system across GSK's digital products, leaving them inconsistent with each other and with the brand.
 
@@ -87,8 +87,8 @@ _System architecture_
 
 An audit of the 2022 rebrand guidelines revealed they lacked the necessary foundations for digital. Rather than adapt them, I built a system from the ground up based on the intent of the rebrand. Digital would sit at the core of GSK's brand, with print and specialised guidelines radiating from it. The system was designed from the perspective of the teams who would adopt it: documentation accompanies every guideline, and accessibility is built in at a token level.
 
-- **Built on design tokens** so the system works in any context; across devices, platforms and colour modes.
-- **Accessibility resolved at the token level**, so every product team inherited it by default.
+- **Accessibility resolved at the token level**. A semantic layer abstracted primitive token values so text remained accessible across light and dark mode.
+- **Fallback high density grids and typography** for specalist tools. Catered to technical audiences who require information dense interfaces.
 - **A lean core component set** covering only what could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - **iOS and Android extensions** of the core library, giving native teams the building blocks to align with each platform's UX paradigms.
 
@@ -96,7 +96,7 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 
 ![The system's token hierarchy: primitive tokens at the base, semantic tokens mapping intent, components built from semantic tokens. Accessibility is resolved at the primitive layer so every adopting team inherits it by default.](https://placeholder.invalid/TODO-token-hierarchy-diagram.png)
 
-![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_general_components.mp4)
+![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,e_boomerang/alan.design/gsk/gskdesignsystem_general_components.mp4)
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/gsk/gskdesignsystem_podcasts.mp4)
 
 _Implementation_

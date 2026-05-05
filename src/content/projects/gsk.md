@@ -10,8 +10,8 @@ order: 1
 year: 2024
 sector: Design System
 brand:
-  primary: '#FFB600'
-  secondary: '#F36633'
+  primary: "#FFB600"
+  secondary: "#F36633"
 roleSummary: |
   Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues. Ran the cross-team working group whose buy-in carried the system into each product team at rollout.
 team:
@@ -62,9 +62,14 @@ _Context_
 
 ## An accessible design system for big biopharma
 
-In 2022 GSK rebranded with Wolff Olins as they spun off their consumer business, focusing on bold forms and striking scientific imagery. As a FTSE 100 biopharma with digital touchpoints spanning brand sites, scientific tools for healthcare professionals, and internal platforms, GSK needed a design system that could carry the new identity across all of them.
+GSK are FTSE 100 biopharma giant with numerous digital products and services. They span brand-led content for the general public, to scientific tools for industry professionals.
 
+In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with new identity.
+
+![New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/image/upload/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb.gif)
 ![GSK employees on the Living Gradient created by Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg)
+
+![GSK's new brand in action at their London HQ.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/wolffolins/G0168BT_i3cocf.webp)
 
 _Problem_
 

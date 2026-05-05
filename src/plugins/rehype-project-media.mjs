@@ -124,11 +124,21 @@ function buildCloudinarySrcset(src) {
     .join(', ');
 }
 
+// Detects an authored 1:1 aspect intent in the Cloudinary URL — either
+// `ar_1.0` (decimal) or `ar_1:1` (ratio). When set, the figure cell takes
+// `aspect-ratio: 1/1` and the inner img/video uses `object-fit: cover` so
+// the cell fills cleanly even if the source is delivered at its natural
+// aspect (e.g. a paired GIF that can't be transformed via Cloudinary).
+function hasOneToOneAspect(src) {
+  return /\bar_1(?:\.0|:1)\b/.test(src);
+}
+
 // Returns { figure, captionText } — caption is placed in the page margin, not inside figure.
 function buildFigure(img, { isPair = false } = {}) {
   const src = img.properties?.src ?? '';
   const alt = img.properties?.alt ?? '';
   const isVideo = VIDEO_EXT.test(src);
+  const isOneToOne = hasOneToOneAspect(src);
 
   // "Caption — Detailed description": caption → margin, description → alt/aria-label.
   const separatorIdx = alt.indexOf(' — ');
@@ -180,11 +190,24 @@ function buildFigure(img, { isPair = false } = {}) {
     figure: {
       type: 'element',
       tagName: 'figure',
-      properties: { className: ['media-full'] },
+      properties: {
+        className: ['media-full'],
+        'data-aspect': isOneToOne ? '1:1' : undefined,
+      },
       children: [mediaChild],
     },
     captionText: captionText || null,
+    isOneToOne,
   };
+}
+
+// In a pair, if either cell carries an authored 1:1 intent we apply it to
+// both so the cells match height (e.g. one image cropped via Cloudinary
+// `ar_1.0` paired with a GIF Cloudinary can't transform).
+function harmoniseAspect(left, right) {
+  if (!(left.isOneToOne || right.isOneToOne)) return;
+  left.figure.properties['data-aspect'] = '1:1';
+  right.figure.properties['data-aspect'] = '1:1';
 }
 
 function makeCaptionEl(text, side) {
@@ -285,6 +308,7 @@ export default function rehypeProjectMedia() {
               next.push(makeMediaBlock([left.figure], captions, false));
             } else {
               const right = buildFigure(rightImg, { isPair: true });
+              harmoniseAspect(left, right);
               const innerCaptions = [
                 ...(left.captionText ? [makePairCaptionEl('Left', left.captionText)] : []),
                 ...(right.captionText ? [makePairCaptionEl('Right', right.captionText)] : []),

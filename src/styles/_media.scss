@@ -31,6 +31,23 @@ figure.media-full {
   }
 }
 
+// Authored 1:1 cells — added by the rehype plugin when the source URL
+// carries `ar_1.0` / `ar_1:1`. The figure becomes a 1:1 box and the
+// inner img/video uses object-fit: cover so the cell fills cleanly even
+// when the source is delivered at its natural aspect (e.g. a paired GIF
+// that Cloudinary can't transform). Pair cells inherit the flag from
+// each other so both halves match height.
+figure.media-full[data-aspect="1:1"] {
+  aspect-ratio: 1 / 1;
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 // Margin captions — mobile: flow below images as normal text.
 .media-caption {
   font-size: 12px;

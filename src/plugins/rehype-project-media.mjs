@@ -98,6 +98,16 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
       seg.params = seg.params.filter((p) => !/^w_\d/.test(p) && p !== 'c_limit');
     }
   }
+  // `fl_animated` is for animated-image delivery (animated WebP / GIF). On
+  // a video URL it forces Cloudinary into that mode — even with a smooth
+  // WebM source, output ends up at GIF-rate playback. Strip it for video
+  // URLs so the source's true frame rate survives transcoding.
+  if (isVideo) {
+    for (const seg of segs) {
+      if (seg.kind !== 'transform') continue;
+      seg.params = seg.params.filter((p) => p !== 'fl_animated');
+    }
+  }
 
   // Aggregate all transform params across segments to look up f_auto/q_auto/etc.
   const allParams = segs.flatMap((s) => (s.kind === 'transform' ? s.params : []));

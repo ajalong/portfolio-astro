@@ -1,10 +1,13 @@
 // Page-fade transition for home → case-study navigation.
 //
-// `.page-wipe` is a fixed-position white-wash overlay that mirrors the
-// background's static white-gradient pattern but at higher edge alpha.
-// Animating its opacity 0 → 1 → 0 intensifies the page's existing wash
-// rather than introducing a separate visual effect. Foreground page
-// content (`.page_container`) cross-fades in parallel.
+// During the transition the page background's white wash (`.bg__fg`)
+// ramps DOWN, exposing the brand-coloured base; the foreground content
+// (`.page_container`) cross-fades in parallel. After the swap the wash
+// ramps back UP and the new content fades in. The brand colour briefly
+// takes centre stage between the two pages.
+//
+// `.bg__fg` carries `transition:persist` so the same DOM node moves
+// across the swap and the WAAPI animation continues uninterrupted.
 //
 // We hijack the click instead of using astro:before-swap because the
 // framework doesn't await replaced event.swap promises, so deferring
@@ -24,15 +27,15 @@ function shouldWipe(toPath: string): boolean {
   return location.pathname === '/' && toPath.startsWith('/project/');
 }
 
-function wipeEl(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('.page-wipe');
+function fgEl(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('.bg__fg');
 }
 
 let wiping = false;
 
 async function runWipe(href: string): Promise<void> {
-  const wipe = wipeEl();
-  if (!wipe) {
+  const fg = fgEl();
+  if (!fg) {
     await navigate(href);
     return;
   }
@@ -41,14 +44,15 @@ async function runWipe(href: string): Promise<void> {
   const oldContainer = document.querySelector<HTMLElement>('.page_container');
 
   // Kick the navigation off in parallel with the cover animation. ClientRouter
-  // fetches + swaps as soon as it's ready; transition:persist on .page-wipe
-  // keeps the overlay in place across the swap.
+  // fetches + swaps as soon as it's ready; transition:persist on .bg__fg
+  // keeps its WAAPI animation running through the swap.
   const navPromise = navigate(href);
 
-  // Cover: white wash ramps up while content fades out.
+  // Cover: white wash ramps down (1 → 0) so brand colour shows through;
+  // foreground content fades out in parallel.
   await Promise.all([
-    wipe.animate(
-      [{ opacity: 0 }, { opacity: 1 }],
+    fg.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
       { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
     ).finished,
     oldContainer
@@ -63,17 +67,18 @@ async function runWipe(href: string): Promise<void> {
   // a no-op and reveal starts immediately.
   await navPromise;
 
-  // The before-swap hook (registered in initPageWipe) has already set the
-  // new container's inline opacity to 0 so it doesn't flash full-opacity
-  // before its fade-in starts.
+  // Re-query in case the DOM swap moved nodes around.
+  const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: white wash ramps down while new content fades in.
+  // Reveal: white wash ramps back up (0 → 1); new content fades in.
   await Promise.all([
-    wipe.animate(
-      [{ opacity: 1 }, { opacity: 0 }],
-      { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
-    ).finished,
+    newFg
+      ? newFg.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+        ).finished
+      : Promise.resolve(),
     newContainer
       ? newContainer.animate(
           [{ opacity: 0 }, { opacity: 1 }],
@@ -82,8 +87,8 @@ async function runWipe(href: string): Promise<void> {
       : Promise.resolve(),
   ]);
 
-  // Reset for next time.
-  wipe.style.opacity = '0';
+  // Reset for next time — clear inline styles so CSS defaults take over.
+  if (newFg) newFg.style.opacity = '';
   if (newContainer) newContainer.style.opacity = '';
   wiping = false;
 }

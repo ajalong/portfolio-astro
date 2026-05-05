@@ -12,19 +12,19 @@ sector: Fintech
 brand:
   primary: '#DC6FB8'
   secondary: '#A172DA'
-roleTitle: Product Design Lead
+roleTitle: Lead Product Designer
 roleSummary: |
   Sole external designer on Tradu's onboarding flow, working independently from their in-house team. Designed a light mode for the flow, built on a primitive token foundation. After the light mode work, scope expanded into a UX audit of the onboarding flow and the corporate site.
 team:
   - name: Alan Long
-    role: Product Design Lead, Onboarding
+    role: Lead Product Designer, Onboarding
     company: Interbrand
     description: |
       Sole external designer on Tradu's onboarding flow. Designed a light mode for the flow built on a primitive token foundation, then audited and improved its UX.
     headshot: https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto/alan.design/headshot-edited.jpg
     linkedin: https://linkedin.com/in/alanalberglong
   - name: Alex Toomey
-    role: Product Design Lead, Corporate site
+    role: Lead Product Designer, Corporate site
     company: Interbrand
     description: |
       Led the design system and corporate site work for Tradu, with my onboarding workstream running after hers.

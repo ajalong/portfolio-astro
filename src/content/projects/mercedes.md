@@ -16,7 +16,7 @@ roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:
   - name: Alan Long
-    role: Product Design Lead
+    role: Lead Product Designer
     company: Interbrand
     description: |
       Led end-to-end design across the three sprints, owning information architecture, the global scenario settings model, onboarding and exports. Co-facilitated the stakeholder workshop with Mercedes-Benz and OMD.

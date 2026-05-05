@@ -16,7 +16,7 @@ roleSummary: |
   Sole product designer on the digital workstream of AtkinsRéalis's ground-up rebrand. Ran design sprints on inclusivity, global reach, and engineering depth, testing each direction with users alongside the UX researcher Jonny Buck. Also led accessibility testing of the in-development brand identity with Interbrand's brand team.
 team:
   - name: Alan Long
-    role: Product Design Lead
+    role: Lead Product Designer
     company: Interbrand
     description: |
       Sole product designer on the digital workstream. Ran design sprints with Jonny Buck, delivering mockups that illustrated the research findings and the proposed information architecture. Led accessibility testing of the in-development brand identity alongside Interbrand's brand team.

@@ -63,50 +63,78 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
   const rest = src.slice(prefix.length);
   const parts = rest.split('/');
 
-  const transformSegments = [];
+  // Cloudinary URL structure: /<transform-segment>(?:/<transform-segment>)*?/<v\d+>?/<publicId>
+  // Transform segments are comma-separated lists of params (e.g. `f_auto,q_auto,c_limit,w_1600`).
+  // Versions (`v\d+`) sit on their own slash-segment between transforms and the publicId.
+  // Walk path parts, classifying each as a transform list, a version, or the start of publicId.
+  const segs = []; // [{ kind: 'transform', params: string[] } | { kind: 'version', value: string }]
   let publicIdStart = 0;
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
-    if (CLOUDINARY_TRANSFORM_PREFIX.test(part) || /^v\d+$/.test(part)) {
-      transformSegments.push(part);
+    if (/^v\d+$/.test(part)) {
+      segs.push({ kind: 'version', value: part });
       publicIdStart = i + 1;
-    } else {
-      break;
+      continue;
     }
+    const params = part.split(',');
+    if (params.length > 0 && params.every((p) => CLOUDINARY_TRANSFORM_PREFIX.test(p))) {
+      segs.push({ kind: 'transform', params });
+      publicIdStart = i + 1;
+      continue;
+    }
+    break;
   }
 
   const hasExplicitWidth = typeof widthOverride === 'number';
   const skipWidth = widthOverride === null;
 
   // When a width is explicitly requested (per srcset entry) or explicitly
-  // skipped, drop any pre-set width / c_limit so we control them. Other
-  // transforms (f_*, q_*, fl_*, e_*, b_*, etc.) are preserved.
-  const segments = (hasExplicitWidth || skipWidth)
-    ? transformSegments.filter((s) => !/^w_\d/.test(s) && s !== 'c_limit')
-    : transformSegments;
+  // skipped, drop any pre-set numeric width / c_limit from EVERY transform
+  // segment so we control them. Other transforms (f_*, q_*, fl_*, e_*, b_*,
+  // c_fill, w_auto, etc.) are preserved.
+  if (hasExplicitWidth || skipWidth) {
+    for (const seg of segs) {
+      if (seg.kind !== 'transform') continue;
+      seg.params = seg.params.filter((p) => !/^w_\d/.test(p) && p !== 'c_limit');
+    }
+  }
 
-  const existingParams = segments.join(',');
+  // Aggregate all transform params across segments to look up f_auto/q_auto/etc.
+  const allParams = segs.flatMap((s) => (s.kind === 'transform' ? s.params : []));
+  const allParamsString = allParams.join(',');
   const publicId = parts.slice(publicIdStart).join('/');
   const isGif = /\.gif$/i.test(publicId);
 
-  const missing = [];
-  if (!/\bf_auto\b/.test(existingParams)) missing.push('f_auto');
-  if (!/\bq_auto\b/.test(existingParams)) missing.push('q_auto:best');
+  const additions = [];
+  if (!/\bf_auto\b/.test(allParamsString)) additions.push('f_auto');
+  if (!/\bq_auto\b/.test(allParamsString)) additions.push('q_auto:best');
   // Animated GIFs need fl_animated so Cloudinary preserves animation when
   // converting to WebP/AVIF via f_auto.
-  if (isGif && !/\bfl_animated\b/.test(existingParams)) missing.push('fl_animated');
+  if (isGif && !/\bfl_animated\b/.test(allParamsString)) additions.push('fl_animated');
   if (hasExplicitWidth) {
-    missing.push('c_limit', 'w_' + widthOverride);
-  } else if (!skipWidth && !isVideo && !/\b[wc]_\d/.test(existingParams)) {
+    additions.push('c_limit', 'w_' + widthOverride);
+  } else if (!skipWidth && !isVideo && !/\b[wc]_\d/.test(allParamsString)) {
     // Backward-compat: legacy single-src callers with no width hint still
     // get a sensible cap.
-    missing.push('c_limit', 'w_' + IMAGE_DEFAULT_WIDTH);
+    additions.push('c_limit', 'w_' + IMAGE_DEFAULT_WIDTH);
   }
 
-  if (!missing.length) return src;
+  if (additions.length === 0 && !(hasExplicitWidth || skipWidth)) return src;
 
-  const allTransforms = [...segments, ...missing].filter(Boolean);
-  return prefix + allTransforms.join(',') + '/' + publicId;
+  // Append additions to the first transform segment (or create one). Versions
+  // stay where they are. This keeps the URL canonical: transforms then
+  // optional version then publicId, each on their own slash-segment.
+  const firstTransform = segs.find((s) => s.kind === 'transform');
+  if (firstTransform) {
+    firstTransform.params.push(...additions);
+  } else if (additions.length) {
+    segs.unshift({ kind: 'transform', params: additions });
+  }
+
+  const segStrings = segs
+    .map((s) => (s.kind === 'transform' ? s.params.join(',') : s.value))
+    .filter((s) => s !== '');
+  return prefix + segStrings.join('/') + '/' + publicId;
 }
 
 // Build a Cloudinary srcset for a markdown image. Returns null for

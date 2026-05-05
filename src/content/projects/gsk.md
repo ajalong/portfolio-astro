@@ -66,7 +66,7 @@ GSK are FTSE 100 biopharma giant with numerous digital products and services. Th
 
 In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with new identity.
 
-![New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/image/upload/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb.gif)
+![New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_1600/v1777997705/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb-2_heywv6.mp4)
 ![GSK employees on the Living Gradient created by Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg)
 
 ![GSK's new brand in action at their London HQ.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/wolffolins/G0168BT_i3cocf.webp)

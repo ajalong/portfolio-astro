@@ -24,9 +24,14 @@
 // untouched.
 import { navigate } from 'astro:transitions/client';
 
-const COVER_DURATION = 500;
-const REVEAL_DURATION = 500;
-const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+// Rapid sweep: build → peak → ramp down. Total ≈ 440 ms when the network
+// finishes inside the cover phase (typical for prefetched / local nav).
+const COVER_DURATION = 220;
+const REVEAL_DURATION = 220;
+// Cover accelerates into peak (matches the "surge"); reveal decelerates
+// out (matches "ramp back down").
+const COVER_EASING = 'cubic-bezier(0.4, 0, 1, 1)';   // ease-in
+const REVEAL_EASING = 'cubic-bezier(0, 0, 0.4, 1)';  // ease-out
 
 function shouldWipe(toPath: string): boolean {
   return location.pathname === '/' && toPath.startsWith('/project/');
@@ -49,25 +54,41 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   wipe.style.setProperty('--wipe-primary', primary);
   wipe.style.setProperty('--wipe-secondary', secondary);
 
-  // Cover: rise from off-screen below to peak coverage (opaque band
-  // centred on viewport).
+  // Kick the navigation off in parallel with the cover animation. ClientRouter
+  // fetches + swaps as soon as it's ready; the persist attribute on .page-wipe
+  // keeps our overlay in place across the swap. Doing this in parallel with
+  // (rather than after) the cover anim removes the awkward stationary peak
+  // that otherwise sits while the network resolves.
+  const navPromise = navigate(href);
+
+  // Cover: rise from off-screen below into peak coverage AND ramp opacity
+  // 0 → 1 so the wipe builds out of the background's faint tint into the
+  // bolder full-opacity brand colours.
   await wipe.animate(
-    [{ transform: 'translateY(100vh)' }, { transform: 'translateY(-50vh)' }],
-    { duration: COVER_DURATION, easing: EASING, fill: 'forwards' },
+    [
+      { transform: 'translateY(100vh)', opacity: 0 },
+      { transform: 'translateY(-50vh)', opacity: 1 },
+    ],
+    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
   ).finished;
 
-  // Drive navigation. ClientRouter handles fetch + DOM swap; the persist
-  // attribute on .page-wipe keeps our overlay in place across the swap.
-  await navigate(href);
+  // If the network was slower than the cover anim, wait — otherwise this is
+  // a no-op and reveal starts immediately.
+  await navPromise;
 
-  // Reveal: continue past peak and exit off the top.
+  // Reveal: continue past peak and ramp opacity 1 → 0 — the bolder colour
+  // surge fades back down toward the new page's own background tint.
   await wipe.animate(
-    [{ transform: 'translateY(-50vh)' }, { transform: 'translateY(-200vh)' }],
-    { duration: REVEAL_DURATION, easing: EASING, fill: 'forwards' },
+    [
+      { transform: 'translateY(-50vh)', opacity: 1 },
+      { transform: 'translateY(-200vh)', opacity: 0 },
+    ],
+    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
   ).finished;
 
   // Reset to off-screen below for the next time.
   wipe.style.transform = 'translateY(100vh)';
+  wipe.style.opacity = '0';
   wiping = false;
 }
 

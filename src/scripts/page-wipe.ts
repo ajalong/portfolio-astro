@@ -48,11 +48,12 @@ async function runWipe(href: string): Promise<void> {
   // keeps its WAAPI animation running through the swap.
   const navPromise = navigate(href);
 
-  // Cover: white wash ramps down (1 → 0) so brand colour shows through;
-  // foreground content fades out in parallel.
+  // Cover: white wash ramps down to half (1 → 0.5) so brand colour reads
+  // a bit more strongly without taking over; foreground content fades out
+  // in parallel.
   await Promise.all([
     fg.animate(
-      [{ opacity: 1 }, { opacity: 0 }],
+      [{ opacity: 1 }, { opacity: 0.5 }],
       { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
     ).finished,
     oldContainer
@@ -71,11 +72,11 @@ async function runWipe(href: string): Promise<void> {
   const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: white wash ramps back up (0 → 1); new content fades in.
+  // Reveal: white wash ramps back up (0.5 → 1); new content fades in.
   await Promise.all([
     newFg
       ? newFg.animate(
-          [{ opacity: 0 }, { opacity: 1 }],
+          [{ opacity: 0.5 }, { opacity: 1 }],
           { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
         ).finished
       : Promise.resolve(),

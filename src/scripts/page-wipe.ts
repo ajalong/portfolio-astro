@@ -51,12 +51,17 @@ async function runWipe(href: string): Promise<void> {
   // Cover: lift the white wash by tightening the gradient's half-opacity
   // stop from 100% to 40% — the drop-off steepens so more brand colour
   // shows through near the bottom while the top stays fully washed.
-  // Foreground content fades out in parallel.
+  // Simultaneously shrink the radial spotlight (--fg-radial-scale 1 → 0)
+  // so the bright top-centre dome contracts to a point. Foreground
+  // content fades out in parallel.
   await Promise.all([
     fg.animate(
       // Cast: TS DOM lib doesn't model custom-property keyframes, but
       // WAAPI accepts them when the property is @property-registered.
-      [{ ['--fg-fade-stop']: '100%' } as any, { ['--fg-fade-stop']: '40%' } as any],
+      [
+        { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
+        { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
+      ],
       { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
     ).finished,
     oldContainer
@@ -75,12 +80,15 @@ async function runWipe(href: string): Promise<void> {
   const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: lower the white wash back into place — half-opacity stop
-  // moves from 40% back to 100%; new content fades in.
+  // Reveal: lower the white wash back into place and grow the radial
+  // spotlight back from 0 to 1; new content fades in.
   await Promise.all([
     newFg
       ? newFg.animate(
-          [{ ['--fg-fade-stop']: '40%' } as any, { ['--fg-fade-stop']: '100%' } as any],
+          [
+            { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
+            { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
+          ],
           { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
         ).finished
       : Promise.resolve(),
@@ -93,7 +101,10 @@ async function runWipe(href: string): Promise<void> {
   ]);
 
   // Reset for next time — clear inline styles so CSS defaults take over.
-  if (newFg) newFg.style.removeProperty('--fg-fade-stop');
+  if (newFg) {
+    newFg.style.removeProperty('--fg-fade-stop');
+    newFg.style.removeProperty('--fg-radial-scale');
+  }
   if (newContainer) newContainer.style.opacity = '';
   wiping = false;
 }

@@ -1,0 +1,23 @@
+// Page-wipe overlay for home → case-study navigation. JS (page-wipe.ts)
+// drives the animation via the Web Animations API; this stylesheet just
+// sets the resting state and the gradient.
+.page-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  // Off-screen below the viewport at rest. JS animates 100% → 0% (cover)
+  // then 0% → -100% (reveal) on home → /project/* navigation.
+  transform: translateY(100%);
+  background: linear-gradient(
+    180deg,
+    var(--wipe-primary, var(--brand-primary)),
+    var(--wipe-secondary, var(--brand-secondary))
+  );
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  // Skip the wipe entirely — navigation happens with no overlay animation.
+  .page-wipe { display: none; }
+}

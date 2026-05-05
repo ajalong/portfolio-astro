@@ -66,9 +66,15 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
     <Background primary={brandPrimary} secondary={brandSecondary} />
     <slot />
+    <div class="page-wipe" aria-hidden="true" transition:persist></div>
     <script>
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';
       import { initMediaAutoplay } from '../scripts/media-autoplay';
+      import { initPageWipe } from '../scripts/page-wipe';
+
+      // Page-wipe binds module-level event listeners — call once on first load,
+      // not inside astro:page-load (would re-bind on every navigation).
+      initPageWipe();
 
       // Clear stuck focus before a ClientRouter navigation. Without this, a
       // tap on a project card can leave it in :focus-visible after navigating

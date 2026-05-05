@@ -40,16 +40,16 @@ interface Props {
   sectionIndex?: SectionIndexEntry[];
   roleTitle?: string;
   roleSummary?: string;
-  gradientLight?: string;
-  gradientDark?: string;
+  brandPrimary?: string;
+  brandSecondary?: string;
 }
 
-const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex, roleTitle, roleSummary, gradientLight, gradientDark } = Astro.props as Props;
+const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
 const clientWithYear = client;
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
 ---
-<BaseLayout {title} description={description} {image} url={url} bodyClass="project-page" {gradientLight} {gradientDark}>
+<BaseLayout {title} description={description} {image} url={url} bodyClass="project-page" {brandPrimary} {brandSecondary}>
   {!showSectionIndex && <ProjectNavbar internalEntryOnly />}
   <div class="page_container">
     <header>

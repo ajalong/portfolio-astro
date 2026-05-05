@@ -9,9 +9,9 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 1
 year: 2024
 sector: Design System
-gradient:
-  light: '#FFB600'
-  dark: '#F36633'
+brand:
+  primary: '#FFB600'
+  secondary: '#F36633'
 roleSummary: |
   Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues. Ran the cross-team working group whose buy-in carried the system into each product team at rollout.
 team:

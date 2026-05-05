@@ -1,11 +1,13 @@
-// Homepage gradient swap. Each project list item carries data-light /
-// data-dark; the observer picks whichever has the largest intersection with
-// a horizontal band across the viewport's vertical centre and writes its
-// pair to :root. The CSS @property + transition handles the actual fade.
+// Homepage brand-colour swap. Each project list item carries the case
+// study's brand colours as data-brand-primary / data-brand-secondary; the
+// observer picks whichever has the largest intersection with a horizontal
+// band across the viewport's vertical centre and writes its pair to :root.
+// The @property registration on --brand-primary / --brand-secondary plus
+// the transition in _background.scss handles the actual fade.
 export function initBackgroundObserver(): void {
   const root = document.documentElement;
   const sections = document.querySelectorAll<HTMLElement>(
-    '[data-bg-section][data-light][data-dark]'
+    '[data-bg-section][data-brand-primary][data-brand-secondary]'
   );
   if (sections.length === 0) return;
 
@@ -16,9 +18,9 @@ export function initBackgroundObserver(): void {
       const top = visible.reduce((a, b) =>
         b.intersectionRatio > a.intersectionRatio ? b : a,
       );
-      const { light, dark } = (top.target as HTMLElement).dataset;
-      if (light) root.style.setProperty('--c-light', light);
-      if (dark) root.style.setProperty('--c-dark', dark);
+      const { brandPrimary, brandSecondary } = (top.target as HTMLElement).dataset;
+      if (brandPrimary) root.style.setProperty('--brand-primary', brandPrimary);
+      if (brandSecondary) root.style.setProperty('--brand-secondary', brandSecondary);
     },
     {
       // Active band ≈ middle 20% of the viewport. A section's pair applies

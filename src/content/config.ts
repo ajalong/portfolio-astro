@@ -31,9 +31,14 @@ const projects = defineCollection({
     // panel as a shorter scope-focused collaborator entry.
     roleSummary: z.string().optional(),
     team: z.array(projectTeamMemberSchema).optional(),
-    gradient: z.object({
-      light: z.string(),
-      dark: z.string(),
+    // Two brand colours per project. They drive the animated background
+    // gradient (see Background.astro / _background.scss) and are exposed
+    // as :root CSS custom properties (`--brand-primary`, `--brand-secondary`)
+    // so any element on the page can reference the active project's brand
+    // palette via `var(--brand-primary)` etc.
+    brand: z.object({
+      primary: z.string(),
+      secondary: z.string(),
     }).optional(),
   }),
 });

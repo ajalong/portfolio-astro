@@ -47,8 +47,8 @@ const subtitle = getLastUpdatedLabel();
             <li
               id={`project-${project.slug}`}
               data-bg-section
-              data-light={project.data.gradient?.light}
-              data-dark={project.data.gradient?.dark}
+              data-brand-primary={project.data.brand?.primary}
+              data-brand-secondary={project.data.brand?.secondary}
             >
               <ProjectCard
                 href={`/project/${project.slug}`}

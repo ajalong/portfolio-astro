@@ -9,11 +9,11 @@ interface Props {
   image?: string;
   url?: string;
   bodyClass?: string;
-  gradientLight?: string;
-  gradientDark?: string;
+  brandPrimary?: string;
+  brandSecondary?: string;
 }
 
-const { title, description, image, url, bodyClass, gradientLight, gradientDark } = Astro.props as Props;
+const { title, description, image, url, bodyClass, brandPrimary, brandSecondary } = Astro.props as Props;
 
 const siteName = 'Alan Long';
 const pageTitle = title === siteName ? title : `${title} – ${siteName}`;
@@ -64,7 +64,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
     </script>
   </head>
   <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
-    <Background light={gradientLight} dark={gradientDark} />
+    <Background primary={brandPrimary} secondary={brandSecondary} />
     <slot />
     <script>
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';

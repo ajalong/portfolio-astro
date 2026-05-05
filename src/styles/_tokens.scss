@@ -1,6 +1,30 @@
 // Design tokens — Sass variables and CSS custom properties.
 // All other partials that need these @use this file.
 
+// Per-project brand colours.
+// Set on the page via inline style on `.bg` (project pages) or via the
+// homepage IntersectionObserver (which writes them to :root as the user
+// scrolls between case studies). Registered with @property so colour
+// transitions on swap are interpolated rather than instantaneous.
+//
+// Initial values are hex (not OKLCH) so the @property fallback survives
+// in browsers that can't parse oklch() — the inline frontmatter values
+// are also hex, and the `in oklch` interpolation hint on the gradient
+// upgrades the blend on modern engines without needing OKLCH stops.
+//
+// Usable anywhere on the site as `var(--brand-primary)` / `var(--brand-secondary)`.
+@property --brand-primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #fdecd1;
+}
+
+@property --brand-secondary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f0c781;
+}
+
 // My role card — neutral grey at 40% opacity so the page background bleeds through
 $bg-card: rgba(230, 230, 230, 0.4);
 // Hover: lavender bloom (hsl 268) bottom-right + warm hue-26 top-left, echoing the site background

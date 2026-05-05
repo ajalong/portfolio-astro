@@ -9,9 +9,9 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 3
 year: 2025
 sector: UX Overhaul
-gradient:
-  light: '#176DB7'
-  dark: '#000000'
+brand:
+  primary: '#176DB7'
+  secondary: '#000000'
 roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:

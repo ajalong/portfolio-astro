@@ -9,9 +9,9 @@ thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_
 order: 8
 year: 2021
 sector: Virtual Event
-gradient:
-  light: "#876438"
-  dark: "#4D4D4D"
+brand:
+  primary: "#876438"
+  secondary: "#4D4D4D"
 roleTitle: Product Design Lead & Front-end Developer
 roleSummary: |
   Designed the WSJ CEO Council virtual event platform and led the front-end development on a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.

@@ -1,36 +1,16 @@
 // Three-layer animated case-study background.
 //
-// Layer 1 (bg__base, z -3) — horizontal OKLCH gradient. The pattern's
-// wavelength is `max(100vw, 600px)` (so very narrow viewports keep a
-// 600px minimum wavelength and don't get a frantic stripe). The element
-// is 2× the wavelength wide and the animation translates by exactly one
-// wavelength, so the loop is seamless. Direction: animation runs L→R
-// (translate goes from -W to 0), so colour appears to flow left-to-right.
+// Layer 1 (bg__base, z -3) — horizontal OKLCH gradient between the two
+// per-project brand colours (--brand-primary / --brand-secondary, defined
+// as @property tokens in _tokens.scss). The pattern's wavelength is
+// `max(100vw, 600px)` (so very narrow viewports keep a 600px minimum
+// wavelength and don't get a frantic stripe). The element is 2× the
+// wavelength wide and the animation translates by exactly one wavelength,
+// so the loop is seamless. Direction: animation runs L→R (translate goes
+// from -W to 0), so colour appears to flow left-to-right.
 // Layer 2/3 (bg__fg, z -1) — two stacked whites: linear top→bottom
 // 1.0→0.5 alpha, plus radial origin top-centre 1.0→0.5. These wash the
 // base out so colour only reads as a tint at the page edges.
-
-// Initial values are hex (not OKLCH) so the @property fallback survives in
-// browsers that can't parse oklch() — the inline frontmatter values are also
-// hex, and the `in oklch` interpolation hint below upgrades the blend on
-// modern engines without needing OKLCH stops.
-@property --c-light {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #fdecd1;
-}
-
-@property --c-dark {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: #f0c781;
-}
-
-// Smooth swap when the homepage observer sets new values on :root.
-// ease-out lands the new colour quickly without snapping.
-:root {
-  transition: --c-light 250ms ease-out, --c-dark 250ms ease-out;
-}
 
 html {
   background-color: #fff;
@@ -60,15 +40,22 @@ html {
   z-index: -3;
   background: linear-gradient(
     in oklch to right,
-    var(--c-light) 0%,
-    var(--c-dark) 25%,
-    var(--c-light) 50%,
-    var(--c-dark) 75%,
-    var(--c-light) 100%
+    var(--brand-primary) 0%,
+    var(--brand-secondary) 25%,
+    var(--brand-primary) 50%,
+    var(--brand-secondary) 75%,
+    var(--brand-primary) 100%
   );
   animation: bg-slide 20s linear infinite;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  // Smooth swap when the homepage observer rewrites :root brand values.
+  // Listening on the consuming element (not :root) avoids a Chrome quirk
+  // where transitioning a registered custom property on the root keeps
+  // the computed value pinned at the @property initial-value.
+  transition:
+    --brand-primary 250ms ease-out,
+    --brand-secondary 250ms ease-out;
 }
 
 .bg__fg {
@@ -102,6 +89,8 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bg__base { animation: none; }
-  :root { transition: none; }
+  .bg__base {
+    animation: none;
+    transition: none;
+  }
 }

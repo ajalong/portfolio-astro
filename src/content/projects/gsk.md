@@ -75,7 +75,7 @@ _Problem_
 
 ## A bold rebrand that didn't work digitally
 
-Bold colour, striking imagery, and expressive typography landed well in consumer-facing marketing material, however across the rest of GSK's digital landscape it presented challenges.
+Bold colour, striking imagery, and expressive typography landed well in consumer-facing marketing material, however across the rest of GSK's digital landscape, it presented challenges.
 
 - There were accessibility issues with the new identity, the biggest one being GSK's shade of orange failed WCAG AA in some contexts.
 - The new identity worked for brand-led experiences but not for specialist tools used by scientists and healthcare professionals.
@@ -85,7 +85,7 @@ _System architecture_
 
 ## Tokens, accessibility, and brand alignment
 
-An audit of the 2022 rebrand guidelines revealed they lacked the necessary foundations for digital. Rather than adapt them, I built a system from the ground up based on the intent of the rebrand. Digital would sit at the core of GSK's brand, with print and specialised guidelines radiating from it. The system was designed from the perspective of the teams who would adopt it: documentation accompanies every guideline, and accessibility is built in at a token level.
+An audit of the 2022 rebrand guidelines revealed they lacked the necessary foundations for digital usage. Rather than adapt them, I built a system from the ground up based on the intent of the rebrand. Digital would sit at the core of GSK's brand, with print and specialised guidelines radiating from it. The system was designed from the perspective of the teams who would adopt it: documentation accompanies every guideline, and accessibility is built in at a token level.
 
 - **Accessibility resolved at the token level**. A semantic layer abstracted primitive token values so text remained accessible across light and dark mode.
 - **Fallback high-density grids and typography** for specialist tools. Catered to technical audiences who require information-dense interfaces.
@@ -103,9 +103,9 @@ _Implementation_
 
 ## Shipping, proving, and supporting adoption
 
-Wherever possible I take a participatory approach to design, involving stakeholders in the design process. This approach can be challenging in terms of logistics and ensuring everyone feels their views have been taken into account, however in this project it played a vital role in accounting for the needs of parties across the business and earning their buy-in.
+Wherever possible I take a participatory approach to design, involving stakeholders in the design process. This approach can be challenging in terms of logistics and ensuring everyone feels their views have been taken into account, however in this project it played a vital role in delivering the needs of product teams across the business and earning their buy-in.
 
-- **I formed a working group of individuals from key product teams** to shape design system requirements. I led weekly workshops as I built, enabling input from those that would use the system.
+- **I formed a working group of individuals from key product teams** to shape design system requirements. I led weekly workshops as I built, enabling input from those who would use the system.
 - **I worked closely with GSK's brand team** to ensure the design system was aligned with the new brand.
 - **I designed Brandhub upon the new system**, GSK's digital asset management and brand guideline platform.
 
@@ -117,7 +117,7 @@ _Impact_
 
 ## A strong reception and growing adoption
 
-The system is doing what it was built to do. Accessibility issues are resolved, adoption is spreading across GSK's digital teams, and the response from product and brand teams has been strong.
+The system is doing what it was built to do. Accessibility issues are resolved, adoption is spreading across GSK's digital teams, and the response from product and brand teams has been very positive.
 
 - **Accessibility issues resolved**, unblocking digital adoption of the 2022 rebrand.
 - **Rolling out company-wide** across GSK's digital teams following the initial release.
@@ -132,7 +132,7 @@ Initially the scope of this project was daunting however through collaboration w
 This project also presented a unique opportunity to align product teams that, due to GSK's corporate structure, had been operating independently. Leading this effort taught me a great deal about how you balance the competing needs of many stakeholders.
 
 - **Stakeholder workshops build buy-in.** They built the internal advocacy network that carried the system into each product team at rollout.
-- **A focus on scope enabled strong adoption.** A smaller set of well-considered components gave teams room to build on the system rather than fight against it.
+- **A focus on scope enabled strong adoption.** A smaller set of well-considered components gave teams room to build on the system rather than be restrained by it.
 - **Accessibility has to live at the token layer.** Fixing issues around colour at the token layer meant every adopting team inherited the fixes without extra work.
 - **Brand and design system work is best done together.** Co-authoring the system with GSK's brand team meant decisions were made collaboratively throughout the project, rather than reviewed only at the point of sign-off.
 

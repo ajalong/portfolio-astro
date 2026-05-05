@@ -1,26 +1,29 @@
-// Page-wipe overlay for home → case-study navigation. JS (page-wipe.ts)
-// drives the animation via the Web Animations API; this stylesheet just
-// sets the resting state and the gradient.
-//
-// Element fills the viewport. Gradient is anchored at the bottom: the top
-// 30 % is fully transparent, the middle ramps from transparent to brand
-// primary, and the bottom hits brand secondary. The animation is pure
-// opacity 0 → 1 → 0 so the colour blooms in place from the bottom rather
-// than translating across the screen — visually echoing the page
-// background's own brand-tint pattern, just briefly intensified.
+// Page-fade overlay for home → case-study navigation. Mirrors the page
+// background's own white wash pattern (radial top-centre + linear
+// top→bottom) but drives the edge alpha higher, so when the JS ramps
+// opacity 0 → 1 it intensifies the existing wash rather than introducing
+// a different effect. Sits behind page content (z -1) — content fades
+// out alongside the ramp-up, exposing the heavier wash; reveal does the
+// reverse.
 .page-wipe {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: -1;
   pointer-events: none;
   opacity: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 30%,
-    var(--wipe-primary, var(--brand-primary)) 70%,
-    var(--wipe-secondary, var(--brand-secondary)) 100%
-  );
+  background:
+    radial-gradient(
+      circle farthest-corner at 50% 0%,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
   will-change: opacity;
 }
 

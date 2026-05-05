@@ -59,7 +59,7 @@ _Design & UX audit_
 
 The initial brief was to implement light mode for onboarding. Tradu were impressed with the work delivered and extended the brief to cover a broader UX audit of the product onboarding and the corporate site.
 
-I establishing a token based approach to the design system allowing for a smooth adoption of a light mode without compromising the existing dark mode.Then In conducting the UX audit, I walked through the designs systematically, identifying refinements that would improve usability and reduce friction across onboarding and the corporate site.
+I established a token-based approach to the design system, allowing for a smooth adoption of a light mode without compromising the existing dark mode. Then, in conducting the UX audit, I walked through the designs systematically, identifying refinements that would improve usability and reduce friction across onboarding and the corporate site.
 
 _Light mode_
 

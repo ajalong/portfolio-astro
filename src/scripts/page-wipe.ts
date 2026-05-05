@@ -26,8 +26,11 @@ import { navigate } from 'astro:transitions/client';
 
 // Bloom sweep: build → peak → ramp down. Pure opacity animation; the
 // gradient is anchored at the bottom of the viewport (see _page-wipe.scss).
-const COVER_DURATION = 350;
-const REVEAL_DURATION = 350;
+// Foreground page content (`.page_container`) fades out during cover and
+// fades in during reveal, in parallel — so the wipe's bloom acts as the
+// background transition while the page content cross-fades on top of it.
+const COVER_DURATION = 600;
+const REVEAL_DURATION = 600;
 // Cover accelerates into peak (matches the "surge"); reveal decelerates
 // out (matches "ramp back down").
 const COVER_EASING = 'cubic-bezier(0.4, 0, 1, 1)';   // ease-in
@@ -54,6 +57,8 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   wipe.style.setProperty('--wipe-primary', primary);
   wipe.style.setProperty('--wipe-secondary', secondary);
 
+  const oldContainer = document.querySelector<HTMLElement>('.page_container');
+
   // Kick the navigation off in parallel with the cover animation. ClientRouter
   // fetches + swaps as soon as it's ready; the persist attribute on .page-wipe
   // keeps our overlay in place across the swap. Doing this in parallel with
@@ -61,31 +66,65 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   // that otherwise sits while the network resolves.
   const navPromise = navigate(href);
 
-  // Cover: bloom in. Pure opacity ramp 0 → 1 — the bottom-anchored
-  // gradient builds out of the background's faint tint into the bolder
-  // full-opacity brand colours.
-  await wipe.animate(
-    [{ opacity: 0 }, { opacity: 1 }],
-    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
-  ).finished;
+  // Cover: wipe blooms in (opacity 0 → 1) while the outgoing page content
+  // fades out (1 → 0). Parallel via Promise.all so we wait for both before
+  // proceeding to the swap-and-reveal phase.
+  await Promise.all([
+    wipe.animate(
+      [{ opacity: 0 }, { opacity: 1 }],
+      { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
+    ).finished,
+    oldContainer
+      ? oldContainer.animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
+        ).finished
+      : Promise.resolve(),
+  ]);
 
   // If the network was slower than the cover anim, wait — otherwise this is
   // a no-op and reveal starts immediately.
   await navPromise;
 
-  // Reveal: opacity 1 → 0 — the bolder colour surge fades back down toward
-  // the new page's own background tint.
-  await wipe.animate(
-    [{ opacity: 1 }, { opacity: 0 }],
-    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
-  ).finished;
+  // The before-swap hook (registered in initPageWipe) has already set the
+  // new container's inline opacity to 0 so it doesn't flash full-opacity
+  // through the wipe's transparent edges before its fade-in starts.
+  const newContainer = document.querySelector<HTMLElement>('.page_container');
+
+  // Reveal: wipe ramps down (1 → 0) while the new page content fades in
+  // (0 → 1). Reads as the new content rising on top of the background
+  // transition's bloom.
+  await Promise.all([
+    wipe.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+    ).finished,
+    newContainer
+      ? newContainer.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+        ).finished
+      : Promise.resolve(),
+  ]);
 
   // Reset for next time.
   wipe.style.opacity = '0';
+  if (newContainer) newContainer.style.opacity = '';
   wiping = false;
 }
 
 export function initPageWipe(): void {
+  // Pre-hide the incoming page's content so it doesn't paint at full
+  // opacity through the wipe's transparent edges between swap and the
+  // start of the reveal-phase fade-in. Astro fires astro:before-swap with
+  // event.newDocument before the DOM swap, giving us a chance to set the
+  // inline style on the soon-to-be container.
+  document.addEventListener('astro:before-swap', (event: any) => {
+    if (!wiping) return;
+    const incoming = event.newDocument?.querySelector?.('.page_container') as HTMLElement | null;
+    if (incoming) incoming.style.opacity = '0';
+  });
+
   // Capture phase so we run before ClientRouter's bubble-phase handler.
   document.addEventListener(
     'click',

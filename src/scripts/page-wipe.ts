@@ -24,10 +24,10 @@
 // untouched.
 import { navigate } from 'astro:transitions/client';
 
-// Rapid sweep: build → peak → ramp down. Total ≈ 440 ms when the network
-// finishes inside the cover phase (typical for prefetched / local nav).
-const COVER_DURATION = 220;
-const REVEAL_DURATION = 220;
+// Bloom sweep: build → peak → ramp down. Pure opacity animation; the
+// gradient is anchored at the bottom of the viewport (see _page-wipe.scss).
+const COVER_DURATION = 350;
+const REVEAL_DURATION = 350;
 // Cover accelerates into peak (matches the "surge"); reveal decelerates
 // out (matches "ramp back down").
 const COVER_EASING = 'cubic-bezier(0.4, 0, 1, 1)';   // ease-in
@@ -61,14 +61,11 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   // that otherwise sits while the network resolves.
   const navPromise = navigate(href);
 
-  // Cover: rise from off-screen below into peak coverage AND ramp opacity
-  // 0 → 1 so the wipe builds out of the background's faint tint into the
-  // bolder full-opacity brand colours.
+  // Cover: bloom in. Pure opacity ramp 0 → 1 — the bottom-anchored
+  // gradient builds out of the background's faint tint into the bolder
+  // full-opacity brand colours.
   await wipe.animate(
-    [
-      { transform: 'translateY(100vh)', opacity: 0 },
-      { transform: 'translateY(-50vh)', opacity: 1 },
-    ],
+    [{ opacity: 0 }, { opacity: 1 }],
     { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
   ).finished;
 
@@ -76,18 +73,14 @@ async function runWipe(href: string, primary: string, secondary: string): Promis
   // a no-op and reveal starts immediately.
   await navPromise;
 
-  // Reveal: continue past peak and ramp opacity 1 → 0 — the bolder colour
-  // surge fades back down toward the new page's own background tint.
+  // Reveal: opacity 1 → 0 — the bolder colour surge fades back down toward
+  // the new page's own background tint.
   await wipe.animate(
-    [
-      { transform: 'translateY(-50vh)', opacity: 1 },
-      { transform: 'translateY(-200vh)', opacity: 0 },
-    ],
+    [{ opacity: 1 }, { opacity: 0 }],
     { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
   ).finished;
 
-  // Reset to off-screen below for the next time.
-  wipe.style.transform = 'translateY(100vh)';
+  // Reset for next time.
   wipe.style.opacity = '0';
   wiping = false;
 }

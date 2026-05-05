@@ -2,30 +2,26 @@
 // drives the animation via the Web Animations API; this stylesheet just
 // sets the resting state and the gradient.
 //
-// Element is 200 vh tall with a vertical gradient that ramps in and out
-// through transparency: top 20 % fades transparent → primary, bottom 20 %
-// fades secondary → transparent, middle 60 % (= 120 vh, > one viewport
-// height) is fully opaque. As the wipe rises across the screen, you see
-// a soft band of brand colour build to peak then ebb away rather than a
-// hard slab. Peak coverage lands when the opaque centre is roughly
-// aligned with the viewport — see page-wipe.ts for the keyframe maths.
+// Element fills the viewport. Gradient is anchored at the bottom: the top
+// 30 % is fully transparent, the middle ramps from transparent to brand
+// primary, and the bottom hits brand secondary. The animation is pure
+// opacity 0 → 1 → 0 so the colour blooms in place from the bottom rather
+// than translating across the screen — visually echoing the page
+// background's own brand-tint pattern, just briefly intensified.
 .page-wipe {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 200vh;
+  inset: 0;
   z-index: 9999;
   pointer-events: none;
-  transform: translateY(100vh);
+  opacity: 0;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    var(--wipe-primary, var(--brand-primary)) 20%,
-    var(--wipe-secondary, var(--brand-secondary)) 80%,
-    transparent 100%
+    transparent 30%,
+    var(--wipe-primary, var(--brand-primary)) 70%,
+    var(--wipe-secondary, var(--brand-secondary)) 100%
   );
-  will-change: transform;
+  will-change: opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {

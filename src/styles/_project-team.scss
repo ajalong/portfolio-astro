@@ -55,6 +55,7 @@
   width: 52px;
   height: 52px;
   overflow: hidden;
+  border-radius: var(--radius-avatar);
   background: #eaeaea;
 
   img {
@@ -320,6 +321,7 @@ html.project-team-panel-open {
   width: 56px;
   height: 56px;
   overflow: hidden;
+  border-radius: var(--radius-avatar);
   background: #eaeaea;
 
   img {

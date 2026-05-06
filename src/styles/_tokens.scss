@@ -35,15 +35,15 @@ $bg-card: rgba(230, 230, 230, 0.4);
 $bg-card-hover-gradient:
   radial-gradient(
     circle farthest-corner at 50% 0%,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 1) 25%,
-    rgba(255, 255, 255, 0.5) 100%
+    rgba(245, 245, 245, 1) 0%,
+    rgba(245, 245, 245, 1) 25%,
+    rgba(245, 245, 245, 0.5) 100%
   ),
   linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 1) 25%,
-    rgba(255, 255, 255, 0.5) 100%
+    rgba(245, 245, 245, 1) 0%,
+    rgba(245, 245, 245, 1) 25%,
+    rgba(245, 245, 245, 0.5) 100%
   ),
   linear-gradient(
     in oklch to right,
@@ -117,8 +117,9 @@ $bg-card-hover-gradient:
   /* Two-step scale, applied only to clickable elements.
    * Round icon-only buttons use `border-radius: 50%` directly — circles
    * aren't a third variant, they're a different shape concept. */
-  --radius-sm: 4px;   /* small clickable: list rows, link rows */
-  --radius-lg: 12px;  /* large clickable: cards, surface-hover-strong */
+  --radius-sm: 4px;       /* small clickable: list rows, link rows */
+  --radius-lg: 12px;      /* large clickable: cards, surface-hover-strong */
+  --radius-avatar: 9999px;/* avatar images — large enough to circle any square photo */
 
   /* ─────────── Spacing primitives (4px grid) ─────────── */
   --unit-2:   2px;  /* nudge — not a 4px multiple, kept for micro-gaps */

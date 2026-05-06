@@ -188,6 +188,8 @@ header {
   height: 58px;
   margin: 0;
   position: relative;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 
   body.home & {

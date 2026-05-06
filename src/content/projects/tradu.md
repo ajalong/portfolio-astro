@@ -10,8 +10,8 @@ order: 2
 year: 2025
 sector: Fintech
 brand:
-  primary: '#DC6FB8'
-  secondary: '#A172DA'
+  primary: "#DC6FB8"
+  secondary: "#A172DA"
 roleTitle: Lead Product Designer
 roleSummary: |
   Sole external designer on Tradu's onboarding flow, working independently from their in-house team. Designed a light mode for the flow, built on a primitive token foundation. After the light mode work, scope expanded into a UX audit of the onboarding flow and the corporate site.
@@ -77,7 +77,7 @@ The first concerned Tangerine, Tradu's primary accent colour. The brand guidelin
 
 The second concerned selected states. A direct dark-to-light inversion left selected states under-distinguished from default states in light mode. Rather than copy the dark-mode treatment, I proposed using Tangerine to mark selection across radio buttons, multi-select buttons, and text fields. The accent did clearer work in light mode than the equivalent dark-mode treatment, where the dark surrounds had given a subtle indicator enough definition.
 
-![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](/placeholder-16x9.svg)
+![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082758/alan.design/tradu/tradu-field_states_scoji5.png)
 
 _Form-state distinction_
 
@@ -93,7 +93,7 @@ _Progress bar relocation_
 
 The progress bar sat inside the top app bar, competing with navigation controls and adding visual complexity to the area users looked to for orientation. I explored several alternative positions and treatments, ultimately recommending the progress bar be placed alongside the primary action button at the bottom of the screen. The change simplified the top app bar and grouped the progress signal with the action that advanced it.
 
-![Seven progress bar variants explored, from compact top-of-screen treatments to placements grouped with the primary action button at the bottom.](/placeholder-16x9.svg)
+![Progress bar variants explored, with compact top-of-screen treatments to placements grouped with the primary action button at the bottom.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082762/alan.design/tradu/tradu-progress_bar_ohs6p0.png)
 
 _Single-select pattern_
 
@@ -117,8 +117,7 @@ _Corporate site_
 
 The engagement expanded further with a UX audit of the corporate site. The work surfaced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
 
-![An annotated frame from the corporate site UX audit, with recommended changes to typography, button sizing, and contrast called out on top of the existing design.](/placeholder-1x1.svg)
-![Multiple homepage variants explored as part of the corporate site audit, testing different approaches to typography, contrast, and content hierarchy.](/placeholder-1x1.svg)
+![Final recommendations from a UX audit of the corporate site.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082768/alan.design/tradu/tradu-site_tweaks_xnoedj.png)
 
 _Impact_
 

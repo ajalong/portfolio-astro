@@ -94,7 +94,8 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 
 ![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
 
-![The system's token hierarchy: primitive tokens at the base, semantic tokens mapping intent, components built from semantic tokens. Accessibility is resolved at the primitive layer so every adopting team inherits it by default.](https://res.cloudinary.com/ajalong/image/upload/e_sharpen:60/v1778025599/alan.design/gsk/gsk-tokens_in_action_ontnc2.png)
+![An example card component in light mode.](https://res.cloudinary.com/ajalong/image/upload/e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_mitkkh.png)
+![An example card component in dark mode — Semantic tokens abstract primitive values allowing easy switching between colour modes.](https://res.cloudinary.com/ajalong/image/upload/e_sharpen:60/v1778026304/alan.design/gsk/gsk-tokens_in_action-dark_ofeo3v.png)
 
 ![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_general_components.mp4)
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_podcasts.mp4)

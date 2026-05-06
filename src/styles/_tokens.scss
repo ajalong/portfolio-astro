@@ -27,16 +27,29 @@
 
 // My role card — neutral grey at 40% opacity so the page background bleeds through
 $bg-card: rgba(230, 230, 230, 0.4);
-// Hover: mirrors the page background's bg__base pattern — but at the
-// new long-wavelength rule the visible width spans peak-to-peak, so the
-// card shows just primary on one edge and secondary on the other.
-// Low alpha keeps it a soft brand-coloured bloom rather than a solid
-// wash.
-$bg-card-hover-gradient: linear-gradient(
-  in oklch to right,
-  color-mix(in srgb, var(--brand-primary) 35%, transparent)   0%,
-  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 100%
-);
+// Hover: mirrors the page background's full bg__fg + bg__base stack —
+// radial white wash + linear white wash on top of the brand-colour
+// gradient. Same stops as .bg__fg / .bg__base, just scaled to the card
+// rather than the viewport. Visible peak-to-peak under the white wash
+// means primary reads at one card edge, secondary at the other.
+$bg-card-hover-gradient:
+  radial-gradient(
+    circle farthest-corner at 50% 0%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 25%,
+    rgba(255, 255, 255, 0.5) 100%
+  ),
+  linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 25%,
+    rgba(255, 255, 255, 0.5) 100%
+  ),
+  linear-gradient(
+    in oklch to right,
+    var(--brand-primary)    0%,
+    var(--brand-secondary) 100%
+  );
 
 @font-face {
   font-family: 'Graphik';

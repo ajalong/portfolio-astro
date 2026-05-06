@@ -1,10 +1,12 @@
 // Page-fade transition for any internal page change.
 //
-// During the transition the radial spotlight on the page background's
-// white wash (`.bg__fg`) shrinks to a point, then grows back; the
-// foreground content (`.page_container`) cross-fades in parallel. The
-// linear half of the wash and the brand-colour base layer are
-// unaffected — only the radial moves.
+// During the transition the linear half of the page background's white
+// wash (`.bg__fg`) lifts — its half-opacity stop animates from 100%
+// (default position at viewport bottom) up to 40% and back, exposing
+// more brand colour in the lower portion of the viewport. Foreground
+// content (`.page_container`) cross-fades in parallel. The radial
+// spotlight and the brand-colour base layer are unaffected — only the
+// linear moves.
 //
 // `.bg__fg` carries `transition:persist` so the same DOM node moves
 // across the swap and the WAAPI animation continues uninterrupted.
@@ -59,16 +61,16 @@ async function runWipe(href: string): Promise<void> {
   // keeps its WAAPI animation running through the swap.
   const navPromise = navigate(href);
 
-  // Cover: shrink the radial spotlight (--fg-radial-scale 1 → 0) so the
-  // bright top-centre dome contracts to a point. Linear wash and the
-  // brand-colour base layer are unaffected — only the radial moves.
-  // Foreground content fades out in parallel.
+  // Cover: lift the linear wash by tightening its half-opacity stop
+  // (--fg-fade-stop 100% → 40%) — drop-off steepens, more brand colour
+  // shows in the lower portion. Radial spotlight and brand-colour base
+  // layer are unaffected. Foreground content fades out in parallel.
   const coverFg = fg.animate(
     // Cast: TS DOM lib doesn't model custom-property keyframes, but
     // WAAPI accepts them when the property is @property-registered.
     [
-      { ['--fg-radial-scale']: '1' } as any,
-      { ['--fg-radial-scale']: '0' } as any,
+      { ['--fg-fade-stop']: '100%' } as any,
+      { ['--fg-fade-stop']: '40%' } as any,
     ],
     { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
   );
@@ -94,12 +96,12 @@ async function runWipe(href: string): Promise<void> {
   const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: grow the radial spotlight back from 0 to 1; new content
-  // fades in.
+  // Reveal: lower the linear wash back into place (40% → 100%); new
+  // content fades in.
   const revealFg = newFg?.animate(
     [
-      { ['--fg-radial-scale']: '0' } as any,
-      { ['--fg-radial-scale']: '1' } as any,
+      { ['--fg-fade-stop']: '40%' } as any,
+      { ['--fg-fade-stop']: '100%' } as any,
     ],
     { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
   );
@@ -122,7 +124,7 @@ async function runWipe(href: string): Promise<void> {
   revealFg?.cancel();
   revealContainer?.cancel();
   if (newFg) {
-    newFg.style.removeProperty('--fg-radial-scale');
+    newFg.style.removeProperty('--fg-fade-stop');
   }
   if (newContainer) newContainer.style.opacity = '';
   wiping = false;

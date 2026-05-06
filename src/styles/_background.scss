@@ -57,15 +57,15 @@ html {
     --brand-secondary 250ms ease-out;
 }
 
-// Multiplier on the radial spotlight's stop positions. At 1 it sits at
-// its full extent; the page-wipe transition animates it 1 → 0 → 1 so
-// the bright top-centre dome contracts to a point and back. Linear
-// wash and the brand-colour base layer are unaffected — only the
-// radial.
-@property --fg-radial-scale {
-  syntax: '<number>';
+// Position of the half-opacity stop on the linear white wash. Lower
+// values lift the drop-off up the screen, exposing more brand colour
+// in the lower portion. Animated by the page-wipe transition 100% → 40%
+// → 100%. The radial spotlight and the brand-colour base layer are
+// unaffected — only the linear.
+@property --fg-fade-stop {
+  syntax: '<percentage>';
   inherits: true;
-  initial-value: 1;
+  initial-value: 100%;
 }
 
 .bg__fg {
@@ -82,14 +82,14 @@ html {
     radial-gradient(
       circle farthest-corner at 50% 0%,
       rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) calc(25% * var(--fg-radial-scale)),
-      rgba(255, 255, 255, 0.5) calc(100% * var(--fg-radial-scale))
+      rgba(255, 255, 255, 1) 25%,
+      rgba(255, 255, 255, 0.5) 100%
     ),
     linear-gradient(
       to bottom,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 1) 25%,
-      rgba(255, 255, 255, 0.5) 100%
+      rgba(255, 255, 255, 0.5) var(--fg-fade-stop)
     );
 }
 

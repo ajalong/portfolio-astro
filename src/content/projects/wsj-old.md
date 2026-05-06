@@ -1,7 +1,8 @@
 ---
 title: CEO Council
 client: Wall Street Journal
-slug: wsj
+slug: wsj-old
+published: false
 summary: How do you engage top business leaders when you can't host them in person?
 metaDescription: I designed and built a virtual event platform for the Wall Street Journal's CEO Council — an exclusive forum for senior business leaders — for Cheerful Twentyfirst, delivering on a tight deadline during COVID-19.
 thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/v1777139289/alan.design/WSJ/ceo_council-trim_ewpmam.jpg
@@ -78,7 +79,7 @@ _Context_
 
 ## WSJ's now virtual flagship event, done on a deadline
 
-The Wall Street Journal's CEO Council is one of WSJ's most prestigious events. It's an exclusive forum where senior business leaders and policy makers gather to discuss the issues of the day, traditionally hosted in Davos and other in-person venues. COVID had made that impossible. Cheerful Twentyfirst, who had run the in-person event prior to COVID, was asked to oversee the virtual edition for summer 2021.
+The Wall Street Journal's CEO Council is one of WSJ's most prestigious events. It's an exclusive forum where senior business leaders and policy makers gather to discuss the issues of the day, traditionally hosted in Davos and other in-person venues. COVID had made that impossible. Cheerful Twentyfirst, who had run the in-person event prior to COVID, was asked to oversee the virtual edition for summer 2021. I led the design and front-end development of the platform.
 
 _Problem_
 
@@ -109,11 +110,10 @@ _Implementation_
 
 ## Fast, documented, built to be reused
 
-Eventfinity's platform was technically robust but had no UI scaffolding out of the box, which meant the entire interface had to be built. I led front-end development alongside John Speck at Gramercy Tech, drawing on patterns I had refined across Cheerful Twentyfirst's previous virtual events. Gramercy Tech also provided back-end development.
+The deadline was very tight for this project; Eventfinity's platform was technically robust but had no UI scaffolding out of the box. This was a double-edged sword: whilst it empowered me to design from a blank canvas, it meant a lot more work was required to implement the design. I led front-end development alongside John Speck at Gramercy Tech, drawing on patterns I had refined across Cheerful Twentyfirst's previous virtual events. Gramercy Tech also provided back-end development resources.
 
-- **A utility class system for scale.** A well-architected set of utility classes kept spacing, typography, and layout consistent across every page, and let new pages be built quickly without each one requiring bespoke CSS.
-- **CSS variables as design tokens.** Colour, type, and spacing values lived as CSS variables, so any system-level change propagated cleanly across the platform.
-- **Documented for handoff.** The code was documented as we wrote it, on the assumption it would outlive the project. It did. The platform was picked up and reused for WSJ's CFO & COO Council and Technology Council.
+- **Utility classes, SCSS and variables.** A well-architected utility class system kept styling consistent and allowed new pages to be built quickly without each one requiring bespoke CSS. Tokens lived as CSS variables, so any change propagated cleanly.
+- **Documented for handoff.** The code was documented as we wrote it, on the assumption that it would outlive the project.
 
 ![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
@@ -121,13 +121,15 @@ _Impact_
 
 ## A huge leap in user experience
 
-The event landed well. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in.
+The event landed well. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in. The platform went on to be reused for further WSJ events, including the CFO & COO Council and the Technology Council.
 
 ![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
 
 _Lessons learned_
 
 ## Restraint, co-design, and documentation
+
+The project reinforced a set of principles I have applied to most work since, particularly around designing for senior audiences, working with stakeholders during design rather than presenting to them at the end, and treating handoff as a design problem in its own right.
 
 - **For a time-poor audience, focus and execution are everything.** At the time, most virtual event platforms lacked product direction; many features existed simply because the technology allowed it. The CEO Council worked because it asked "should we" rather than "can we" at every decision point.
 - **Co-design is a delivery tactic as well as a research one.** Bringing WSJ stakeholders into the design process meant sign-off was not a hurdle looming over the process. It was distributed across the project. On a deadline this tight, that compression of the approval cycle made the difference.

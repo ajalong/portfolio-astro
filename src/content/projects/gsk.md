@@ -112,8 +112,6 @@ Wherever possible I take a participatory approach to design, involving stakehold
 
 ![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
 
-![gsk.com refined through the new system as it rolled out across the corporate site.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_corpsite.png)
-
 _Impact_
 
 ## A strong reception and growing adoption

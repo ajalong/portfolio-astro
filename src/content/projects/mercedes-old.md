@@ -11,8 +11,8 @@ order: 3
 year: 2025
 sector: UX Overhaul
 brand:
-  primary: '#176DB7'
-  secondary: '#000000'
+  primary: "#176DB7"
+  secondary: "#000000"
 roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:
@@ -61,6 +61,7 @@ team:
 ---
 
 _Context_
+
 ## Overhauling an automotive giant's ad analytics platform
 
 The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a collection of tools to track, measure, and optimise the performance of advertising campaigns across all paid media channels. Originally built by [OMD](https://www.omd.com/), one of Interbrand's sister agencies, the platform had grown in capability over the years without ever having had dedicated product design input. Interbrand was brought in to overhaul it.
@@ -68,6 +69,7 @@ The Media Decision Engine is Mercedes-Benz's paid media analytics platform, a co
 The visual direction was based on Mercedes-Benz's public brand guidelines and live consumer sites, since we worked without direct access to their internal design system.
 
 _Problem_
+
 ## A powerful platform obscured by its interface
 
 The Media Decision Engine was a capable platform that was hard to use. The underlying data and analytics were solid, but the interface that surfaced them was not.
@@ -77,11 +79,13 @@ The Media Decision Engine was a capable platform that was hard to use. The under
 - **Exporting data.** Getting data out of the platform was harder than it should have been. Export formats were limited, and there was no way to batch exports across multiple tools, forcing users to repeat the same task tool by tool.
 
 _Research_
+
 ## Understanding the users, the existing tools, and the thinking behind them
 
 Before redesigning anything, we needed a clear picture of who used the platform, what they were trying to do with it, and the rationale behind how the existing tools had been built. Niq Curry led user research with the platform's users and developed a set of personas that anchored the redesign. We also interviewed stakeholders from OMD, the team behind the original platform, to understand the constraints and decisions that had shaped it. I co-facilitated a day-long workshop in London with Mercedes-Benz's team, who flew in from Stuttgart, walking the group through the personas, user needs, and pain points before opening up to ideation.
 
 _Design sprints_
+
 ## Three sprints in series
 
 The three problem areas were tackled as separate design sprints, run in series so each could build on the last. Information architecture came first as the foundation. Settings control built on top. Onboarding came last, layering on top of an interface that was now far more intuitive.
@@ -89,6 +93,7 @@ The three problem areas were tackled as separate design sprints, run in series s
 Exporting data sat slightly apart from the three sprints and was wrapped into the final designs.
 
 _Information architecture_
+
 ### Grouping tools around the user's process
 
 The original platform was organised around the tools themselves. The redesign organised them around the user's process.
@@ -100,6 +105,7 @@ Within each stage, tools were laid out section by section down a single page, in
 ![The Market Opportunities stage of the IA, showing tools laid out in the order users move through them. — “Identify Market Trends”: multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-identify_market_trends.png)
 
 _Configuring parameters_
+
 ### Global settings, adjustable anywhere
 
 Users had been re-entering the same data into tool after tool. The redesign separated parameters that needed to be shared across tools from those that were tool-specific, so global settings could be configured once.
@@ -115,6 +121,7 @@ The result was a platform where content throughout the site reacted to global sc
 ![Channel Optimisation: spend versus impact across paid media channels, with budget allocation in the right rail. — Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-channel_optimisation.png)
 
 _Onboarding_
+
 ### A guided introduction for less experienced users
 
 The first two sprints had done a lot of the onboarding work. A clearer information architecture and live, demonstrative scenarios meant the platform now explained itself in ways the old one couldn't. The onboarding sprint focused on the gap that remained, particularly for users less familiar with media analytics.
@@ -128,6 +135,7 @@ The first two sprints had done a lot of the onboarding work. A clearer informati
 ![Tooltips appear on first use at the moment a user is most likely to need a prompt, then disappear once dismissed.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-tooltips.png)
 
 _Exporting_
+
 ### Consistency and batch operations
 
 The original platform's export experience was patchy. Formats varied between tools, and there was no way to export from more than one tool at a time, so anyone needing data from across the platform had to repeat the same task in tool after tool.
@@ -136,6 +144,7 @@ The original platform's export experience was patchy. Formats varied between too
 - **Batch exports across tools.** Users could select multiple tools and export their data in a single action, removing the repetition the old platform had forced on them.
 
 _Impact_
+
 ## A powerful platform that explains itself
 
 Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
@@ -145,6 +154,7 @@ The information architecture was reorganised around the user's process, scenario
 ![The login screen sets expectations for who the platform is for, before the user has logged in.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-login.png)
 
 _Lessons learned_
+
 ## Redesigning inside a working product
 
 A few things became clear over the course of the project. Most of them came down to the fact that overhauling an existing platform is a different discipline from designing one from scratch. The constraints, the history, and the existing user expectations all impact the work you do.

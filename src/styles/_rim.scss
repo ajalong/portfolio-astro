@@ -26,19 +26,19 @@
   100% { --button-rim-angle: 0deg;   }
 }
 
-// Iridescent rim — cream → lilac → rose → peach → butter → cream.
-// 8 stops with wide spans so the browser blurs hues into each other.
-// Cream holds ~22% (80°) of the wheel; colour band runs purple → orange.
-// Degree positions are required so the cream hold stays flat at each end.
+// Brand-coloured rim — transparent hold zones at the wheel's start/end
+// fade into a primary → secondary → primary band through the middle.
+// `transparent` here serves as the rest state (conceptually the brand
+// colour at alpha 0, but using the keyword keeps the gradient legal in
+// every interpolation context).
 $rim-gradient-stops:
-  hsl(32 38% 94%)    0deg,    /* cream — start  */
-  hsl(32 38% 94%)   20deg,    /* cream — flat hold */
-  hsl(268 52% 68%)  80deg,    /* lilac */
-  hsl(338 54% 62%) 160deg,    /* rose */
-  hsl(22 64% 68%)  220deg,    /* peach */
-  hsl(42 70% 72%)  290deg,    /* butter */
-  hsl(32 38% 94%)  340deg,    /* cream — flat hold */
-  hsl(32 38% 94%)  360deg;    /* cream — end */
+  transparent              0deg,    /* rest — start */
+  transparent             20deg,    /* rest — flat hold */
+  var(--brand-primary)    90deg,
+  var(--brand-secondary) 180deg,
+  var(--brand-primary)   270deg,
+  transparent            340deg,    /* rest — flat hold */
+  transparent            360deg;    /* rest — end */
 
 // Inner-glow wash — updated to echo the new warmer rim palette
 $rim-inner-wash:

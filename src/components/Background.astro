@@ -5,18 +5,10 @@
 //   that sit over the base so colour reads as a soft tint behind the page.
 // Brand colours come in via the `--brand-primary` / `--brand-secondary`
 // CSS custom properties (declared as @property tokens in _tokens.scss).
-// Project pages set them inline here; the homepage observer writes them
-// to :root as the user scrolls between case studies.
-interface Props {
-  primary?: string;
-  secondary?: string;
-}
-const { primary, secondary } = Astro.props;
-const styleAttr = primary && secondary
-  ? `--brand-primary: ${primary}; --brand-secondary: ${secondary};`
-  : undefined;
+// Project pages set them inline on <body> in BaseLayout so they're
+// inherited globally; the homepage observer writes them to :root.
 ---
-<div class="bg" style={styleAttr} aria-hidden="true">
+<div class="bg" aria-hidden="true">
   <div class="bg__base"></div>
   <div class="bg__fg" transition:persist="bg-fg"></div>
 </div>

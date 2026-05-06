@@ -63,8 +63,13 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       })(window, document, "clarity", "script", "w8iouo87v0");
     </script>
   </head>
-  <body class={`initial-load ${bodyClass ?? ''}`.trim()}>
-    <Background primary={brandPrimary} secondary={brandSecondary} />
+  <body
+    class={`initial-load ${bodyClass ?? ''}`.trim()}
+    style={brandPrimary && brandSecondary
+      ? `--brand-primary: ${brandPrimary}; --brand-secondary: ${brandSecondary};`
+      : undefined}
+  >
+    <Background />
     <slot />
     <script>
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';

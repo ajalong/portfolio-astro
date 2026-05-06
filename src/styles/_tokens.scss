@@ -27,11 +27,17 @@
 
 // My role card — neutral grey at 40% opacity so the page background bleeds through
 $bg-card: rgba(230, 230, 230, 0.4);
-// Hover: lavender bloom (hsl 268) bottom-right + warm hue-26 top-left, echoing the site background
-$bg-card-hover-gradient:
-  radial-gradient(ellipse at 110% -10%,  hsl(26 44% 84% / 0.45) 0%, hsl(26 32% 89% / 0.2) 45%, transparent 68%),
-  radial-gradient(ellipse at -10% 110%,  hsl(15 44% 84% / 0.45) 0%, hsl(15 32% 89% / 0.2) 45%, transparent 68%),
-  radial-gradient(ellipse at 110% 110%, hsl(268 34% 83% / 0.45) 0%, hsl(268 24% 89% / 0.2) 45%, transparent 68%);
+// Hover: mirrors the page background's bg__base pattern — alternating
+// brand primary/secondary across the card in oklch space, at low alpha
+// so it reads as a soft brand-coloured bloom rather than a solid wash.
+$bg-card-hover-gradient: linear-gradient(
+  in oklch to right,
+  color-mix(in srgb, var(--brand-primary) 35%, transparent)    0%,
+  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 25%,
+  color-mix(in srgb, var(--brand-primary) 35%, transparent)   50%,
+  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 75%,
+  color-mix(in srgb, var(--brand-primary) 35%, transparent)  100%
+);
 
 @font-face {
   font-family: 'Graphik';
@@ -197,14 +203,14 @@ $bg-card-hover-gradient:
    */
   --zip-hover-gradient: linear-gradient(
     90deg,
-    hsl(268 48% 52%)  0%,   /* lilac  — left edge */
-    hsl(338 50% 50%) 18%,   /* rose */
-    hsl(22  56% 54%) 34%,   /* peach */
-    transparent      42%,   /* fade into zip gap */
-    transparent      46%,   /* zip gap — still in left half, exits on animation */
-    hsl(268 48% 52%) 52%,   /* lilac  — right half begins, fully colourful */
-    hsl(338 50% 50%) 68%,   /* rose */
-    hsl(22  56% 54%) 84%,   /* peach */
-    hsl(42  58% 56%) 100%   /* butter — right edge */
+    var(--brand-primary)    0%,   /* primary — left edge */
+    var(--brand-secondary) 18%,
+    var(--brand-primary)   34%,
+    transparent            42%,   /* fade into zip gap */
+    transparent            46%,   /* zip gap — still in left half, exits on animation */
+    var(--brand-secondary) 52%,   /* right half begins, fully colourful */
+    var(--brand-primary)   68%,
+    var(--brand-secondary) 84%,
+    var(--brand-primary)  100%
   );
 }

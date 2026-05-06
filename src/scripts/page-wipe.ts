@@ -1,35 +1,45 @@
-// Page-fade transition for home → case-study navigation.
+// Page-fade transition for any internal page change.
 //
-// During the transition the page background's white wash (`.bg__fg`)
-// ramps DOWN, exposing the brand-coloured base; the foreground content
-// (`.page_container`) cross-fades in parallel. After the swap the wash
-// ramps back UP and the new content fades in. The brand colour briefly
-// takes centre stage between the two pages.
+// During the transition the radial spotlight on the page background's
+// white wash (`.bg__fg`) shrinks to a point, then grows back; the
+// foreground content (`.page_container`) cross-fades in parallel. The
+// linear half of the wash and the brand-colour base layer are
+// unaffected — only the radial moves.
 //
 // `.bg__fg` carries `transition:persist` so the same DOM node moves
 // across the swap and the WAAPI animation continues uninterrupted.
 //
 // We hijack the click instead of using astro:before-swap because the
 // framework doesn't await replaced event.swap promises, so deferring
-// the swap that way doesn't actually pause until the cover anim completes.
-//
-// Other navigations (project → project, project → home, direct URL) are
-// untouched.
+// the swap that way doesn't actually pause until the cover anim
+// completes. Direct URL entries (no click) bypass the transition.
 import { navigate } from 'astro:transitions/client';
 
 const COVER_DURATION = 600;
 const REVEAL_DURATION = 600;
-// Pronounced ease at both ends of each phase — makes the gradient movement
-// feel weighted into and out of peak rather than running at constant rate.
-const COVER_EASING = 'cubic-bezier(0.77, 0, 0.175, 1)';   // ease-in-out quart
-const REVEAL_EASING = 'cubic-bezier(0.77, 0, 0.175, 1)';  // ease-in-out quart
+// Strong ease at both ends of each phase — gradient movement feels
+// weighted in and out of peak (ease-in-out quint).
+const COVER_EASING = 'cubic-bezier(0.86, 0, 0.07, 1)';   // ease-in-out quint
+const REVEAL_EASING = 'cubic-bezier(0.86, 0, 0.07, 1)';  // ease-in-out quint
 
 function shouldWipe(toPath: string): boolean {
-  return location.pathname === '/' && toPath.startsWith('/project/');
+  // Trigger on any same-origin page change. Same-path navigations
+  // (refreshes, hash-only changes) skip the transition.
+  return toPath !== location.pathname;
 }
 
 function fgEl(): HTMLElement | null {
   return document.querySelector<HTMLElement>('.bg__fg');
+}
+
+// Resolve after the next frame has painted — two requestAnimationFrame
+// calls guarantee the browser has had a chance to lay out and paint the
+// new page once. Cheap (~16-32 ms) and avoids any race with Astro's
+// astro:page-load event timing.
+function waitForPageReady(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  });
 }
 
 let wiping = false;
@@ -49,18 +59,16 @@ async function runWipe(href: string): Promise<void> {
   // keeps its WAAPI animation running through the swap.
   const navPromise = navigate(href);
 
-  // Cover: lift the white wash by tightening the gradient's half-opacity
-  // stop from 100% to 40% — the drop-off steepens so more brand colour
-  // shows through near the bottom while the top stays fully washed.
-  // Simultaneously shrink the radial spotlight (--fg-radial-scale 1 → 0)
-  // so the bright top-centre dome contracts to a point. Foreground
-  // content fades out in parallel.
+  // Cover: shrink the radial spotlight (--fg-radial-scale 1 → 0) so the
+  // bright top-centre dome contracts to a point. Linear wash and the
+  // brand-colour base layer are unaffected — only the radial moves.
+  // Foreground content fades out in parallel.
   const coverFg = fg.animate(
     // Cast: TS DOM lib doesn't model custom-property keyframes, but
     // WAAPI accepts them when the property is @property-registered.
     [
-      { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
-      { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
+      { ['--fg-radial-scale']: '1' } as any,
+      { ['--fg-radial-scale']: '0' } as any,
     ],
     { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
   );
@@ -77,16 +85,21 @@ async function runWipe(href: string): Promise<void> {
   // a no-op and reveal starts immediately.
   await navPromise;
 
+  // Wait for the new page's initial paint before starting the reveal so
+  // the radial doesn't open onto a blank/half-rendered page. Failsafe
+  // timeout below stops this from pinning indefinitely.
+  await waitForPageReady();
+
   // Re-query in case the DOM swap moved nodes around.
   const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: lower the white wash back into place and grow the radial
-  // spotlight back from 0 to 1; new content fades in.
+  // Reveal: grow the radial spotlight back from 0 to 1; new content
+  // fades in.
   const revealFg = newFg?.animate(
     [
-      { ['--fg-fade-stop']: '40%', ['--fg-radial-scale']: '0' } as any,
-      { ['--fg-fade-stop']: '100%', ['--fg-radial-scale']: '1' } as any,
+      { ['--fg-radial-scale']: '0' } as any,
+      { ['--fg-radial-scale']: '1' } as any,
     ],
     { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
   );
@@ -109,7 +122,6 @@ async function runWipe(href: string): Promise<void> {
   revealFg?.cancel();
   revealContainer?.cancel();
   if (newFg) {
-    newFg.style.removeProperty('--fg-fade-stop');
     newFg.style.removeProperty('--fg-radial-scale');
   }
   if (newContainer) newContainer.style.opacity = '';

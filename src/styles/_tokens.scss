@@ -214,16 +214,28 @@ $bg-card-hover-gradient:
    * across the link and exits to the left — leaving only colour in the final state.
    * All stops are percentage-based so the effect scales with any link length.
    */
+}
+
+/*
+ * Link underline zip — defined on `body` (not :root) so the inner
+ * var(--brand-primary) / var(--brand-secondary) references resolve
+ * against body's inline brand colours rather than getting baked in at
+ * :root with the @property defaults. Brand colours are mixed with black
+ * in oklab so light brand pairs (GSK yellow, Atkins lime) still read
+ * as a visible underline. Transparent stops stay transparent — only
+ * the colourful stops darken.
+ */
+body {
   --zip-hover-gradient: linear-gradient(
     90deg,
-    var(--brand-primary)    0%,   /* primary — left edge */
-    var(--brand-secondary) 18%,
-    var(--brand-primary)   34%,
-    transparent            42%,   /* fade into zip gap */
-    transparent            46%,   /* zip gap — still in left half, exits on animation */
-    var(--brand-secondary) 52%,   /* right half begins, fully colourful */
-    var(--brand-primary)   68%,
-    var(--brand-secondary) 84%,
-    var(--brand-primary)  100%
+    color-mix(in oklab, var(--brand-primary) 70%, black)    0%,   /* primary — left edge */
+    color-mix(in oklab, var(--brand-secondary) 70%, black) 18%,
+    color-mix(in oklab, var(--brand-primary) 70%, black)   34%,
+    transparent                                            42%,   /* fade into zip gap */
+    transparent                                            46%,   /* zip gap — still in left half, exits on animation */
+    color-mix(in oklab, var(--brand-secondary) 70%, black) 52%,   /* right half begins, fully colourful */
+    color-mix(in oklab, var(--brand-primary) 70%, black)   68%,
+    color-mix(in oklab, var(--brand-secondary) 70%, black) 84%,
+    color-mix(in oklab, var(--brand-primary) 70%, black)  100%
   );
 }

@@ -19,9 +19,10 @@ import { navigate } from 'astro:transitions/client';
 
 const COVER_DURATION = 600;
 const REVEAL_DURATION = 600;
-// Cover accelerates into peak; reveal decelerates out.
-const COVER_EASING = 'cubic-bezier(0.4, 0, 1, 1)';   // ease-in
-const REVEAL_EASING = 'cubic-bezier(0, 0, 0.4, 1)';  // ease-out
+// Pronounced ease at both ends of each phase — makes the gradient movement
+// feel weighted into and out of peak rather than running at constant rate.
+const COVER_EASING = 'cubic-bezier(0.77, 0, 0.175, 1)';   // ease-in-out quart
+const REVEAL_EASING = 'cubic-bezier(0.77, 0, 0.175, 1)';  // ease-in-out quart
 
 function shouldWipe(toPath: string): boolean {
   return location.pathname === '/' && toPath.startsWith('/project/');

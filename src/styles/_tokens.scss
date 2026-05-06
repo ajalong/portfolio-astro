@@ -27,16 +27,15 @@
 
 // My role card — neutral grey at 40% opacity so the page background bleeds through
 $bg-card: rgba(230, 230, 230, 0.4);
-// Hover: mirrors the page background's bg__base pattern — alternating
-// brand primary/secondary across the card in oklch space, at low alpha
-// so it reads as a soft brand-coloured bloom rather than a solid wash.
+// Hover: mirrors the page background's bg__base pattern — but at the
+// new long-wavelength rule the visible width spans peak-to-peak, so the
+// card shows just primary on one edge and secondary on the other.
+// Low alpha keeps it a soft brand-coloured bloom rather than a solid
+// wash.
 $bg-card-hover-gradient: linear-gradient(
   in oklch to right,
-  color-mix(in srgb, var(--brand-primary) 35%, transparent)    0%,
-  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 25%,
-  color-mix(in srgb, var(--brand-primary) 35%, transparent)   50%,
-  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 75%,
-  color-mix(in srgb, var(--brand-primary) 35%, transparent)  100%
+  color-mix(in srgb, var(--brand-primary) 35%, transparent)   0%,
+  color-mix(in srgb, var(--brand-secondary) 35%, transparent) 100%
 );
 
 @font-face {

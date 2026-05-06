@@ -13,6 +13,8 @@ interface NextProjectCard {
   thumbnailSrc: string;
   thumbnailVideo?: string;
   thumbnailAlt: string;
+  brandPrimary?: string;
+  brandSecondary?: string;
 }
 
 interface TeamMember {
@@ -33,7 +35,7 @@ interface Props {
   description: string;
   image?: string;
   url?: string;
-  otherWork?: NextProjectCard[];
+  nextProject?: NextProjectCard;
   team?: TeamMember[];
   year?: number;
   sector?: string;
@@ -44,7 +46,7 @@ interface Props {
   brandSecondary?: string;
 }
 
-const { title, client, description, image, url, otherWork, team, year, sector, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
+const { title, client, description, image, url, nextProject, team, year, sector, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
 const clientWithYear = client;
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
@@ -69,22 +71,24 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     </main>
     <footer id="page-permalink-footer">
       <div class="footer-content">
-        {otherWork && otherWork.length > 0 && (
-          <section class="other-work" aria-label="Other work">
-            <p class="kicker">Other work</p>
-            <div class="other-work__grid">
-              {otherWork.map((p) => (
-                <ProjectCard
-                  href={p.href}
-                  thumbnailSrc={p.thumbnailSrc}
-                  thumbnailVideo={p.thumbnailVideo}
-                  thumbnailAlt={p.thumbnailAlt}
-                  projectTitle={p.title}
-                  client={p.client}
-                  summary={p.summary}
-                  belowFold
-                />
-              ))}
+        {nextProject && (
+          <section class="next-project" aria-label="Next project">
+            <p class="kicker">Next</p>
+            <div
+              data-next-project-brand
+              data-brand-primary={nextProject.brandPrimary}
+              data-brand-secondary={nextProject.brandSecondary}
+            >
+              <ProjectCard
+                href={nextProject.href}
+                thumbnailSrc={nextProject.thumbnailSrc}
+                thumbnailVideo={nextProject.thumbnailVideo}
+                thumbnailAlt={nextProject.thumbnailAlt}
+                projectTitle={nextProject.title}
+                client={nextProject.client}
+                summary={nextProject.summary}
+                belowFold
+              />
             </div>
           </section>
         )}
@@ -103,11 +107,13 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';
     import { initCaptionFade } from '../scripts/caption-fade';
     import { initMediaLightbox } from '../scripts/media-lightbox';
+    import { initNextProjectBrandSwap } from '../scripts/next-project-brand-swap';
     // initMediaAutoplay moved to BaseLayout so home thumbnails benefit too.
     document.addEventListener('astro:page-load', () => {
       initProjectNavFromInternal();
       initCaptionFade();
       initMediaLightbox();
+      initNextProjectBrandSwap();
     });
   </script>
 </BaseLayout>

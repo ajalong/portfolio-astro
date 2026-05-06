@@ -311,21 +311,11 @@ body:not(.project-page) p ~ figure {
   padding-top: var(--unit-128);
 }
 
-#page-permalink-footer .other-work {
+#page-permalink-footer .next-project {
   margin: 0 0 48px;
 
   .kicker {
     margin: 0 0 var(--text-spacing-tight);
-  }
-}
-
-#page-permalink-footer .other-work__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--grid-gap);
-
-  @media screen and (min-width: 1001px) {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 

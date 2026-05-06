@@ -10,36 +10,32 @@ export async function getStaticPaths() {
   const published = all.filter((p) => p.data.published !== false);
   const sorted = [...published].sort((a, b) => a.data.order - b.data.order);
 
-  return sorted.map((project, i) => {
-    const otherWork = [
-      sorted[(i + 1) % sorted.length],
-      sorted[(i + 2) % sorted.length],
-    ].filter((p, idx, arr) => p.slug !== project.slug && arr.findIndex((x) => x.slug === p.slug) === idx);
-    return {
-      params: { slug: project.slug },
-      props: { project, otherWork },
-    };
-  });
+  return sorted.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, nextProject: sorted[(i + 1) % sorted.length] },
+  }));
 }
 
 interface Props {
   project: ProjectEntry;
-  otherWork: ProjectEntry[];
+  nextProject: ProjectEntry;
 }
 
-const { project, otherWork } = Astro.props as Props;
+const { project, nextProject } = Astro.props as Props;
 
 const { title, client, metaDescription, thumbnailImage, year, sector, roleTitle, roleSummary, brand } = project.data;
 
-const otherWorkCards = otherWork.map((p) => ({
-  href: `/project/${p.slug}`,
-  title: p.data.title,
-  client: p.data.client,
-  summary: p.data.summary,
-  thumbnailSrc: p.data.thumbnailImage,
-  thumbnailVideo: p.data.thumbnailVideo,
-  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[p.slug] ?? p.data.title,
-}));
+const nextProjectCard = {
+  href: `/project/${nextProject.slug}`,
+  title: nextProject.data.title,
+  client: nextProject.data.client,
+  summary: nextProject.data.summary,
+  thumbnailSrc: nextProject.data.thumbnailImage,
+  thumbnailVideo: nextProject.data.thumbnailVideo,
+  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? nextProject.data.title,
+  brandPrimary: nextProject.data.brand?.primary,
+  brandSecondary: nextProject.data.brand?.secondary,
+};
 
 const { Content } = await project.render();
 
@@ -96,7 +92,7 @@ const sectionIndex = parseSectionIndex(project.body, !!project.data.team?.length
   year={year}
   sector={sector}
   team={project.data.team}
-  otherWork={otherWorkCards}
+  nextProject={nextProjectCard}
   {sectionIndex}
   {roleTitle}
   {roleSummary}

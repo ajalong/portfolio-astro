@@ -117,13 +117,13 @@ Eventfinity's platform was technically robust but had no UI scaffolding out of t
 
 ![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
 
+![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
+
 _Impact_
 
 ## A huge leap in user experience
 
 The event landed well. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in.
-
-![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
 
 _Lessons learned_
 

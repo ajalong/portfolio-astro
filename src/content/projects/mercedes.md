@@ -93,7 +93,7 @@ _Information architecture_
 
 The original platform was organised around the tools themselves. The redesign organised them around the user's process.
 
-Tools were regrouped into three stages that mirrored how users actually moved through a media planning decision: Looking for market opportunities in existing data; determining the audience and focus of messaging; then setting the overall budget and allocating it across media channels.
+Tools were regrouped into three stages that mirrored how users actually moved through a media planning decision: looking for market opportunities in existing data; determining the audience and focus of messaging; then setting the overall budget and allocating it across media channels.
 
 Within each stage, tools were laid out down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform in their heads.
 

@@ -92,10 +92,10 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 - **A lean core component set** covering only what could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - **iOS and Android extensions** of the core library, giving native teams the building blocks to align with each platform's UX paradigms.
 
-![An example card component in light mode. — Card component in light mode, labeled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_mitkkh.png)
-![An example card component in dark mode. Semantic tokens abstract primitive values allowing easy switching between colour modes. — A card component in dark mode, labeled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/e_sharpen:60/v1778026304/alan.design/gsk/gsk-tokens_in_action-dark_ofeo3v.png)
+![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-introduction_lpbm2a.png)
 
-![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_gettingstartedframes.png)
+![An example card component in light mode. — Card component in light mode, labelled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_m7onmf.png)
+![An example card component in dark mode. Semantic tokens abstract primitive values allowing easy switching between colour modes. — A card component in dark mode, labelled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026304/alan.design/gsk/gsk-tokens_in_action-dark_f7jrje.png)
 
 ![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_general_components.mp4)
 ![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_podcasts.mp4)
@@ -110,7 +110,7 @@ Wherever possible I take a participatory approach to design, involving stakehold
 - **I worked closely with GSK's brand team** to ensure the design system was aligned with the new brand.
 - **I designed Brandhub upon the new system**, GSK's digital asset management and brand guideline platform.
 
-![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/gskdesignsystem_brandhub.png)
+![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-brandhub_dyoew8.png)
 
 _Impact_
 

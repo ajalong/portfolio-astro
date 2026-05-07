@@ -100,7 +100,9 @@ p {
 .kicker {
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
-  color: var(--text-accent);
+  // Derived from brand primary; lightness capped so contrast against the
+  // white-washed page background clears WCAG AA. L≤0.42 → ≈8:1 on white.
+  color: oklch(from var(--brand-primary) min(l, 0.42) c h);
   // text-transform: uppercase;
 }
 

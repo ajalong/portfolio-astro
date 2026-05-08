@@ -4,8 +4,9 @@ client: Mercedes-Benz
 slug: mercedes
 summary: Redesigning Mercedes-Benz’s ad analytics platform to fix navigation, onboarding and data visualisation issues.
 metaDescription: Working with Interbrand, I helped overhaul Mercedes-Benz’s ad analytics platform, addressing pain points in navigation, onboarding and data visualisation through research, design sprints and collaboration with their UX team.
-thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/v1777140383/alan.design/Mercedes/mercedes-benz-140-years-welcome-home-unwind-airmatic_zviput.jpg
-thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_limit,w_1600,e_fade:1200/e_fade:-1200/v1777140383/alan.design/Mercedes/mercedes-benz-140-years-welcome-home-unwind-airmatic_zviput.mp4
+mediaBase: alan.design/Mercedes
+mediaVersion: v1777140383
+thumbnail: mercedes-benz-140-years-welcome-home-unwind-airmatic_zviput
 order: 3
 year: 2025
 sector: UX Overhaul
@@ -97,7 +98,7 @@ Tools were regrouped into three stages that mirrored how users actually moved th
 
 Within each stage, tools were laid out down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform in their heads.
 
-![The Market Opportunities stage of the IA, showing tools laid out in the order users move through them. — “Identify Market Trends”: multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-market_trends_aasyii.png)
+!["Identify Market Trends": multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](mercedes-market_trends_aasyii.png "The Market Opportunities stage of the IA, showing tools laid out in the order users move through them.")
 
 _Configuring parameters_
 
@@ -112,9 +113,9 @@ Users had been re-entering the same data into tool after tool. The redesign sepa
 
 The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discrete tools.
 
-![The Scenario Settings overlay. Adjusting any global parameter updates visualisations across every tool live. — Modal over chart: Scenario tab, dropdowns (market, model, competitors, segment, fuel, timeframe), saved scenario cards, Reset and Update.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-settings_nfcco6.png)
+![Modal over chart: Scenario tab, dropdowns (market, model, competitors, segment, fuel, timeframe), saved scenario cards, Reset and Update.](mercedes-settings_nfcco6.png "The Scenario Settings overlay. Adjusting any global parameter updates visualisations across every tool live.")
 
-![Channel Optimisation: spend versus impact across paid media channels, with budget allocation in the right rail. — Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-channel_optimisation_naza6q.png)
+![Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](mercedes-channel_optimisation_naza6q.png "Channel Optimisation: spend versus impact across paid media channels, with budget allocation in the right rail.")
 
 _Onboarding_
 
@@ -126,9 +127,9 @@ The first two sprints had done a lot of the onboarding work. A clearer informati
 - **Tooltips and nudges, used sparingly.** Tied to specific moments where users were most likely to need a prompt, with copy kept short.
 - **Copy pitched to the audience.** Onboarding copy assumed a working knowledge of media analytics and avoided the explanatory hand-holding that often makes onboarding feel patronising to expert users.
 
-![The first-use orientation, kept short because the IA had already done most of the work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-overlay_fmo5gj.png)
+![First-use orientation overlay highlighting the IA's three stages.](mercedes-overlay_fmo5gj.png "The first-use orientation, kept short because the IA had already done most of the work.")
 
-![The login screen sets expectations for who the platform is for, before the user has logged in.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/Mercedes/mercedes-login_dqkdm1.png)
+![Login screen with platform purpose statement above the form.](mercedes-login_dqkdm1.png "The login screen sets expectations for who the platform is for, before the user has logged in.")
 
 _Impact_
 

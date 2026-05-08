@@ -4,6 +4,11 @@ client: Tradu
 slug: tradu
 summary: A token-driven light mode and UX refinements for a fintech onboarding flow.
 metaDescription: A token-driven light mode for Tradu's onboarding flow, followed by a UX audit that built on the same primitive token foundation.
+mediaBase: alan.design/tradu
+# Tradu's poster (PNG) and loop (MP4) are separate uploads with different
+# public-ids, so the single `thumbnail` shorthand doesn't fit. Keeping
+# the legacy full-URL fields here while body media uses the new
+# relative-path resolution.
 thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_800/v1777807570/alan.design/tradu/tradu-thumbnailImage_yo7krq.png
 thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_limit,w_1600,e_fade:1200/e_fade:-1200/v1777807484/alan.design/tradu/tradu-thumbnailVideo_ren8b8.mp4
 order: 2
@@ -67,20 +72,17 @@ Tradu's confidence in the work led them to commission a broader UX audit of the 
 - **Redesigned the top app bar** to make it more compact, increasing screen space for page content. Visual hierarchy and clarity was improved through simplification of elements within it.
 - **Relocated the progress bar** alongside the continue button at the bottom of the screen. The change grouped the progress signal with the action that advanced it, creating a small reward loop on each step.
 
-![The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/tradu/tradu-tokens_iailkn.png)
+![Primitive token scale: black-to-white base + brand accents, with dark- and light-mode tokens derived as inversions.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/tradu/tradu-tokens_iailkn.png "The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.")
 
-![Component states](/placeholder-1x1.svg)
-![top app bar](/placeholder-1x1.svg)
+![Progress-bar position variants compared, ending with the primary-action grouping at the bottom.](tradu-progress_bar_ohs6p0.png "Progress bar variants explored, with compact top-of-screen treatments to placements grouped with the primary action button at the bottom.")
 
-![Progress bar variants explored, with compact top-of-screen treatments to placements grouped with the primary action button at the bottom.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082762/alan.design/tradu/tradu-progress_bar_ohs6p0.png)
-
-![Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine, across radio buttons, multi-select buttons, and text fields. Tangerine produces clearer visual separation in the lighter environment.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082758/alan.design/tradu/tradu-field_states_scoji5.png)
+![Selected states in light mode: black indicator vs Tangerine indicator across radio buttons, multi-select buttons, and text fields.](tradu-field_states_scoji5.png "Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine. Tangerine produces clearer visual separation in the lighter environment.")
 
 ### The corporate site
 
 The engagement expanded further with a UX audit of the corporate site. The work surfaced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
 
-![Final recommendations from a UX audit of the corporate site.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1778082768/alan.design/tradu/tradu-site_tweaks_xnoedj.png)
+![Annotated Figma frame from the corporate-site UX audit.](tradu-site_tweaks_xnoedj.png "Final recommendations from a UX audit of the corporate site.")
 
 _Impact_
 

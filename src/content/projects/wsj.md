@@ -4,8 +4,9 @@ client: Wall Street Journal
 slug: wsj
 summary: How do you engage top business leaders when you can't host them in person?
 metaDescription: I designed and built a virtual event platform for the Wall Street Journal's CEO Council — an exclusive forum for senior business leaders — for Cheerful Twentyfirst, delivering on a tight deadline during COVID-19.
-thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/v1777139289/alan.design/WSJ/ceo_council-trim_ewpmam.jpg
-thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_limit,w_1600,e_fade:1200/e_fade:-1200/v1777139289/alan.design/WSJ/ceo_council-trim_ewpmam.mp4
+mediaBase: alan.design/WSJ
+mediaVersion: v1777139289
+thumbnail: ceo_council-trim_ewpmam
 order: 8
 year: 2021
 sector: Virtual Event
@@ -101,9 +102,9 @@ _Design_
 - **Networking worth showing up for.** A hero animation in the Lobby featured attendees' headshots and a live count of users online, paired with a direct call to action. The brief was engagement, and networking was given the prominence the brief required.
 - **Co-design with WSJ stakeholders.** Rather than presenting finished work for sign-off, I ran the design process collaboratively with WSJ's team. By the time decisions were made, stakeholders had been part of making them, which meant buy-in with WSJ leadership was less challenging.
 
-![The Welcome page architecture, prioritising the user's most likely need above the fold.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/WSJ/wsj-landing_wireframe.png)
+![Welcome page wireframe with the question-submission form above the fold.](wsj-landing_wireframe.png "The Welcome page architecture, prioritising the user's most likely need above the fold.")
 
-![Animation of the Welcome page (landing page) being scrolled.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/welcome_apstqd.mp4)
+![Welcome page scrolling through its sections.](welcome_apstqd.mp4 "Animation of the Welcome page (landing page) being scrolled.")
 
 _Implementation_
 
@@ -115,9 +116,9 @@ Eventfinity's platform was technically robust but had no UI scaffolding out of t
 - **CSS variables as design tokens.** Colour, type, and spacing values lived as CSS variables, so any system-level change propagated cleanly across the platform.
 - **Documented for handoff.** The code was documented as we wrote it, on the assumption it would outlive the project. It did. The platform was picked up and reused for WSJ's CFO & COO Council and Technology Council.
 
-![Animation of the Lobby page (social area) showcasing on-page UI motion.](https://res.cloudinary.com/ajalong/video/upload/w_auto,ar_16:9,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/Lobby-short2.mp4)
+![Lobby page UI motion — hero animation with attendee headshots and live count.](Lobby-short2.mp4 "Animation of the Lobby page (social area) showcasing on-page UI motion.")
 
-![Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto,fl_animated/alan.design/WSJ/auditorium_message_v2_urqiwl.mp4)
+![Q&A flow — submitting a question on the live-stream auditorium page.](auditorium_message_v2_urqiwl.mp4 "Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.")
 
 _Impact_
 

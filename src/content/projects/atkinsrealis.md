@@ -4,6 +4,9 @@ client: AtkinsRéalis
 slug: atkinsrealis
 summary: Exploring how a new AtkinsRéalis brand could live online through design sprints, user testing and accessibility work.
 metaDescription: In 2023 I worked with Interbrand to explore how the new AtkinsRéalis brand could be expressed on the web, running design sprints and user testing to communicate the brand’s tenets while ensuring accessibility and practicality for future implementation.
+mediaBase: alan.design/AtkinsRealis
+# AtkinsRéalis thumbnail is a .mov source pinned to 16:9 — kept as a
+# full URL so the ar_16:9 crop survives. Body media uses relative paths.
 thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/v1777141869/alan.design/AtkinsRealis/atkinsrealis-trim_pqak2m.jpg
 thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/ar_16:9,f_auto,q_auto,c_limit,w_1600,e_fade:1200/e_fade:-1200/v1777141869/alan.design/AtkinsRealis/atkinsrealis-trim_pqak2m.mov
 order: 5
@@ -76,7 +79,7 @@ In 2023, SNC-Lavalin contracted Interbrand for a ground-up rebrand. The result w
 
 While the wider Interbrand team developed the new brand, Jonny Buck (UX Researcher), Lisa Pink (Project Manager) and I were tasked with exploring how AtkinsRéalis's new corporate strategy could be expressed through their corporate site. The deliverable was a research-led report with mockups, illustrating tested directions, rather than a final site.
 
-![High-fidelity mock-up of what the homepage could look like with the team's UX recommendations incorporated — Navy hero, headline and About CTA left; portrait and teal arcs right; below, editorial and project cards in a grid.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-visual_identity_exploration.png)
+![Navy hero with headline and About CTA left; portrait and teal arcs right; below, editorial and project cards in a grid.](atikinsrealis-visual_identity_exploration.png "High-fidelity mock-up of what the homepage could look like with the team's UX recommendations incorporated.")
 
 _Problem_
 
@@ -121,14 +124,14 @@ Brand values are most credibly communicated on a corporate site through what the
 >
 > — Testing participant
 
-![Final homepage mockup showing a brand message and content types above the fold, created based on feedback from user testing.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777334486/alan.design/AtkinsRealis/atkinsrealis-home-final_ctqrrx.png)
+![Homepage mockup with brand statement hero and content tiles below the fold.](atkinsrealis-home-final_ctqrrx.png "Final homepage mockup showing a brand message and content types above the fold, created based on feedback from user testing.")
 
-![Final navigation mockup showing the full taxonomy of markets, created based on feedback from user testing.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777331681/alan.design/AtkinsRealis/atkinsrealis-navigation-full_taxonomy_ylg1nj.png)
+![Mega-nav open with full taxonomy across services and markets.](atkinsrealis-navigation-full_taxonomy_ylg1nj.png "Final navigation mockup showing the full taxonomy of markets, created based on feedback from user testing.")
 
-![A variant of the projects overview page tested with users, leading with a world map to highlight the international nature of the business.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/AtkinsRealis/atikinsrealis-international.png)
+![World-map projects overview with location pins and project count by region.](atikinsrealis-international.png "A variant of the projects overview page tested with users, leading with a world map to highlight the international nature of the business.")
 
-![A services page section variant that gave prominence to the people delivering the work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338008/alan.design/AtkinsRealis/atkinsrealis-project-spotlight_uu61hn.png)
-![A team member section variant that surfaced the individuals behind a project.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/v1777338007/alan.design/AtkinsRealis/atkinsrealis-project-person_kggre8.png)
+![Services-page section foregrounding the people delivering the work.](atkinsrealis-project-spotlight_uu61hn.png "A services page section variant that gave prominence to the people delivering the work.")
+![Project-page section spotlighting team-member and partner profiles.](atkinsrealis-project-person_kggre8.png "A team member section variant that surfaced the individuals behind a project.")
 
 _Impact_
 

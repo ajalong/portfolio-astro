@@ -4,8 +4,8 @@ client: GSK
 slug: gsk
 summary: A company-wide design system to make GSK's bold new brand accessible across all digital products.
 metaDescription: In response to accessibility and technical challenges with GSK's 2022 rebrand, I designed a core digital design system that could be adopted across the company, balancing expressive brand content with dense tools for healthcare professionals.
-thumbnailImage: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_800,so_0/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_16_hfms2k.jpg
-thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_limit,w_1600/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_16_hfms2k.mp4
+mediaBase: alan.design/gsk
+thumbnail: wolffolins/WolffOlins_GSK_CaseStudy_16_hfms2k
 order: 1
 year: 2024
 sector: Design System
@@ -66,10 +66,10 @@ GSK are a FTSE 100 biopharma giant with numerous digital products. They span bra
 
 In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with the new identity.
 
-![New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_1600/v1777997705/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb-2_heywv6.mp4)
-![GSK employees on the Living Gradient created by Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg)
+![New GSK logo built from DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_1600/v1777997705/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb-2_heywv6.mp4 "New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.")
+![GSK employees on the Living Gradient — Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg "GSK employees on the Living Gradient created by Wolff Olins.")
 
-![GSK's new brand in action at their London HQ.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800/alan.design/gsk/wolffolins/G0168BT_i3cocf.webp)
+![GSK's new brand in action at their London HQ.](wolffolins/G0168BT_i3cocf.webp "GSK's new brand in action at their London HQ.")
 
 _Problem_
 
@@ -92,13 +92,13 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 - **A lean core component set** covering only what could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - **iOS and Android extensions** of the core library, giving native teams the building blocks to align with each platform's UX paradigms.
 
-![Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-introduction_lpbm2a.png)
+![Getting Started section of the design system, explaining the core system's role.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-introduction_lpbm2a.png "Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.")
 
-![An example card component in light mode. — Card component in light mode, labelled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_m7onmf.png)
-![An example card component in dark mode. Semantic tokens abstract primitive values allowing easy switching between colour modes. — A card component in dark mode, labelled with primitive and semantic tokens](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026304/alan.design/gsk/gsk-tokens_in_action-dark_f7jrje.png)
+![Card component in light mode, labelled with primitive and semantic tokens.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_m7onmf.png "An example card component in light mode.")
+![Card component in dark mode, labelled with primitive and semantic tokens.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026304/alan.design/gsk/gsk-tokens_in_action-dark_f7jrje.png "An example card component in dark mode. Semantic tokens abstract primitive values allowing easy switching between colour modes.")
 
-![Core UI components, for example a toggle switch, in light and dark mode from the design system.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_general_components.mp4)
-![A GSK podcast iOS app built from design system components in light and dark mode.](https://res.cloudinary.com/ajalong/video/upload/w_auto,c_fill,q_auto,f_auto/alan.design/gsk/gskdesignsystem_podcasts.mp4)
+![Toggle-switch component in light and dark mode, animating between states.](gskdesignsystem_general_components.mp4 "Core UI components, for example a toggle switch, in light and dark mode from the design system.")
+![GSK podcast iOS app screen rotation in light and dark mode.](gskdesignsystem_podcasts.mp4 "A GSK podcast iOS app built from design system components in light and dark mode.")
 
 _Implementation_
 
@@ -110,7 +110,7 @@ Wherever possible I take a participatory approach to design, involving stakehold
 - **I worked closely with GSK's brand team** to ensure the design system was aligned with the new brand.
 - **I designed Brandhub upon the new system**, GSK's digital asset management and brand guideline platform.
 
-![GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-brandhub_dyoew8.png)
+![GSK Brandhub homepage with brand guidelines, the design system, and downloadable assets.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-brandhub_dyoew8.png "GSK Brandhub, the company's internal brand guidelines hub, built using the core design system.")
 
 _Impact_
 

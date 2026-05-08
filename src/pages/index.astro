@@ -5,11 +5,19 @@ import { getLastUpdatedLabel } from '../data/lastUpdated';
 import { getCollection } from 'astro:content';
 import ProjectCard from '../components/ProjectCard.astro';
 import HomeSectionIndex from '../components/HomeSectionIndex.astro';
+import { resolveThumbnails } from '../lib/cloudinary.mjs';
 
 const allProjects = await getCollection('projects');
 const projects = allProjects
   .filter((p) => p.data.published !== false)
   .sort((a, b) => a.data.order - b.data.order);
+
+// Resolve thumbnail URLs once per project — accepts either the new
+// `thumbnail` (public-id + mediaBase) shape or the legacy
+// `thumbnailImage` / `thumbnailVideo` full URLs.
+const projectThumbs = new Map(
+  projects.map((p) => [p.slug, resolveThumbnails(p.data)]),
+);
 
 // Each project card needs a stable DOM id so the sticky nav's jump-links
 // can target it. Prefix to avoid clashes with any other ids on the page.
@@ -52,11 +60,11 @@ const subtitle = getLastUpdatedLabel();
             >
               <ProjectCard
                 href={`/project/${project.slug}`}
-                thumbnailSrc={project.data.thumbnailImage}
+                thumbnailSrc={projectThumbs.get(project.slug)?.poster}
                 thumbnailAlt={
                   PROJECT_THUMBNAIL_ALTS[project.slug] ?? `${project.data.title} thumbnail`
                 }
-                thumbnailVideo={project.data.thumbnailVideo}
+                thumbnailVideo={projectThumbs.get(project.slug)?.video ?? undefined}
                 projectTitle={project.data.title}
                 client={project.data.client}
                 summary={project.data.summary}

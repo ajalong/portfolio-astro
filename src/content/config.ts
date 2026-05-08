@@ -17,7 +17,24 @@ const projects = defineCollection({
     client: z.string(),
     summary: z.string(),
     metaDescription: z.string(),
-    thumbnailImage: z.string(),
+    // Cloudinary base path the rehype plugin prepends to every relative
+    // body asset reference (e.g. `mediaBase: alan.design/WSJ` →
+    // `[alt](welcome.mp4)` resolves to .../alan.design/WSJ/welcome.mp4).
+    // Optional only because legacy entries still use full URLs in body.
+    mediaBase: z.string().optional(),
+    // Optional version pin (`v123456789`) inserted between transforms and
+    // the public-id. Omit to always serve latest.
+    mediaVersion: z.string().optional(),
+    // Single Cloudinary public-id (no extension) for the project thumbnail.
+    // The plugin builds both the .jpg poster (first-frame) and the .mp4
+    // loop URLs from this with the thumbnail-context transform profile —
+    // smaller width, eco quality, fade-in/out, audio stripped. Replaces
+    // the manual thumbnailImage / thumbnailVideo URLs.
+    thumbnail: z.string().optional(),
+    // Legacy full-URL thumbnails. Either `thumbnail` (new) or
+    // `thumbnailImage` (legacy) must be set. `thumbnailVideo` is optional
+    // in both shapes (cards can fall back to the still poster).
+    thumbnailImage: z.string().optional(),
     thumbnailVideo: z.string().optional(),
     order: z.number(),
     published: z.boolean().optional(),

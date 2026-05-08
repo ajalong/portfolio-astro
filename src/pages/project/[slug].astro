@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { PROJECT_THUMBNAIL_ALTS } from '../../data/projectThumbnailAlts';
+import { resolveThumbnails } from '../../lib/cloudinary.mjs';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 
 type ProjectEntry = CollectionEntry<'projects'>;
@@ -23,15 +24,17 @@ interface Props {
 
 const { project, nextProject } = Astro.props as Props;
 
-const { title, client, metaDescription, thumbnailImage, year, sector, roleTitle, roleSummary, brand } = project.data;
+const { title, client, metaDescription, year, sector, roleTitle, roleSummary, brand } = project.data;
+const { poster: thumbnailImage } = resolveThumbnails(project.data);
 
+const nextThumbs = resolveThumbnails(nextProject.data);
 const nextProjectCard = {
   href: `/project/${nextProject.slug}`,
   title: nextProject.data.title,
   client: nextProject.data.client,
   summary: nextProject.data.summary,
-  thumbnailSrc: nextProject.data.thumbnailImage,
-  thumbnailVideo: nextProject.data.thumbnailVideo,
+  thumbnailSrc: nextThumbs.poster,
+  thumbnailVideo: nextThumbs.video,
   thumbnailAlt: PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? nextProject.data.title,
   brandPrimary: nextProject.data.brand?.primary,
   brandSecondary: nextProject.data.brand?.secondary,

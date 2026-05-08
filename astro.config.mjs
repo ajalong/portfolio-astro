@@ -5,6 +5,7 @@ import rehypeProjectMedia from './src/plugins/rehype-project-media.mjs';
 import rehypeExternalLinks from './src/plugins/rehype-external-links.mjs';
 import remarkProjectSections from './src/plugins/remark-project-sections.mjs';
 import remarkBlockquoteCite from './src/plugins/remark-blockquote-cite.mjs';
+import remarkResolveMedia from './src/plugins/remark-resolve-media.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,7 +27,10 @@ export default defineConfig({
     '/project/atikinsrealis': '/project/atkinsrealis',
   },
   markdown: {
-    remarkPlugins: [remarkBlockquoteCite, remarkProjectSections],
+    // remarkResolveMedia must run BEFORE Astro's content-assets vite
+    // plugin tries to ESM-import bare-filename image refs — by the time
+    // it sees them, they've been rewritten to full Cloudinary URLs.
+    remarkPlugins: [remarkResolveMedia, remarkBlockquoteCite, remarkProjectSections],
     rehypePlugins: [rehypeExternalLinks, rehypeProjectMedia],
   },
 });

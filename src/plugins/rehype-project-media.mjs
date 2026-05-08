@@ -5,13 +5,20 @@
  *   - A single markdown image on its own becomes a full-width figure (cols 2–7).
  *   - Two consecutive markdown images (no blank line between) become a side-by-side
  *     pair: left image in cols 2–4, right in cols 5–7.
- *   - Captions (the alt text, or the part before " — " in "Caption — Alt") are
- *     placed in the page margin: right margin (col 8) for single images and the
- *     right image of a pair; left margin (col 1) for the left image of a pair.
+ *   - Alt text and caption are independent. Authoring shape:
+ *       ![alt for screen readers](filename.ext "visible caption")
+ *     The bracketed text is the alt; the quoted markdown title attribute is
+ *     the caption shown in the page margin (col 8 / col 1 for pair).
+ *     Legacy shape — `![Caption — Alt](url)` with em-dash separator — is
+ *     still supported for back-compat.
  *   - .mp4 / .webm / .mov sources render as <video data-autoplay-on-view>
  *     (no native `autoplay` attribute — playback is JS-driven by
  *     `initMediaAutoplay` so off-screen videos never start) instead of <img>.
- *   - Cloudinary URLs are auto-optimised with f_auto, q_auto, and a width cap.
+ *   - Body asset references can be relative filenames; the plugin resolves
+ *     them against the entry's `mediaBase` / `mediaVersion` frontmatter
+ *     (see src/lib/cloudinary.mjs). Full URLs pass through unchanged.
+ *   - Cloudinary URLs (resolved or authored) are auto-optimised with
+ *     f_auto, q_auto, c_limit/w_*, and (for video) vc_auto/fps_auto/ac_none.
  *
  * Emits:
  *   <div class="media-block">
@@ -27,6 +34,7 @@
  *   </div>
  */
 import { visit } from 'unist-util-visit';
+import { resolveBodyMediaUrl } from '../lib/cloudinary.mjs';
 
 const VIDEO_EXT = /\.(mp4|webm|mov)(\?.*)?$/i;
 const CLOUDINARY_IMAGE_RE = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\//;
@@ -121,6 +129,16 @@ function optimizeCloudinaryUrl(src, isVideo, widthOverride) {
   // Animated GIFs need fl_animated so Cloudinary preserves animation when
   // converting to WebP/AVIF via f_auto.
   if (isGif && !/\bfl_animated\b/.test(allParamsString)) additions.push('fl_animated');
+  // Video-only optimisations: best-codec-within-format selection and
+  // full audio-track strip (every video on the site is silent UI
+  // motion). Each one skips if an explicit override is already present
+  // in the URL.
+  // (fps_auto omitted — requires the Cloudinary FFmpeg add-on which
+  // isn't enabled on this account; URL returns 400 when included.)
+  if (isVideo) {
+    if (!/\bvc_/.test(allParamsString)) additions.push('vc_auto');
+    if (!/\bac_/.test(allParamsString)) additions.push('ac_none');
+  }
   if (hasExplicitWidth) {
     additions.push('c_limit', 'w_' + widthOverride);
   } else if (!skipWidth && !isVideo && !/\b[wc]_\d/.test(allParamsString)) {
@@ -172,16 +190,40 @@ function hasOneToOneAspect(src) {
 }
 
 // Returns { figure, captionText } — caption is placed in the page margin, not inside figure.
-function buildFigure(img, { isPair = false } = {}) {
-  const src = img.properties?.src ?? '';
+function buildFigure(img, { isPair = false, isFirst = false, frontmatter = {} } = {}) {
+  const rawSrc = img.properties?.src ?? '';
+  // Resolve relative filenames against the entry's mediaBase before any
+  // type / Cloudinary checks — full URLs and site-rooted paths pass through.
+  const src = resolveBodyMediaUrl(rawSrc, frontmatter);
   const alt = img.properties?.alt ?? '';
+  const title = img.properties?.title ?? '';
   const isVideo = VIDEO_EXT.test(src);
   const isOneToOne = hasOneToOneAspect(src);
 
-  // "Caption — Detailed description": caption → margin, description → alt/aria-label.
-  const separatorIdx = alt.indexOf(' — ');
-  const captionText = separatorIdx !== -1 ? alt.slice(0, separatorIdx) : alt;
-  const altText = separatorIdx !== -1 ? alt.slice(separatorIdx + 3) : alt;
+  // Caption / alt resolution:
+  //   1. Markdown title attribute (`![alt](url "caption")`) — preferred.
+  //      Caption is whatever's quoted; alt stays as bracketed text.
+  //   2. Legacy em-dash separator — `![Caption — Alt description](url)` —
+  //      split into caption (before) and alt (after). Kept for back-compat
+  //      on entries not yet migrated.
+  //   3. Plain alt with no title and no separator — alt doubles as the
+  //      caption. Preserves the visible-margin caption that older entries
+  //      relied on.
+  let captionText;
+  let altText;
+  if (title) {
+    captionText = title;
+    altText = alt;
+  } else {
+    const separatorIdx = alt.indexOf(' — ');
+    if (separatorIdx !== -1) {
+      captionText = alt.slice(0, separatorIdx);
+      altText = alt.slice(separatorIdx + 3);
+    } else {
+      captionText = alt;
+      altText = alt;
+    }
+  }
 
   let mediaChild;
   if (isVideo) {
@@ -197,6 +239,10 @@ function buildFigure(img, { isPair = false } = {}) {
         loop: true,
         muted: true,
         playsInline: true,
+        // Load just enough for first-frame paint and metadata; the full
+        // file is fetched only once initMediaAutoplay calls play() on
+        // intersect.
+        preload: 'metadata',
         'data-autoplay-on-view': '',
         'aria-label': altText || undefined,
       },
@@ -219,7 +265,19 @@ function buildFigure(img, { isPair = false } = {}) {
         srcset: srcset || undefined,
         sizes: srcset ? (isPair ? SIZES_PAIR : SIZES_FULL) : undefined,
         alt: altText,
+        // Suppress the markdown title attribute on the rendered <img> —
+        // we've already lifted it into the visible caption below the
+        // figure, and leaving it on the element produces a duplicate
+        // browser tooltip on hover.
+        title: undefined,
         draggable: false,
+        // Off-thread decode — frees the main thread during paint.
+        decoding: 'async',
+        // First figure is the LCP candidate on case-study pages: load
+        // eagerly with high priority. Everything below the fold lazy-
+        // loads to spare bandwidth until the user scrolls in.
+        loading: isFirst ? 'eager' : 'lazy',
+        fetchpriority: isFirst ? 'high' : undefined,
       },
     };
   }
@@ -313,7 +371,24 @@ function imageParagraphImgs(node) {
 }
 
 export default function rehypeProjectMedia() {
-  return (tree) => {
+  return (tree, file) => {
+    // Astro stashes the entry's frontmatter on the vfile under
+    // `data.astro.frontmatter`. Used here for `mediaBase` / `mediaVersion`
+    // resolution of relative body asset references.
+    const frontmatter = file?.data?.astro?.frontmatter ?? {};
+
+    // Tracks the first image figure across the whole document so we can
+    // hint it as the LCP candidate (loading="eager", fetchpriority="high").
+    // Videos don't get this — body videos lazy-paint via preload="metadata"
+    // and only LCP in rare cases.
+    let imageFigureCount = 0;
+    const claimFirstImage = (src) => {
+      if (VIDEO_EXT.test(src)) return false;
+      if (imageFigureCount > 0) return false;
+      imageFigureCount++;
+      return true;
+    };
+
     const processChildren = (node) => {
       if (!Array.isArray(node.children)) return;
 
@@ -332,7 +407,8 @@ export default function rehypeProjectMedia() {
         }
 
         if (imgs.length === 1) {
-          const { figure, captionText } = buildFigure(imgs[0], { isPair: false });
+          const isFirst = claimFirstImage(imgs[0].properties?.src ?? '');
+          const { figure, captionText } = buildFigure(imgs[0], { isPair: false, isFirst, frontmatter });
           const captions = captionText ? [makeCaptionEl(captionText, 'right')] : [];
           next.push(makeMediaBlock([figure], captions, false));
         } else {
@@ -340,12 +416,13 @@ export default function rehypeProjectMedia() {
           for (let k = 0; k < imgs.length; k += 2) {
             const rightImg = imgs[k + 1];
             const isPair = !!rightImg;
-            const left = buildFigure(imgs[k], { isPair });
+            const leftFirst = claimFirstImage(imgs[k].properties?.src ?? '');
+            const left = buildFigure(imgs[k], { isPair, isFirst: leftFirst, frontmatter });
             if (!rightImg) {
               const captions = left.captionText ? [makeCaptionEl(left.captionText, 'right')] : [];
               next.push(makeMediaBlock([left.figure], captions, false));
             } else {
-              const right = buildFigure(rightImg, { isPair: true });
+              const right = buildFigure(rightImg, { isPair: true, isFirst: false, frontmatter });
               harmoniseAspect(left, right);
               const innerCaptions = [
                 ...(left.captionText ? [makePairCaptionEl('Left', left.captionText)] : []),

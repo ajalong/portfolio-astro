@@ -4,28 +4,6 @@
 //   surface-hover / surface-hover-strong
 @use "tokens" as *;
 
-@property --button-rim-angle {
-  syntax: '<angle>';
-  initial-value: 360deg;
-  inherits: false;
-}
-
-
-// 10s cycle — sine-like velocity profile: slow ramp → fast sweep → slow ease.
-// Nine stops replace the original thirty; the shape is identical to the eye.
-// 0°→360° runs backwards so the "bright zone" sweeps left-to-right.
-@keyframes button-rim-angle-spin {
-  0%   { --button-rim-angle: 360deg; }
-  5%   { --button-rim-angle: 345deg; }
-  12%  { --button-rim-angle: 310deg; }
-  20%  { --button-rim-angle: 270deg; }
-  30%  { --button-rim-angle: 215deg; }
-  50%  { --button-rim-angle: 120deg; }
-  70%  { --button-rim-angle: 58deg;  }
-  85%  { --button-rim-angle: 14deg;  }
-  100% { --button-rim-angle: 0deg;   }
-}
-
 // Brand-coloured rim — transparent hold zones at the wheel's start/end
 // fade into a primary → secondary → primary band through the middle.
 // `transparent` here serves as the rest state (conceptually the brand
@@ -60,8 +38,7 @@ $cta-secondary-inner-glow-active:
   inset 0 0 30px 7px hsl(220 6% 18% / 0.065),
   inset 0 0 42px 10px hsl(220 5% 24% / 0.045);
 
-// Pseudo-elements always present with animation running; hover toggles opacity.
-// JS sets --rim-seek on pointerenter to restart the spin at a random fast-burst zone.
+// Static brand-coloured rim — visible on hover/focus via opacity toggle.
 @mixin button-rim-pseudo {
   &::before {
     content: '';
@@ -74,30 +51,10 @@ $cta-secondary-inner-glow-active:
     border: var(--button-rim-width) solid transparent;
     background:
       linear-gradient(var(--rim-fill), var(--rim-fill)) padding-box,
-      conic-gradient(from var(--button-rim-angle), #{$rim-gradient-stops}) border-box;
+      conic-gradient(from 0deg, #{$rim-gradient-stops}) border-box;
     background-clip: padding-box, border-box;
     opacity: 0;
     transition: opacity 0.28s ease-out;
-    animation: button-rim-angle-spin 10s linear infinite;
-    animation-delay: calc(-1s * var(--rim-seek, 0));
-  }
-
-  &[data-rim-restart]::before {
-    animation: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::before {
-      animation: none;
-      background:
-        linear-gradient(var(--rim-fill), var(--rim-fill)) padding-box,
-        conic-gradient(from 0deg, #{$rim-gradient-stops}) border-box;
-      background-clip: padding-box, border-box;
-    }
-
-    &[data-rim-restart]::before {
-      animation: none;
-    }
   }
 }
 

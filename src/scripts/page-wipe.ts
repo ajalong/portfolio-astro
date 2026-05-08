@@ -1,15 +1,24 @@
-// Page-fade transition for any internal page change.
+// Page-wipe transition for any internal page change.
 //
-// During the transition the linear half of the page background's white
-// wash (`.bg__fg`) lifts — its half-opacity stop animates from 100%
-// (default position at viewport bottom) up to 40% and back, exposing
-// more brand colour in the lower portion of the viewport. Foreground
-// content (`.page_container`) cross-fades in parallel. The radial
-// spotlight and the brand-colour base layer are unaffected — only the
-// linear moves.
+// Background and foreground are fully decoupled:
 //
-// `.bg__fg` carries `transition:persist` so the same DOM node moves
-// across the swap and the WAAPI animation continues uninterrupted.
+// - Background: a single 0.8 s burst on `.bg__base`. An additive 200vw
+//   shift on `background-position-x` is composed on top of the always-
+//   running 20 s bg-slide, so the brand-colour gradient ramps up,
+//   peaks, and ramps down — one full wavelength of accelerated drift
+//   over the burst — before settling back to the steady drift. The
+//   element itself never moves (it's viewport-sized with a tiled
+//   gradient), so an accelerated drift can't expose the html bg
+//   underneath. The white wash layers (`.bg__fg-radial`,
+//   `.bg__fg-linear`) are static throughout.
+//
+// - Foreground (`.page_container`) cross-fades out, then back in once
+//   the new page is ready. Driven by network/paint timing, not the bg
+//   clock — the background may finish before the foreground is ready
+//   (and that's fine, the burst is purely additive on top of steady drift).
+//
+// `.bg__base` carries `transition:persist` so the same DOM node survives
+// the swap and its WAAPI burst continues uninterrupted.
 //
 // We hijack the click instead of using astro:before-swap because the
 // framework doesn't await replaced event.swap promises, so deferring
@@ -17,12 +26,14 @@
 // completes. Direct URL entries (no click) bypass the transition.
 import { navigate } from 'astro:transitions/client';
 
-const COVER_DURATION = 600;
-const REVEAL_DURATION = 600;
-// Strong ease at both ends of each phase — gradient movement feels
-// weighted in and out of peak (ease-in-out quint).
-const COVER_EASING = 'cubic-bezier(0.86, 0, 0.07, 1)';   // ease-in-out quint
-const REVEAL_EASING = 'cubic-bezier(0.86, 0, 0.07, 1)';  // ease-in-out quint
+// Background burst — one wavelength of accelerated drift over 0.8 s.
+const BG_BURST_DURATION = 800;
+// Light ease-in-out: velocity ramps up, peaks mid-burst, ramps down.
+const BG_BURST_EASE = 'cubic-bezier(0.4, 0, 0.6, 1)';
+
+// Foreground cross-fade — driven by content readiness, not the bg clock.
+const FG_FADE_DURATION = 600;
+const FG_EASE = 'cubic-bezier(0, 0, 0, 1)';   // ease-out (per spec "0,1")
 
 function shouldWipe(toPath: string): boolean {
   // Trigger on any same-origin page change. Same-path navigations
@@ -30,8 +41,8 @@ function shouldWipe(toPath: string): boolean {
   return toPath !== location.pathname;
 }
 
-function fgEl(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('.bg__fg');
+function baseEl(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('.bg__base');
 }
 
 // Resolve after the next frame has painted — two requestAnimationFrame
@@ -45,87 +56,75 @@ function waitForPageReady(): Promise<void> {
 }
 
 let wiping = false;
+// In-flight bg burst, tracked so a rapid second navigation can replace
+// it cleanly instead of stacking animations on the persisted base layer.
+let bgBurst: Animation | null = null;
+
+function startBgBurst(): void {
+  bgBurst?.cancel();
+  const base = baseEl();
+  if (!base) return;
+  // Additive background-position burst — composes on top of the always-
+  // running CSS bg-slide so the brand-colour pattern bursts forward by
+  // exactly one wavelength (200vw) over BG_BURST_DURATION. The CSS
+  // animation runs bg-position-x 200vw → 0; an additive −200vw burst
+  // accelerates motion in the same direction. composite:'add' is per
+  // keyframe.
+  const a = base.animate(
+    [
+      { backgroundPositionX: '0',      composite: 'add' } as any,
+      { backgroundPositionX: '-200vw', composite: 'add' } as any,
+    ],
+    { duration: BG_BURST_DURATION, easing: BG_BURST_EASE, fill: 'none' },
+  );
+  bgBurst = a;
+  a.finished.then(
+    () => { if (bgBurst === a) bgBurst = null; },
+    () => { /* swallow AbortError when cancelled by a successor */ },
+  );
+}
 
 async function runWipe(href: string): Promise<void> {
-  const fg = fgEl();
-  if (!fg) {
-    await navigate(href);
-    return;
-  }
-
   wiping = true;
   const oldContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Kick the navigation off in parallel with the cover animation. ClientRouter
-  // fetches + swaps as soon as it's ready; transition:persist on .bg__fg
-  // keeps its WAAPI animation running through the swap.
+  // Fire the background burst independently — it runs to completion
+  // regardless of how long the foreground takes to load.
+  startBgBurst();
+
+  // Kick the navigation off in parallel with the foreground cover.
   const navPromise = navigate(href);
 
-  // Cover: lift the linear wash by tightening its half-opacity stop
-  // (--fg-fade-stop 100% → 40%) — drop-off steepens, more brand colour
-  // shows in the lower portion. Radial spotlight and brand-colour base
-  // layer are unaffected. Foreground content fades out in parallel.
-  const coverFg = fg.animate(
-    // Cast: TS DOM lib doesn't model custom-property keyframes, but
-    // WAAPI accepts them when the property is @property-registered.
-    [
-      { ['--fg-fade-stop']: '100%' } as any,
-      { ['--fg-fade-stop']: '40%' } as any,
-    ],
-    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
-  );
+  // Foreground cover — fade old content out.
   const coverContainer = oldContainer?.animate(
     [{ opacity: 1 }, { opacity: 0 }],
-    { duration: COVER_DURATION, easing: COVER_EASING, fill: 'forwards' },
+    { duration: FG_FADE_DURATION, easing: FG_EASE, fill: 'forwards' },
   );
-  await Promise.all([
-    coverFg.finished,
-    coverContainer?.finished ?? Promise.resolve(),
-  ]);
+  await (coverContainer?.finished ?? Promise.resolve());
 
-  // If the network was slower than the cover anim, wait — otherwise this is
-  // a no-op and reveal starts immediately.
   await navPromise;
 
   // Wait for the new page's initial paint before starting the reveal so
-  // the radial doesn't open onto a blank/half-rendered page. Failsafe
-  // timeout below stops this from pinning indefinitely.
+  // content doesn't fade in onto a blank/half-rendered DOM.
   await waitForPageReady();
 
-  // Re-query in case the DOM swap moved nodes around.
-  const newFg = fgEl();
   const newContainer = document.querySelector<HTMLElement>('.page_container');
 
-  // Reveal: lower the linear wash back into place (40% → 100%); new
-  // content fades in.
-  const revealFg = newFg?.animate(
-    [
-      { ['--fg-fade-stop']: '40%' } as any,
-      { ['--fg-fade-stop']: '100%' } as any,
-    ],
-    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
-  );
+  // Foreground reveal — fade new content in.
   const revealContainer = newContainer?.animate(
     [{ opacity: 0 }, { opacity: 1 }],
-    { duration: REVEAL_DURATION, easing: REVEAL_EASING, fill: 'forwards' },
+    { duration: FG_FADE_DURATION, easing: FG_EASE, fill: 'forwards' },
   );
-  await Promise.all([
-    revealFg?.finished ?? Promise.resolve(),
-    revealContainer?.finished ?? Promise.resolve(),
-  ]);
+  await (revealContainer?.finished ?? Promise.resolve());
 
-  // Cancel all WAAPI animations and clear inline styles so the elements
-  // return to their natural compositing state. fill:'forwards' alone keeps
-  // the animation in the active list, which can hold the element on its
-  // own GPU layer — that has been observed to break backdrop-filter on
-  // overlays (e.g. the project team panel) painted later.
-  coverFg.cancel();
+  // Cancel foreground animations and clear inline styles so the new
+  // container returns to its natural compositing state. fill:'forwards'
+  // alone keeps the animation in the active list, which can hold the
+  // element on its own GPU layer — observed to break backdrop-filter on
+  // overlays (e.g. the project team panel) painted later. The bg burst
+  // is left running; its own finished handler cleans up.
   coverContainer?.cancel();
-  revealFg?.cancel();
   revealContainer?.cancel();
-  if (newFg) {
-    newFg.style.removeProperty('--fg-fade-stop');
-  }
   if (newContainer) newContainer.style.opacity = '';
   wiping = false;
 }

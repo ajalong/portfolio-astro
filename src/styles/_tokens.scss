@@ -169,6 +169,31 @@ $bg-card-hover-gradient:
   --grid-gap:           var(--unit-16);  /* gutter between grid columns */
   --page-gutter-y:      var(--unit-88);  /* space from viewport top to title */
   --page-gutter-x:      var(--unit-16);  /* space from viewport left/right to grid */
+
+  /* ─────────── Motion: durations ─────────── */
+  --dur-instant:  100ms;  /* outline / focus snaps */
+  --dur-quick:    120ms;  /* underline colour, micro hovers */
+  --dur-fast:     200ms;  /* opacity hovers, small reveals, lightbox content */
+  --dur-base:     300ms;  /* page-tx ramp leg, card overlay, rim opacity */
+  --dur-medium:   400ms;  /* page-tx hold, card thumbnail fade, media */
+  --dur-slow:     600ms;  /* fg page-tx fade, card hover scale */
+  --dur-slide:    550ms;  /* zip-underline travel */
+  --dur-page-tx:  1000ms; /* full bg page-tx cycle */
+  --dur-bg-loop:  20s;    /* always-running brand-gradient drift */
+
+  /* ─────────── Motion: easings ─────────── */
+  --ease-linear:    linear;
+  --ease-default:   ease;                                /* legacy hover fallback */
+  --ease-out:       cubic-bezier(0, 0, 0, 1);            /* fg fade in/out */
+  --ease-light:     cubic-bezier(0.4, 0, 0.6, 1);        /* bg-base sweep */
+  --ease-strong:    cubic-bezier(0.83, 0, 0.17, 1);      /* bg radial / linear ramp */
+  --ease-zip:       cubic-bezier(0.22, 1, 0.36, 1);      /* zip underline, card scale */
+  --ease-overshoot: cubic-bezier(0.32, 0.72, 0, 1);      /* team panel slide-in */
+
+  /* ─────────── Motion: page transition (composable) ─────────── */
+  --page-tx-ramp:   300ms;  /* radial drop / linear push, both directions */
+  --page-tx-hold:   400ms;  /* held at full coverage */
+  --page-tx-fg:     600ms;  /* fg cover or reveal */
 }
 
 /* Mobile re-tune — tokens shift at 1000px so per-rule media queries are unnecessary */

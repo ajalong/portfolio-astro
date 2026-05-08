@@ -1,14 +1,19 @@
 ---
-// Three-layer animated case-study background.
+// Four-layer animated case-study background.
 // - .bg__base holds the per-project brand-colour gradient and slides horizontally.
-// - .bg__fg is two stacked white washes (radial top-centre + linear top→bottom)
-//   that sit over the base so colour reads as a soft tint behind the page.
+// - .bg__fg-radial: white radial wash, top-centre origin. Animated to
+//   transparent during page transitions.
+// - .bg__fg-linear: white linear wash, top→bottom. Animated to fully
+//   opaque during page transitions.
+// Splitting the two washes into separate elements lets the page-wipe
+// animate each layer's gradient-stop alphas independently via WAAPI.
 // Brand colours come in via the `--brand-primary` / `--brand-secondary`
 // CSS custom properties (declared as @property tokens in _tokens.scss).
 // Project pages set them inline on <body> in BaseLayout so they're
 // inherited globally; the homepage observer writes them to :root.
 ---
 <div class="bg" aria-hidden="true">
-  <div class="bg__base"></div>
-  <div class="bg__fg" transition:persist="bg-fg"></div>
+  <div class="bg__base" transition:persist="bg-base"></div>
+  <div class="bg__fg-radial" transition:persist="bg-fg-radial"></div>
+  <div class="bg__fg-linear" transition:persist="bg-fg-linear"></div>
 </div>

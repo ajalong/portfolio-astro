@@ -1,16 +1,26 @@
-// Three-layer animated case-study background.
+// Four-layer animated case-study background.
 //
 // Layer 1 (bg__base, z -3) — horizontal OKLCH gradient between the two
 // per-project brand colours (--brand-primary / --brand-secondary, defined
-// as @property tokens in _tokens.scss). The pattern's wavelength is
-// `max(100vw, 600px)` (so very narrow viewports keep a 600px minimum
-// wavelength and don't get a frantic stripe). The element is 2× the
-// wavelength wide and the animation translates by exactly one wavelength,
-// so the loop is seamless. Direction: animation runs L→R (translate goes
-// from -W to 0), so colour appears to flow left-to-right.
-// Layer 2/3 (bg__fg, z -1) — two stacked whites: linear top→bottom
-// 1.0→0.5 alpha, plus radial origin top-centre 1.0→0.5. These wash the
-// base out so colour only reads as a tint at the page edges.
+// as @property tokens in _tokens.scss). The pattern's wavelength is 200vw
+// so the viewport always spans peak-to-peak of the gradient. The element
+// is 2× the wavelength wide and the animation translates by exactly one
+// wavelength, so the loop is seamless. Direction: L→R (translate runs
+// -W → 0), so colour appears to flow left-to-right.
+//
+// Layer 2 (bg__fg-radial, z -2) — top-centred white radial wash. At rest:
+// solid white at the centre, half-opacity at the corners. During a page
+// transition, both stops are animated to alpha 0 (layer dissolves) and
+// then back, exposing more brand colour mid-transition.
+//
+// Layer 3 (bg__fg-linear, z -1) — top→bottom white linear wash. At rest:
+// solid white at the top, half-opacity at the bottom. During a page
+// transition, the bottom stop is animated to alpha 1 (layer becomes
+// solid white) and then back, peaking the cover when the radial is at
+// its dimmest.
+//
+// Stop alphas are exposed as registered @property values so they can be
+// interpolated by WAAPI from the page-wipe orchestration script.
 
 html {
   background-color: #fff;
@@ -28,28 +38,24 @@ html {
 }
 
 .bg__base {
+  // Viewport-sized element with a tiled gradient — animating
+  // background-position rather than transform keeps the element
+  // pinned to the viewport, so an accelerated drift (page-wipe burst)
+  // can never push the element off-screen and expose the html bg
+  // behind it. Wavelength is 200vw; tile repeats horizontally.
   position: absolute;
-  top: 0;
-  left: 0;
-  // Element is 2× the pattern wavelength so the viewport is always
-  // covered during the slide. Wavelength = 2× viewport width (200vw),
-  // so the viewport always spans peak-to-peak of the gradient — at
-  // the loop boundary primary sits at the left edge and secondary at
-  // the right.
-  width: 400vw;
-  height: 100%;
+  inset: 0;
   z-index: -3;
-  background: linear-gradient(
+  background-image: linear-gradient(
     in oklch to right,
-    var(--brand-primary) 0%,
-    var(--brand-secondary) 25%,
-    var(--brand-primary) 50%,
-    var(--brand-secondary) 75%,
-    var(--brand-primary) 100%
+    var(--brand-primary)    0%,
+    var(--brand-secondary) 50%,
+    var(--brand-primary)  100%
   );
-  animation: bg-slide 20s linear infinite;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
+  background-size: 200vw 100%;
+  background-repeat: repeat-x;
+  animation: bg-slide var(--dur-bg-loop) var(--ease-linear) infinite;
+  will-change: background-position;
   // Smooth swap when the homepage observer rewrites :root brand values.
   // Listening on the consuming element (not :root) avoids a Chrome quirk
   // where transitioning a registered custom property on the root keeps
@@ -59,45 +65,61 @@ html {
     --brand-secondary 250ms ease-out;
 }
 
-// Position of the half-opacity stop on the linear white wash. Lower
-// values lift the drop-off up the screen, exposing more brand colour
-// in the lower portion. Animated by the page-wipe transition 100% → 40%
-// → 100%. The radial spotlight and the brand-colour base layer are
-// unaffected — only the linear.
-@property --fg-fade-stop {
-  syntax: '<percentage>';
+// Stop alphas for the two white wash layers. Registered with @property
+// so WAAPI can interpolate them. Defaults reflect the layers' rest state
+// (radial: 1 at centre → 0.5 at corners; linear: 1 at top → 0.5 at bottom).
+@property --bg-radial-near {
+  syntax: '<number>';
   inherits: true;
-  initial-value: 100%;
+  initial-value: 1;
+}
+@property --bg-radial-far {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0.5;
+}
+@property --bg-linear-near {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+@property --bg-linear-far {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0.5;
 }
 
-.bg__fg {
+.bg__fg-radial {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  // farthest-corner keeps the geometry consistent in landscape & portrait.
+  background: radial-gradient(
+    circle farthest-corner at 50% 0%,
+    rgb(255 255 255 / var(--bg-radial-near)) 0%,
+    rgb(255 255 255 / var(--bg-radial-near)) 25%,
+    rgb(255 255 255 / var(--bg-radial-far)) 100%
+  );
+}
+
+.bg__fg-linear {
   position: absolute;
   inset: 0;
   z-index: -1;
-  // Both layers hold solid white through 25% of their travel, then ramp to
-  // 50% white by --fg-fade-stop (default 100% — bottom of gradient). During
-  // the page transition, --fg-fade-stop animates down to ~40% so the
-  // half-opacity stop moves up the gradient and the bottom of the viewport
-  // exposes more of the brand-coloured base. Using `farthest-corner` for
-  // the radial keeps the geometry consistent in landscape and portrait.
-  background:
-    radial-gradient(
-      circle farthest-corner at 50% 0%,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 25%,
-      rgba(255, 255, 255, 0.5) 100%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 25%,
-      rgba(255, 255, 255, 0.5) var(--fg-fade-stop)
-    );
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / var(--bg-linear-near)) 0%,
+    rgb(255 255 255 / var(--bg-linear-near)) 25%,
+    rgb(255 255 255 / var(--bg-linear-far)) 100%
+  );
 }
 
 @keyframes bg-slide {
-  from { transform: translate3d(-200vw, 0, 0); }
-  to   { transform: translate3d(0, 0, 0); }
+  // One wavelength of horizontal drift per loop. Direction matches the
+  // previous transform-based animation: at viewport-x=0, the visible
+  // colour cycles primary → secondary → primary over one loop.
+  from { background-position-x: 200vw; }
+  to   { background-position-x: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

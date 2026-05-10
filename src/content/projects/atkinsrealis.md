@@ -139,12 +139,12 @@ _Impact_
 
 The project handed over a substantive body of design thinking around IA, navigation, case studies, homepage structure, inclusivity messaging and accessibility, all validated in user testing. Beyond the deliverables, the engagement shifted how AtkinsRéalis thought about their site: from a styling exercise to a structural problem, with strong IA, evidence-backed patterns, and a concrete way of demonstrating inclusivity. For Interbrand, the project marked the first major delivery with the digital solutions team operating as part of the agency directly.
 
-The corporate site received a reskin for the brand launch rather than a ground-up overhaul. Deadlines and delays around strategy sign-off left no time to implement the recommendations in full ahead of launch. AtkinsRéalis are incorporating the findings into ongoing development of the site.
+The corporate site received a reskin for the brand launch rather than a ground-up overhaul. Deadlines and delays around strategy sign-off left no time to implement the recommendations in full ahead of the launch. AtkinsRéalis are incorporating the findings into ongoing development of the site.
 
 _Lessons learned_
 
 ## What the project taught me about exploratory work
 
-- **Brand values land through structural choices, not decorative ones.** The variants that performed best in testing were those where the site's structure required something of the company itself — leading with named partners, embedding a poll that committed the company to listening. Variants that gestured at values through copy or styling alone did not test as well.
-- **Doing product design in parallel with other workstreams needs a deliberate working method.** Working alongside strategy and brand workstreams that are themselves still being defined is difficult. The way through is to design at fidelities that reflect how settled the inputs are, and to structure the work as iterative sprints rather than a linear path to a final deliverable.
+- **Brand values are best communicated through structural choices, not decorative ones.** The variants that performed best in testing were those where the site's structure required something of the company itself — leading with named partners, embedding a poll that committed the company to listening. Variants that gestured at values through copy or styling alone did not test as well.
+- **Doing product design in parallel with other workstreams needs a deliberate working method.** Working alongside strategy and brand workstreams that are themselves still being developed is challenging. By running design sprints in series, each building on the prior, findings from my work could contribute to other workstreams.
 - **An exploration project's value goes beyond design insights.** This exploration project led the client to understand their own problem more clearly than they did at the start. AtkinsRéalis ended the engagement with a clearer view of how their website needed to work, even if the timeline did not allow for full implementation immediately.

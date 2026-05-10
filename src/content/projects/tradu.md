@@ -64,10 +64,10 @@ _Design & UX audit_
 
 Working back from the existing dark mode, I defined primitive tokens for colour from which I abstracted semantic tokens. This systematic approach delivered light mode without compromising the existing dark mode and enabled tighter control of the orange accent colour, ensuring accessibility.
 
-Tradu's confidence in the work led them to commission a broader UX audit of the onboarding flow. II worked through the flow's 19 screens, identifying refinements that would reduce friction and customer drop-off. The audit covered field-state treatments, the position of the progress bar, the single-select pattern, and the top app bar.
+Tradu's confidence in the work led them to commission a broader UX audit of the onboarding flow. I worked through the flow's 19 screens, identifying refinements that would reduce friction and customer drop-off. The audit covered field-state treatments, the position of the progress bar, the single-select pattern, and the top app bar.
 
 - **Semantic token system created** across colour, layout and typography. Enabled light mode and accessibility improvements.
-- **Refined component states** improved accessiblity and reduced cognitive load, reducing customer drop-off.
+- **Refined component states** improved accessibility and reduced cognitive load, reducing customer drop-off.
 - **Redesigned single-select lists** to remove the requirement for a separate confirmation tap. Tapping the option itself advances the flow, increasing input efficiency and reducing friction.
 - **Redesigned the top app bar** to make it more compact, increasing screen space for page content. Visual hierarchy and clarity was improved through simplification of elements within it.
 - **Relocated the progress bar** alongside the continue button at the bottom of the screen. The change grouped the progress signal with the action that advanced it, creating a small reward loop on each step.
@@ -80,7 +80,7 @@ Tradu's confidence in the work led them to commission a broader UX audit of the 
 
 ### The corporate site
 
-The engagement expanded further with a UX audit of the corporate site. The work surfaced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
+The engagement expanded further with a UX audit of the corporate site. The work produced a set of refinements to typography, button sizing, and contrast across sections. The deliverable was a Figma file with annotations indicating recommended changes against the existing designs, alongside variant explorations for several sections.
 
 ![Annotated Figma frame from the corporate-site UX audit.](tradu-site_tweaks_xnoedj.png "Final recommendations from a UX audit of the corporate site.")
 
@@ -94,6 +94,6 @@ _Lessons learned_
 
 ## Operating inside an existing system
 
-- **Token-driven thinking applies in both directions.** The foundation work I had developed at GSK started from primitive tokens upwards. Tradu's existing dark mode had to be reverse-engineered into primitives that could then support light mode. The same systematic approach worked, but applied backwards: identifying the values in use, abstracting them, and re-deriving the original from the abstraction.
-- **Accessibility decisions sometimes require pushing back on brand guidelines.** The Tangerine recommendation went against the brand specification for light mode. The brand team had specified the alternative shade in good faith, but the accessibility outcome was stronger when the standard Tangerine was retained with black text. The lesson is about being willing to make that call constructively, rather than treating brand guidelines as absolute.
-- **Strong foundations earn an extended engagement.** The original brief was one week of work on light mode for onboarding. The engagement extended through formal statements of work into a full UX audit of onboarding and the corporate site. Each expansion was a function of the systematic approach holding up at the previous stage.
+- **Token-driven thinking applies in both directions.** Tradu's existing dark mode had to be reverse-engineered into primitives that could then support light mode. This systematic approach worked, but applied backwards: identifying the values in use, abstracting them, and re-deriving the original from the abstraction.
+- **Accessibility decisions sometimes require pushing back on brand guidelines.** The brand specified two shades of orange, one for usage on dark surfaces, another for light surfaces. The more vibrant shade of the two was actually more accessible on all surfaces so the darker, less vibrant shade specified for usage on light sufaces was dropped. Rather than treating brand guidelines as absolute, I convinced Tradu to amend the brand guidelines.
+- **Strong foundations earn an extended engagement.** The original brief was one week of work on light mode for onboarding. The engagement extended through formal statements of work into a full UX audit of onboarding and the corporate site. Each expansion was a function of the systematic approach taken at the previous stage.

@@ -73,7 +73,7 @@ _Problem_
 The Media Decision Engine was a capable platform held back by its interface.
 
 - **Information architecture.** The platform never properly explained itself. Users struggled to understand what it was for and what each individual tool did.
-- **Inconsistency across tools.** Each tool had been built in isolation. Flows, interaction patterns, and data visualisation all varied from tool to tool, forcing users to re-learn the interface every time they switched.
+- **Inconsistency across tools.** Each tool had been built in isolation. Flows, interaction patterns, and data visualisation all varied from tool to tool, forcing users to re-learn the interface every time they switched tool.
 - **Exporting data.** Export formats were limited, and there was no way to batch exports across multiple tools, forcing users to repeat the same task tool by tool.
 
 _Research_
@@ -96,7 +96,7 @@ The original platform was organised around the tools themselves. The redesign or
 
 Tools were regrouped into three stages that mirrored how users actually moved through a media planning decision: looking for market opportunities in existing data; determining the audience and focus of messaging; then setting the overall budget and allocating it across media channels.
 
-Within each stage, tools were laid out down a single page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform in their heads.
+Within each stage, tools were grouped on a page, in the order users would naturally work through them. Putting related tools next to each other made the relationships between them self-evident, so users no longer had to reconstruct the logic of the platform.
 
 !["Identify Market Trends": multi-year registration lines (Mercedes vs Audi vs Other), settings bar, Market Landscape tab.](mercedes-market_trends_aasyii.png "The Market Opportunities stage of the IA, showing tools laid out in the order users move through them.")
 
@@ -108,8 +108,8 @@ Users had been re-entering the same data into tool after tool. The redesign sepa
 
 - **Global vs. local parameters.** I scoped every parameter as either global (applied across multiple tools) or local (relevant to a single tool). Globals were consolidated into a single Scenario Settings overlay, accessible from anywhere on the platform. Local parameters stayed within their tool, configurable in place.
 - **Pre-populated visualisations.** With globals managed centrally, graphs and other visualisations could update live as users adjusted scenarios, showing them what a parameter did rather than explaining it.
-- **Microcopy rewritten platform-wide.** All in-product copy was rewritten to be short and plain, lowering cognitive load and making the relationships between tools more legible.
-- **Exports unified across tools.** Users could export from any tool using the same flow, and select multiple tools for batch export, removing the repetition the old platform had forced on them.
+- **Microcopy rewritten platform-wide.** All in-product copy was rewritten to be short and plain, lowering cognitive load and making the relationships between tools more intuitive.
+- **Exports unified across tools.** Users could export from any tool using the same flow, and select multiple tools for batch export, removing the repetition built into the old platform.
 
 The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discrete tools.
 
@@ -141,5 +141,5 @@ _Lessons learned_
 
 ## Redesigning inside a working product
 
-- **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost was time; the gain was a redesign that held together as one product.
+- **Running sprints in series rather than parallel multiplies their value.** Running information architecture, global scenario settings, and onboarding sprints in parallel would have produced three competent solutions. Running each one after the other produced one coherent platform, because each sprint inherited the structural decisions of the last. The cost was time; the gain was a cohesive redesign.
 - **Insights from the original creators are invaluable.** The OMD interviews were the most valuable research input we had. They did not validate decisions; they exposed the constraints that we would otherwise have rediscovered the hard way.

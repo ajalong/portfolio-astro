@@ -152,6 +152,11 @@ export function initPageWipe(): void {
       const target = event.target as HTMLElement | null;
       const link = target?.closest?.('a[href]') as HTMLAnchorElement | null;
       if (!link) return;
+      // Skip links explicitly targeted elsewhere (`target="_blank"`,
+      // `target="_top"`, named frame, etc). Without this, the wipe
+      // intercepts the click for any same-origin URL — including PDFs
+      // and other downloads the user wanted to open in a new tab.
+      if (link.target && link.target !== '_self') return;
       // Same-origin internal nav only.
       const url = new URL(link.href, location.href);
       if (url.origin !== location.origin) return;

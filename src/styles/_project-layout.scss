@@ -229,11 +229,8 @@
     max-width: none;
   }
 
-  // Caption fade-on-scroll lives in JS (`project-caption-fade.ts`) — see
-  // its header for the rationale. CSS scroll-driven animations would be
-  // the natural fit but browser support for `animation-timeline: view()`
-  // is still uneven; the JS version is bullet-proof and lets us read the
-  // nav's actual bounding box rather than approximating its position.
+  // Caption fade-on-scroll lives in JS (`src/scripts/caption-fade.js`) —
+  // see that file's header for the rationale.
 }
 
 // (Card-group and media-group shell + cluster layout rules live in _cards.scss

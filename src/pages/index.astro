@@ -7,6 +7,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import HomeSectionIndex from '../components/HomeSectionIndex.astro';
 import NavSd from '../components/NavSd.astro';
 import CardGroup from '../components/cards/CardGroup.astro';
+import Card from '../components/cards/Card.astro';
 import MetricCard from '../components/cards/MetricCard.astro';
 import { resolveThumbnails, buildShowcaseImageUrl } from '../lib/cloudinary.mjs';
 
@@ -50,6 +51,17 @@ const showcaseTopRightUrl = showcaseMedia?.topRight
 const showcaseBottomRightUrl = showcaseMedia?.bottomRight
   ? buildShowcaseImageUrl(showcaseMedia.bottomRight.src, featuredProject!.data)
   : null;
+
+// Pin the showcase's hover gradient to the featured project's brand
+// colours. Without this, the section inherits whichever colours the
+// bg-observer happens to have written to :root — and at page load
+// before any project list section is in the active band, that's the
+// pale @property defaults (#fdecd1 / #f0c781), which makes the hover
+// state visually identical to rest. Setting the vars inline scopes
+// vibrant GSK orange/yellow to this subtree regardless of scroll.
+const showcaseBrandStyle = featuredProject?.data.brand
+  ? `--brand-primary: ${featuredProject.data.brand.primary}; --brand-secondary: ${featuredProject.data.brand.secondary};`
+  : undefined;
 ---
 <BaseLayout
   title="Alan Long"
@@ -65,9 +77,9 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
         <p>Product Design</p>
       </div>
       <div class="about">
-        <p>
-          Five years at agencies in London, with clients across pharma, automotive, engineering and media. Brand skills from my time at <a href="https://interbrand.com/" target="_blank" rel="noopener noreferrer">Interbrand</a>, and a front-end background that keeps me close to implementation. Both feed a systems-led approach to design that runs from high-level architectural choices through to visual craft.
-        </p>
+        <p>Five years at agencies in London, with clients across pharma, automotive, engineering and media.</p>
+        <p>Brand skills from my time at <a href="https://interbrand.com/" target="_blank" rel="noopener noreferrer">Interbrand</a>, and a front-end background that keeps me close to implementation. Both feed a systems-led approach to design that runs from high-level architectural choices through to visual craft.</p>
+        <p>This site was designed and built with the help of AI. The projects showcased here predate the most recent advancements in AI, however, if done today, AI would be used heavily throughout.</p>
       </div>
     </header>
     <HomeSectionIndex projects={navProjects} subtitle={subtitle} />
@@ -81,7 +93,7 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
           worked on side-by-side. Hidden at ≤$breakpoint-medium for now;
           mobile treatment is a follow-up. Cards are placeholders pending
           the content slots. */}
-      <section class="project-showcase" aria-label="Featured project">
+      <section class="project-showcase" aria-label="Featured project" style={showcaseBrandStyle}>
         {/*
           Showcase layout — 4 cols × 3 rows.
 
@@ -99,11 +111,11 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
         <a
           class="project-showcase__link"
           href={featuredHref}
-          aria-label={featuredProject ? `View ${featuredProject.data.client} case study` : 'View featured project'}
+          aria-label={featuredProject ? `${featuredProject.data.client} case study — ${featuredProject.data.title}` : 'View featured project'}
         >
-        <CardGroup columns={4} rows={3}>
+        <CardGroup id="project-gsk-card-group" columns={4} rows={3}>
           {/* A — featured, row 1 / cols 1–2 */}
-          <div class="project-showcase__card project-showcase__card--feature" style="--card-span: 2">
+          <Card span={2} col={1} row={1} class="project-showcase__card--feature">
             {featuredProject && (
               <>
                 <div class="project-showcase__copy">
@@ -120,9 +132,9 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
                 <span class="btn-primary">See the project</span>
               </>
             )}
-          </div>
+          </Card>
           {/* B — row 1 / cols 3–4 (showcase image) */}
-          <div class="project-showcase__card" style="--card-span: 2">
+          <Card span={2} col={3} row={1} class="project-showcase__card--media">
             {showcaseTopRightUrl && (
               <img
                 class="project-showcase__media"
@@ -132,14 +144,20 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
                 decoding="async"
               />
             )}
-          </div>
-          {/* C — rows 2–3 / col 1 (featured project's 1st impact metric) */}
+          </Card>
+          {/* C — rows 2–3 / col 1 (featured project's 1st impact metric).
+              Descriptions are intentionally omitted across all three
+              showcase metrics — value + label carry the impact, and the
+              bento row heights are tight enough that even C's tall slot
+              reads better without a description. Same data still drives
+              the project page's Impact section in full. */}
           {showcaseMetrics[0] && (
             <MetricCard
               value={showcaseMetrics[0].value}
               label={showcaseMetrics[0].label}
-              description={showcaseMetrics[0].description}
               rowSpan={2}
+              col={1}
+              row={2}
             />
           )}
           {/* D — row 2 / col 2 (2nd impact metric) */}
@@ -147,11 +165,12 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
             <MetricCard
               value={showcaseMetrics[1].value}
               label={showcaseMetrics[1].label}
-              description={showcaseMetrics[1].description}
+              col={2}
+              row={2}
             />
           )}
-          {/* F — rows 2–3 / cols 3–4 (showcase image; placed before E so auto-flow leaves the (3,2) gap for E) */}
-          <div class="project-showcase__card" style="--card-span: 2; --card-row-span: 2">
+          {/* F — rows 2–3 / cols 3–4 (showcase image; placed before E so auto-flow leaves the (3,2) gap for E). Hidden at ≤$breakpoint-medium — the mobile stack only carries A, B, and the three metrics. */}
+          <Card span={2} rowSpan={2} col={3} row={2} class="project-showcase__card--media project-showcase__card--mobile-hidden">
             {showcaseBottomRightUrl && (
               <img
                 class="project-showcase__media"
@@ -161,13 +180,14 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
                 decoding="async"
               />
             )}
-          </div>
+          </Card>
           {/* E — row 3 / col 2 (3rd impact metric) */}
           {showcaseMetrics[2] && (
             <MetricCard
               value={showcaseMetrics[2].value}
               label={showcaseMetrics[2].label}
-              description={showcaseMetrics[2].description}
+              col={2}
+              row={3}
             />
           )}
         </CardGroup>
@@ -202,8 +222,10 @@ const showcaseBottomRightUrl = showcaseMedia?.bottomRight
   </div>
   <script>
     import { initBackgroundObserver } from '../scripts/bg-observer';
+    import { initShowcaseOverflowObservers } from '../scripts/showcase-overflow';
     document.addEventListener('astro:page-load', () => {
       initBackgroundObserver();
+      initShowcaseOverflowObservers();
     });
   </script>
 </BaseLayout>

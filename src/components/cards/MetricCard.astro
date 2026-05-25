@@ -10,6 +10,21 @@
  *   `rowSpan` — claims N inner rows (default 1). Used by the homepage
  *               showcase's left "tall" card; CardGroup's grid honours
  *               --card-row-span on any direct child.
+ *   `col` / `row` — 1-based starting column / row in the parent grid.
+ *               Only needed when the parent CardGroup uses a cross-card
+ *               effect that requires per-cell positional metadata (the
+ *               homepage showcase's group-spanning hover gradient).
+ *               Body-MDX callers can ignore these.
+ *
+ * Semantics: rendered as a `<dl>` (description list) — the label is the
+ * `<dt>` (term being measured) and the value + optional description are
+ * `<dd>`s (the metric value and its supporting context). The `<dl>`
+ * groups them as one name-value pair, which is the right shape for
+ * structured-data parsers and assistive tech. Visual order (value on
+ * top, label beneath) is recreated with `flex-direction: column-reverse`
+ * inside the `__head` wrapper — DOM order stays semantic (term first,
+ * value second) so screen readers read "GSK employees worldwide:
+ * 66,800" rather than the reverse.
  */
 interface Props {
   value: string;
@@ -17,17 +32,22 @@ interface Props {
   description?: string;
   span?: number;
   rowSpan?: number;
+  col?: number;
+  row?: number;
+  class?: string;
 }
-const { value, label, description, span = 1, rowSpan = 1 } = Astro.props as Props;
+const { value, label, description, span = 1, rowSpan = 1, col, row, class: className } = Astro.props as Props;
 const styleParts: string[] = [];
 if (span > 1) styleParts.push(`--card-span: ${span}`);
 if (rowSpan > 1) styleParts.push(`--card-row-span: ${rowSpan}`);
+if (col) styleParts.push(`--card-col: ${col}`);
+if (row) styleParts.push(`--card-row: ${row}`);
 const style = styleParts.length ? styleParts.join('; ') : undefined;
 ---
-<div class="metric-card" style={style}>
+<dl class:list={['metric-card', className]} style={style}>
   <div class="metric-card__head">
-    <p class="metric-card__value">{value}</p>
-    <p class="metric-card__label">{label}</p>
+    <dt class="metric-card__label">{label}</dt>
+    <dd class="metric-card__value">{value}</dd>
   </div>
-  {description && <p class="metric-card__description">{description}</p>}
-</div>
+  {description && <dd class="metric-card__description">{description}</dd>}
+</dl>

@@ -26,10 +26,7 @@
 //   no longer matches now that we have 6 cards and the source order
 //   changed. The reshuffle rule below still targets card 2 (B); it
 //   needs a design pass once the mobile layout for 6 cards is decided.
-//
-// Placeholder cards for now — content slots will land in a follow-up.
 @use "tokens" as *;
-@use "rim" as *;
 
 .project-showcase {
   // Bottom spacing before the existing project-list. Match the section-
@@ -37,93 +34,115 @@
   margin-bottom: var(--section-spacing);
 }
 
-// The entire card-group is one big link to the featured project. Uses
-// the same `surface-hover-strong` mixin as `.my-role-card` — gradient
-// bloom that shows through the cards' semi-transparent `--bg-card` fill
-// (the mixin overlay sits at z-index: -1, behind the card-group's
-// contents). `border-radius` matches the card-group's outer radius so
-// the overlay (which inherits border-radius) clips correctly. The inner
-// "See the project" button is rendered as a `<span>` rather than a
-// nested `<a>` — visual affordance only, the outer link handles clicks.
+// The entire card-group is one big link to the featured project. Plain
+// transparent click wrapper — the hover gradient lives on the cards
+// themselves (see the per-card `::after` rule below) so the link needs
+// no visual chrome of its own. The inner "See the project" button is
+// rendered as a `<span>` rather than a nested `<a>` — visual affordance
+// only, the outer link handles clicks.
 .project-showcase__link {
-  @include surface-hover-strong;
   display: block;
-  border-radius: var(--radius-lg);
   color: inherit;
   text-decoration: none;
   cursor: pointer;
 }
 
-// Placeholder card chrome. The .card-group rule already gives each direct
-// child the bg-card fill + 4px radius + padding; this just adds an
-// aspect-ratio so the empty placeholders have visible height. Selectors
-// key off the `--card-span` / `--card-row-span` custom properties set
-// inline on each card in index.astro. Once real content lands these
-// will size from their content instead.
-
-// 1×1 default (D, E) — square.
-.project-showcase__card {
-  aspect-ratio: 1 / 1;
-}
-
-// 2×1 (A, B) — wide. `:not([style*="--card-row-span"])` keeps this rule
-// from matching F (which carries both span vars).
-.project-showcase__card[style*="--card-span: 2"]:not([style*="--card-row-span"]) {
-  aspect-ratio: 16 / 9;
-}
-
-// 1×2 (C) — tall. Symmetric `:not()` so it doesn't catch F. Not
-// currently in use (C is a MetricCard, which uses the auto-aspect
-// override below). Kept for any future non-metric tall card.
-.project-showcase__card[style*="--card-row-span: 2"]:not([style*="--card-span"]) {
-  aspect-ratio: 1 / 2;
-}
-
-// 2×2 (F) — locked 16:9 so the image card's shape matches B's. F's
-// height sets the combined height of rows 2 + 3 (≈ (2c+gap) × 9/16);
-// each individual row track ends up roughly half that. The metric
-// cards in those rows fill the resulting space.
-.project-showcase__card[style*="--card-span: 2"][style*="--card-row-span: 2"] {
-  aspect-ratio: 16 / 9;
-}
-
-// Hover-state bridge for the card-group: at rest each card keeps its
-// default 40% `--bg-card` (per the generic `.card-group > *` rule), so
-// the gaps between cards stay visible as separation. On hover we drop
-// the cards' grey almost to transparent (10%) so the link wrapper's
-// surface-hover-strong gradient — which sits behind everything in the
-// link's stacking context — reads through the cards at nearly the same
-// strength as it does through the gaps. The result feels like one
-// continuous gradient washing across the whole group rather than a
-// patchwork of "gradient in gaps, grey-dimmed gradient on cards".
+// Card chrome. The `.card-group > *` rule already gives each direct
+// child the bg-card fill + 4px radius + padding; rules here add the
+// aspect-ratio + content-specific treatment per card *role*. Roles are
+// expressed as modifier classes set by the index.astro author — keeps
+// the SCSS structural rather than sniffing inline-style custom props
+// (the previous selectors did that and were whitespace-fragile).
 //
-// Transition the bg-color so the cards fade with the gradient rather
-// than snapping; matched 300ms duration to surface-hover-strong's own
-// opacity ease.
-.project-showcase .card-group > * {
-  transition: background-color 300ms ease;
+// Feature card (A) and media cards (B, F) all lock 16:9. F spans 2 cols
+// + 2 rows but its aspect-ratio is the same as B — F's height drives
+// the combined height of rows 2 + 3, with the metric cards in those
+// rows filling the resulting space.
+.project-showcase__card--feature,
+.project-showcase__card--media {
+  aspect-ratio: 16 / 9;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .project-showcase__link:hover .card-group > * {
-    background-color: rgba(230, 230, 230, 0.1);
+// Hover gradient — one continuous gradient painted across the entire
+// group. Each card's `::after` carries the same gradient sized to span
+// the whole group; the card displays the slice corresponding to its
+// position in the group, so adjacent cards' edges share the same
+// gradient colour and the whole thing reads as one wash. Works in
+// every layout (desktop bento, compact, anything future) because the
+// math is driven by actual measured positions rather than assumed
+// grid coordinates.
+//
+// `--gradient-size-x/-y` and `--gradient-pos-x/-y` are written onto
+// each card by `src/scripts/showcase-overflow.ts`, which measures
+// every card's bounds against the card-group on every layout change
+// (ResizeObserver). It converts the fractional position into the
+// CSS-percentage that aligns each card's slice with its grid cell:
+//
+//   image_size  = (group_size / card_size) × 100% of card
+//   bg_position = (card_offset / (group_size − card_size)) × 100%
+//
+// The latter is the CSS-percentage formula for background-position:
+// a percentage there is interpreted as a fraction of (element_size −
+// image_size). When the card spans the full axis (image == element on
+// that axis), the JS substitutes 0% to avoid the divide-by-zero.
+//
+// Fallbacks of `100% / 0%` apply pre-JS or when JS hasn't run yet —
+// each card paints the full gradient at its own bounds (per-card
+// bloom). Visually less unified than the continuous wash but visible
+// and not broken.
+//
+// Same `::after` + `z-index: -1` + `isolation: isolate` pattern as
+// `surface-hover-strong` on `.my-role-card`. `border-radius: inherit`
+// rounds the slice to the card's 4px inner radius; corner cards'
+// outer corners are further clipped by `.card-group`'s 12px overflow
+// envelope.
+.project-showcase .card-group > * {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: $bg-card-hover-gradient;
+    background-repeat: no-repeat;
+    background-size: var(--gradient-size-x, 100%) var(--gradient-size-y, 100%);
+    background-position: var(--gradient-pos-x, 0%) var(--gradient-pos-y, 0%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
   }
 }
 
-// Lock the showcase's card-group to the exact aspect-ratio the layout
-// implies so the image cards (B + F) render at 16:9 without the grid
-// stretching them. Geometry:
+@media (hover: hover) and (pointer: fine) {
+  .project-showcase__link:hover .card-group > *::after {
+    opacity: 1;
+  }
+}
+
+// Lock the showcase's card-group to a 16/9 outer aspect-ratio and
+// distribute rows 2fr / 1fr / 1fr so every card lands at the shape
+// its grid footprint implies:
 //
-//   • B width = F width = 2c+g (2 cols + 1 inter-col gap)
-//   • B + F locked 16:9 → height = (2c+g) × 9/16
-//   • Grid total height = B_h + row-gap + F_h = ~2 × B_h + g
-//   • Grid total width  = W = 4c + 3g
-//   • → Grid aspect ≈ 16/9 (gaps drop out in the limit)
+//   • 2×1 cells (A, B):   width 2c+g, height = row 1 (2fr)        → ~16/9
+//   • 1×1 cells (D, E):   width  c,   height = row 2 or 3 (1fr)  → ~16/9
+//   • 2×2 cell  (F):      width 2c+g, height = rows 2–3 + gap     → ~16/9
+//   • 1×2 cell  (C):      width  c,   height = rows 2–3 + gap     → ~8/9
+//                                                                    (a 1-col-wide,
+//                                                                    2-row-tall cell
+//                                                                    is geometrically
+//                                                                    taller than wide;
+//                                                                    not 16/9 but the
+//                                                                    correct shape for
+//                                                                    its grid footprint)
 //
-// Rows distribute as 2fr / 1fr / 1fr because row 1 (B/A) is twice the
-// height of each of rows 2 and 3 (which together hold F at 16:9).
-// Without these, `align-items: stretch` (grid default) wins and F
-// stretches to whatever slot the auto-rows produce, breaking 16:9.
+// The 4px inter-card gaps shift each card's aspect by a fraction
+// of a percent (F ends up 1.77:1 rather than 1.78:1 = exact 16:9)
+// — invisible in practice. Without the row distribution, default
+// `align-items: stretch` would warp the cards to whatever the
+// auto-rows produce.
 .project-showcase .card-group {
   aspect-ratio: 16 / 9;
   grid-template-rows: 2fr 1fr 1fr;
@@ -148,23 +167,16 @@
   overflow: hidden;
 }
 
-// D and E (the two short middle-column cards) drop the description — at
-// the reduced row height there isn't room for value + label + description,
-// and the short label carries enough context on its own. C keeps its
-// description because it has the full 2-row height to work with.
-// Targeting via the absence of `--card-row-span` cleanly distinguishes
-// D + E (no row-span) from C (which sets row-span to 2).
-.project-showcase .metric-card:not([style*="--card-row-span"]) .metric-card__description {
-  display: none;
-}
-
-// Image-bearing cards (top-right / bottom-right): drop the card-group's
-// default 20px padding and clip the image to the card's rounded corners
-// so it bleeds edge-to-edge. `:has()` targets only cards that actually
-// contain a media element — text-content cards (e.g. A) keep their
-// padding. Same pattern as `.card-group:has(> .testimonial-card)` in
-// _cards.scss.
-.project-showcase__card:has(> .project-showcase__media) {
+// Image-bearing cards (B, F): drop the card-group's default 20px
+// padding and clip the image to the card's rounded corners so it
+// bleeds edge-to-edge. Text-content cards (A) carry --feature and
+// keep their padding.
+//
+// Selector chain bumps specificity above `.card-group > *` (which sets
+// padding in `_cards.scss`). _cards is `@use`d AFTER project-showcase
+// in global.scss, so on equal specificity the generic rule wins on
+// source order — adding the ancestors lifts this rule above it.
+.project-showcase .card-group > .project-showcase__card--media {
   padding: 0;
   overflow: hidden;
 }
@@ -182,8 +194,8 @@
 
 // Feature card (top-left) — carries the project title, kickers, and CTA.
 // Content sits at the top with a vertical stack; the button anchors 32px
-// below the kickers. Aspect-ratio comes from the [--card-span: 2]
-// selector above (16:9); the flex column lays out the inner blocks.
+// below the kickers. Aspect-ratio comes from the shared --feature/--media
+// rule above (16:9); the flex column lays out the inner blocks.
 //
 // Stack:
 //   title → 16px → kickers → 32px → button
@@ -232,17 +244,153 @@
   color: var(--text-secondary);
 }
 
-// Mobile reshuffle — STALE: written for the previous 5-card layout where
-// card 2 (B) was a desktop "row 1 right" that needed to become a tall
-// left-column card on mobile. Still applied here because it doesn't
-// actively break anything for the 6-card grid, but the mobile layout
-// for the new 6-card composition hasn't been designed yet. Revisit
-// this rule (and add cases for C / F's row-span) once the mobile
-// layout lands.
-@media screen and (max-width: $breakpoint-medium) {
-  .project-showcase .card-group > :nth-child(2) {
-    grid-column: span 1;
-    grid-row: span 2;
+// Two non-desktop layouts, both toggled exclusively by
+// `src/scripts/showcase-overflow.ts` via mutually-exclusive modifier
+// classes on the showcase. JS picks based on actual measured cards:
+//
+//   `.project-showcase--compact`      — feature alongside metric cluster
+//   `.project-showcase--ultra-narrow` — pure vertical stack
+//
+// State transitions are content-driven (overflow detection, aspect
+// measurement) so the layout switches at whatever width actually
+// breaks for the live content, not a hardcoded pixel threshold.
+
+// Properties common to both non-desktop layouts: drop the bento's
+// locked aspect-ratio + fr row tracks, hide F, restore the metric-card
+// 16:9 floor (the desktop override sets it to `auto`).
+@mixin _non-desktop-base($trigger) {
+  #{$trigger} .card-group {
+    grid-auto-flow: row;
+    grid-auto-rows: auto;
     aspect-ratio: auto;
   }
+
+  #{$trigger} .project-showcase__card--mobile-hidden {
+    display: none;
+  }
+
+  // Each metric card sizes to a 16:9 floor in non-desktop layouts so
+  // they read as cards rather than thin bands; aspect-ratio yields to
+  // content if labels need more height.
+  #{$trigger} .metric-card {
+    aspect-ratio: 16 / 9;
+  }
 }
+
+// Compact layout — feature alongside metric cluster, primary media
+// below. Triggered when content overflows the desktop bento.
+//
+//   ┌──────────────┬─────┬─────┐
+//   │              │     │  D  │
+//   │      A       │  C  ├─────┤
+//   │              │     │  E  │
+//   ├──────────────┴─────┴─────┤
+//   │            B             │
+//   └──────────────────────────┘
+//
+// 4-col outer grid: A takes cols 1-2 (50% width), the metric cluster
+// preserves its desktop arrangement in cols 3-4 (C tall in col 3 with
+// rowSpan 2, D + E stacked in col 4), B spans the full width in row 3.
+@mixin _compact-layout($trigger) {
+  @include _non-desktop-base($trigger);
+
+  #{$trigger} .card-group {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+  }
+
+  #{$trigger} .card-group > .project-showcase__card--feature {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 2;
+  }
+
+  #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card) {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+  #{$trigger} .card-group > .metric-card:nth-child(2 of .metric-card) {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  #{$trigger} .card-group > .metric-card:nth-child(3 of .metric-card) {
+    grid-column: 4;
+    grid-row: 2;
+  }
+
+  #{$trigger} .card-group > .project-showcase__card--media:not(.project-showcase__card--mobile-hidden) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  // Override `_cards.scss`'s generic "first metric of an odd-count
+  // cluster spans the full row" rule (sets `grid-column: 1 / -1` and
+  // `aspect-ratio: auto` on C). Re-state C's explicit placement here
+  // with higher specificity than the generic rule.
+  #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+// Ultra-narrow layout — pure vertical stack with the metric cluster
+// preserved in its existing C-tall-plus-DE-stacked arrangement, just
+// rotated to live between A above and B below. Triggered from compact
+// when the feature card's content has pushed it taller than wide —
+// at that point the side-by-side compact arrangement no longer reads
+// and we need the full vertical stack.
+//
+//   ┌─────────────┐
+//   │      A      │
+//   ├──────┬──────┤
+//   │      │  D   │
+//   │  C   ├──────┤
+//   │      │  E   │
+//   ├──────┴──────┤
+//   │      B      │
+//   └─────────────┘
+//
+// 2-col outer grid: A spans both cols in row 1, the CDE cluster takes
+// rows 2-3 with C tall in col 1 and D + E stacked in col 2, B spans
+// both cols in row 4.
+@mixin _ultra-narrow-layout($trigger) {
+  @include _non-desktop-base($trigger);
+
+  #{$trigger} .card-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto;
+  }
+
+  #{$trigger} .card-group > .project-showcase__card--feature {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card) {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+  }
+  #{$trigger} .card-group > .metric-card:nth-child(2 of .metric-card) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  #{$trigger} .card-group > .metric-card:nth-child(3 of .metric-card) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  #{$trigger} .card-group > .project-showcase__card--media:not(.project-showcase__card--mobile-hidden) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  // Generic odd-first-metric override — restate C's placement here.
+  #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@include _compact-layout('.project-showcase--compact');
+@include _ultra-narrow-layout('.project-showcase--ultra-narrow');

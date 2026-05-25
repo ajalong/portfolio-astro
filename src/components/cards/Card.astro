@@ -1,0 +1,39 @@
+---
+/**
+ * Generic CardGroup child — opaque container with span/rowSpan props that
+ * write the CardGroup's grid-placement custom properties internally.
+ *
+ * Use Card whenever a cluster needs a cell that isn't a MetricCard or
+ * TestimonialCard — copy blocks, images, mixed content. The .card-group
+ * shell already gives every direct child the shared fill + radius +
+ * padding chrome; Card adds nothing else, so callers bring their own
+ * modifier classes for content-specific styling.
+ *
+ * `span` / `rowSpan` mirror MetricCard's API — set N>1 to occupy that
+ * many inner columns/rows in the parent CardGroup. The component writes
+ * the inline `--card-span` / `--card-row-span` custom properties so
+ * callers never hand-author them (the SCSS used to sniff those style
+ * strings to identify cards; modifier classes do that work now).
+ */
+interface Props {
+  span?: number;
+  rowSpan?: number;
+  col?: number;
+  row?: number;
+  class?: string;
+}
+const { span = 1, rowSpan = 1, col, row, class: className } = Astro.props as Props;
+const styleParts: string[] = [];
+if (span > 1) styleParts.push(`--card-span: ${span}`);
+if (rowSpan > 1) styleParts.push(`--card-row-span: ${rowSpan}`);
+// `col` / `row` are the card's 1-based starting column/row in the parent
+// CardGroup. Optional — only callers that participate in a group-spanning
+// effect (e.g. the homepage showcase's continuous-gradient hover) need to
+// set them; absent values fall through to plain auto-flow placement.
+if (col) styleParts.push(`--card-col: ${col}`);
+if (row) styleParts.push(`--card-row: ${row}`);
+const style = styleParts.length ? styleParts.join('; ') : undefined;
+---
+<div class:list={['card', className]} style={style}>
+  <slot />
+</div>

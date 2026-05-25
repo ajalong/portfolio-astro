@@ -41,15 +41,28 @@ interface Props {
   flow?: 'horizontal' | 'vertical';
   pageSpan?: number;
   class?: string;
+  id?: string;
 }
-const { columns = 3, rows, flow = 'horizontal', pageSpan, class: className } = Astro.props as Props;
+const { columns = 3, rows, flow = 'horizontal', pageSpan, class: className, id } = Astro.props as Props;
 const styleParts = [`--card-group-columns: ${columns}`];
 if (rows) styleParts.push(`--card-group-rows: ${rows}`);
 if (pageSpan) styleParts.push(`--page-span: ${pageSpan}`);
 // `flow="vertical"` is applied via a class (not inline) so the mobile-drop
 // rule in _cards.scss can override it back to row-flow at narrow widths.
 // Inline styles would win over CSS rules and block that override.
+
+// Fail-closed: render the slot to HTML up-front and check whether it
+// has any non-comment content. If the slot ends up empty (e.g. because
+// every child was conditional on data that wasn't present, like
+// `{frontmatter.impactMetrics?.map(...)}` on an empty array), don't
+// emit the outer shell — otherwise we'd ship a stray 12px-radius
+// rounded box with no content. `Fragment set:html` re-injects the
+// rendered slot so we don't re-evaluate children twice.
+const slotHtml = await Astro.slots.render('default');
+const hasChildren = slotHtml.replace(/<!--[\s\S]*?-->/g, '').trim().length > 0;
 ---
-<div class:list={['card-group', flow === 'vertical' && 'card-group--vertical-flow', className]} style={styleParts.join('; ')}>
-  <slot />
-</div>
+{hasChildren && (
+  <div id={id} class:list={['card-group', flow === 'vertical' && 'card-group--vertical-flow', className]} style={styleParts.join('; ')}>
+    <Fragment set:html={slotHtml} />
+  </div>
+)}

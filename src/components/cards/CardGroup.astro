@@ -1,0 +1,55 @@
+---
+/**
+ * Rounded "card cluster" shell with an internal grid.
+ *
+ * Authoring (MDX):
+ *   <CardGroup columns={3}>
+ *     <MetricCard ... />
+ *     <MetricCard ... />
+ *     <TestimonialCard span={3}>…</TestimonialCard>
+ *   </CardGroup>
+ *
+ * Visual contract: 12px outer radius, 4px inner gap, 4px-radius inner cards.
+ * Cards default to span={1}; setting span={N} (where N === columns) makes the
+ * card span the full row.
+ *
+ * Children may also opt into a row-span via the `--card-row-span` custom
+ * property (e.g. `style="--card-span: 2; --card-row-span: 2"` for a card
+ * that occupies a 2-col × 2-row block). Default is 1 — existing callers
+ * that don't set it are unaffected.
+ *
+ * `columns` — number of inner columns (default 3).
+ *
+ * `rows` — number of explicit row tracks. Required when `flow="vertical"` so
+ * the column-fill knows when to wrap. Also used by clusters that contain a
+ * TestimonialCard to equalise metric rows while leaving the testimonial in
+ * its own content-sized row.
+ *
+ * `flow` — fill direction for the inner cards. `"horizontal"` (default) fills
+ * row-by-row (left-to-right, top-to-bottom). `"vertical"` fills column-by-
+ * column (top-to-bottom within each column before moving right) — useful
+ * when you want the reading order to go top-left → bottom-left → top-center
+ * → bottom-center etc. Requires `rows`.
+ *
+ * `pageSpan` controls how many page-grid columns the cluster occupies. The
+ * project layout defaults body children to 4 cols (2–5); set `pageSpan={3}`
+ * for a narrower 3-col cluster.
+ */
+interface Props {
+  columns?: number;
+  rows?: number;
+  flow?: 'horizontal' | 'vertical';
+  pageSpan?: number;
+  class?: string;
+}
+const { columns = 3, rows, flow = 'horizontal', pageSpan, class: className } = Astro.props as Props;
+const styleParts = [`--card-group-columns: ${columns}`];
+if (rows) styleParts.push(`--card-group-rows: ${rows}`);
+if (pageSpan) styleParts.push(`--page-span: ${pageSpan}`);
+// `flow="vertical"` is applied via a class (not inline) so the mobile-drop
+// rule in _cards.scss can override it back to row-flow at narrow widths.
+// Inline styles would win over CSS rules and block that override.
+---
+<div class:list={['card-group', flow === 'vertical' && 'card-group--vertical-flow', className]} style={styleParts.join('; ')}>
+  <slot />
+</div>

@@ -1,0 +1,24 @@
+---
+/**
+ * 14×14 right-pointing arrow. Stroke uses `currentColor` so the icon inherits
+ * its parent's text colour — set `color` on a containing element to recolour.
+ *
+ * Source asset: ~/Documents/Portfolio/icons/arrow.svg (canonical).
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props as Props;
+---
+<svg
+  class={className}
+  width="14"
+  height="14"
+  viewBox="0 0 14 14"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <path d="M1.39375 7H12.5938" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M8.40156 11.1998L12.6016 6.9998L8.40156 2.7998" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

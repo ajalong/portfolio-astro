@@ -10,8 +10,31 @@
   padding: var(--page-gutter-y) var(--page-gutter-x) 0;
 }
 
+// Standard viewports (mobile + medium) on project pages: the floating
+// NavSd sits at top: $nav-sd-top-offset with $nav-sd-height. Stack
+// the nav clearance under the existing $page-gutter-y so the visual spacing
+// between the nav bottom and the page title stays at $page-gutter-y.
+@media screen and (max-width: ($breakpoint-large - 1px)) {
+  body.project-page .page_container {
+    padding-top: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
+  }
+}
+
+// Industry + theme kickers sit beneath the project h1 as inline labels.
+// Scoped under .profile-info so it wins over `.profile-info p` (which sets
+// the large title-adjacent paragraph style used by the old client subtitle).
+.profile-info .project-header-kickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--unit-16);
+  margin: var(--unit-8) 0 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  color: oklch(from var(--brand-primary) min(l, 0.42) c h);
+}
+
 /*
- * Page grid — 6 equal cols (≥1001px).
+ * Page grid — 6 equal cols at ≥$breakpoint-large.
  *
  *   col 1      : left margin
  *   cols 2–5   : main content — header, body copy, team card, images
@@ -19,9 +42,11 @@
  *   col 6      : section jump-nav + captions
  *
  * main spans all 6 cols as a subgrid so article content can address col 1
- * and col 6 for margin captions.
+ * and col 6 for margin captions. Below $breakpoint-large the page collapses
+ * to a stacked single-column layout (no grid) — mobile gets phone-portrait
+ * gutters, medium gets a bigger gutter (see _tokens.scss).
  */
-@media screen and (min-width: 1001px) {
+@media screen and (min-width: $breakpoint-large) {
   body.project-page .page_container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -49,6 +74,17 @@
     grid-column: 2 / 6;
   }
 
+  // "My role" section. Medium (401–1079): spans the body content area
+  // (cols 2-5). At large (≥$breakpoint-large) it narrows to cols 2-4 (see
+  // the rule below this media block) — same rule as body card-groups
+  // (see _cards.scss). The cluster is always a vertical stack (role card
+  // on top, orgs beneath, see _project-team.scss). No subgrid needed —
+  // the toolbar's kicker and cluster are both block-level direct children
+  // that fill the toolbar's own width.
+  body.project-page .page_container > main > .project-team-toolbar {
+    grid-column: 2 / 6;
+  }
+
   body.project-page .page_container > main > article {
     grid-column: 1 / -1;
   }
@@ -58,10 +94,15 @@
     grid-row: 3;
   }
 
-  // Section nav — col 6, sticky alongside content, above margin captions.
-  // z-index keeps it above captions that scroll into col 6; position: sticky
-  // lives in _project-section-index.scss so we must not override it here.
-  body.project-page .page_container > .project-section-index {
+}
+
+// Section nav — only placed in the page grid at large viewports (≥1080).
+// Below large the nav is a fixed-position floating bottom box (see
+// _nav-lg.scss) and doesn't participate in the grid.
+// z-index keeps it above captions that scroll into col 6; position: sticky
+// lives in _nav-lg.scss so we must not override it here.
+@media screen and (min-width: $breakpoint-large) {
+  body.project-page .page_container > .nav-lg {
     grid-column: 6;
     grid-row: 1 / -1;
     align-self: start;
@@ -69,15 +110,29 @@
   }
 }
 
+// Large viewports (≥$breakpoint-large): the toolbar narrows from cols 2-5
+// to cols 2-4, matching the body card-group rule in _cards.scss. Coincides
+// with the page-grid scaffold also activating at $breakpoint-large; below
+// that the page_container isn't a grid and this rule has nothing to
+// position.
+@media screen and (min-width: $breakpoint-large) {
+  body.project-page .page_container > main > .project-team-toolbar {
+    grid-column: 2 / 5;
+  }
+}
+
 /*
  * Content sub-grid — article and each section subgrid from the 6-col page grid.
+ * Only active at ≥$breakpoint-large; below that the article and sections are
+ * normal block flow and the mobile fallbacks (further below) handle pair
+ * media layout.
  *
  *   cols 2–5 : text, headings, lists, full-width media
  *   cols 2–3 / 4–5 : image pair (each figure within the block)
  *   col 1    : left margin (reserved)
  *   col 6    : right caption (single image or both captions of a pair)
  */
-@media screen and (min-width: 1001px) {
+@media screen and (min-width: $breakpoint-large) {
   body.project-page article,
   body.project-page article > section {
     display: grid;
@@ -119,7 +174,25 @@
     grid-column: 2 / 6;
   }
 
-  // Pair: left image cols 2–3, right image cols 4–5.
+  // Pair: left image cols 2–3, right image cols 4–5. The gap between them
+  // is the inherited page-grid gutter (`--grid-gap`, 16px) so the figures
+  // stay aligned to page cols. (Overriding `column-gap` on the subgrid
+  // would shrink the gap visually but redistribute the saved space into
+  // the tracks, pushing the figures off-grid.)
+
+  // Media corner radii — match the card vocabulary. A standalone media-block
+  // carries the large 12px radius on its figure (with `overflow: hidden` so
+  // the img/video inside is clipped). Inside a .media-group the inner figures
+  // drop to the 4px inner radius (see _cards.scss), and the cluster's own
+  // `overflow: hidden` shapes the corner items' outer edges to the 12px
+  // cluster envelope.
+  //
+  // Radius lives on `figure` (not the inner `img`/`video`) so the mechanism
+  // is the same as cards — the block element itself carries the radius.
+  .media-block figure {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
   .media-block--pair > figure.media-full:first-child {
     grid-column: 2 / 4;
   }
@@ -155,21 +228,34 @@
     align-self: auto;
     max-width: none;
   }
+
+  // Caption fade-on-scroll lives in JS (`project-caption-fade.ts`) — see
+  // its header for the rationale. CSS scroll-driven animations would be
+  // the natural fit but browser support for `animation-timeline: view()`
+  // is still uneven; the JS version is bullet-proof and lets us read the
+  // nav's actual bounding box rather than approximating its position.
 }
 
+// (Card-group and media-group shell + cluster layout rules live in _cards.scss
+// alongside the rest of the cluster primitives.)
+
 /*
- * Mobile media (≤1000px) — in-flow captions are hidden. The full descriptive
- * alt text is still on the <img>/<video> for screen readers, and the
- * lightbox (`.media-lightbox__caption`) renders the caption when the user
- * taps to expand. Pairs stay side-by-side as a 2-col row.
+ * Stacked-layout media (<$breakpoint-large) — applies across mobile + medium.
+ * Without the page subgrid scaffold, pairs use a plain 1fr 1fr grid with a
+ * tight 4px gap, and in-flow captions are hidden. The full descriptive alt
+ * text is still on the <img>/<video> for screen readers, and the lightbox
+ * (`.media-lightbox__caption`) renders the caption when the user taps to
+ * expand.
  */
-@media screen and (max-width: 1000px) {
-  // Pair: 2-col grid — figures on row 1.
+@media screen and (max-width: ($breakpoint-large - 1px)) {
+
+  // Pair: 2-col grid — figures on row 1. The gap between the two figures
+  // tightens to 4px on mobile, matching the tightened stacked-media rhythm.
   .media-block--pair {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    column-gap: var(--grid-gap);
-    row-gap: var(--unit-8);
+    column-gap: var(--unit-4);
+    row-gap: var(--unit-4);
   }
   .media-block--pair > figure.media-full {
     margin: 0;
@@ -221,8 +307,21 @@ body:not(.project-page) .page_container article section {
 body.project-page .page_container > header {
   margin-bottom: var(--section-spacing);
 
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: $breakpoint-medium) {
     margin-bottom: var(--unit-56);
+  }
+
+  // Let the title block fill the header's grid columns instead of sizing to
+  // content, so long single-sentence titles wrap rather than overflow.
+  .profile-info {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  // h1 follows normal text rules: capped at 600px, otherwise filling the
+  // content columns. Matches the body-paragraph max-width on the same page.
+  .profile-info h1 {
+    max-width: 600px;
   }
 }
 
@@ -260,6 +359,9 @@ $flow: ':is(#{$a}, #{$a} section)';
     --flow-space: var(--text-spacing-tight);
   }
 
+  // Solo media-blocks — block-spacing rhythm, with a tighter grid-gap when
+  // two media-blocks sit next to each other (mobile tightens further to 4px
+  // so the run reads as a single grouped strip rather than spaced apart).
   :is(h1, h2, h3, h4, h5, h6) + .media-block {
     --flow-space: var(--block-spacing);
   }
@@ -268,12 +370,25 @@ $flow: ':is(#{$a}, #{$a} section)';
     --flow-space: var(--block-spacing);
   }
 
-  // Media stacked on media shares rhythm with the horizontal grid gap.
   .media-block + .media-block {
     --flow-space: var(--grid-gap);
+
+    @media screen and (max-width: $breakpoint-medium) {
+      --flow-space: var(--unit-4);
+    }
   }
 
   .media-block + section {
+    --flow-space: var(--section-spacing);
+  }
+
+  // Card- and media-clusters read as sections within the body flow — same
+  // breathing room above and after as a <section> element gets. The `:is()`
+  // selector keeps both cluster types on the single rule (cheaper than two
+  // duplicated rules) without coupling them through a shared base class.
+  :is(.card-group, .media-group),
+  :is(.card-group, .media-group) + *,
+  .media-block + :is(.card-group, .media-group) {
     --flow-space: var(--section-spacing);
   }
 

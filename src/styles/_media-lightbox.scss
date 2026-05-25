@@ -1,9 +1,19 @@
-// Click-to-expand lightbox for project media. The clone is animated
-// from the source figure's rect to the centred lightbox position via a
-// JS-driven FLIP transform; the backdrop fades in via @starting-style
-// and fades out when the dialog has the .is-closing class set by JS
-// before it actually closes. The matching caption is rendered as a
-// white card below.
+// Click-to-expand lightbox for project media.
+//
+// Visual contract:
+//   - Full-viewport dialog with dark blurred backdrop (matches the SdNav
+//     and team panel — shared --bg-dark + --blur tokens).
+//   - Content (media + caption) fades in on open and out on close. Both
+//     directions use --dur-fast + --ease-out — the standard "fast fade"
+//     motion the site uses for opacity reveals.
+//   - No FLIP / scale animation — just opacity. Decision: the visual
+//     coherence comes from the backdrop blur establishing context, not
+//     from animating between in-page and lightbox positions.
+//   - Caption position (above vs right of media) is set by JS as a
+//     `data-caption-position` attribute on the dialog; CSS swaps the
+//     flex-direction of the content based on it.
+//   - Caption renders as light text directly on the dark backdrop — no
+//     card chrome.
 @use "tokens" as *;
 
 .media-full :is(img, video) {
@@ -11,40 +21,40 @@
 }
 
 .media-lightbox {
-  padding: 0;
+  // Dialog fills the viewport. 16px padding all-round keeps the close
+  // button, the media, and the caption inset from the viewport edges by
+  // the same margin (matches the design spec).
+  padding: var(--unit-16);
   border: 0;
   background: transparent;
-  max-width: 100vw;
-  max-height: 100vh;
-  width: 100vw;
-  height: 100vh;
   inset: 0;
   margin: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
   overflow: hidden;
   cursor: zoom-out;
+  color: var(--text-inverse);
 
-  // Backdrop matches the team-panel overlay's frosted-glass treatment.
-  // @starting-style + transition handles the fade-in on open; the
-  // .is-closing class set by JS triggers the fade-out before close().
+  // Backdrop — shared dark + blur vocabulary. @starting-style + transition
+  // handles the fade-in on open; .is-closing class set by JS triggers the
+  // fade-out before close() (so the animation has time to play).
   &::backdrop {
-    background: rgb(0 0 0 / 0.2);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    transition: opacity 240ms ease, backdrop-filter 240ms ease;
+    background: var(--bg-dark);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    transition: opacity var(--dur-fast) var(--ease-out);
   }
 
   @starting-style {
     &[open]::backdrop {
       opacity: 0;
-      backdrop-filter: blur(0);
-      -webkit-backdrop-filter: blur(0);
     }
   }
 
   &.is-closing::backdrop {
     opacity: 0;
-    backdrop-filter: blur(0);
-    -webkit-backdrop-filter: blur(0);
   }
 
   &:not([open]) {
@@ -53,61 +63,224 @@
 }
 
 // position: fixed pins the dialog to the viewport. UA's `dialog:modal[open]`
-// is (0,2,1) so we tie specificity with the tag selector and win on order.
+// is specificity (0,2,1) so we tie via the tag selector and win on order.
 dialog.media-lightbox[open] {
   display: flex;
   position: fixed;
 }
 
-.media-lightbox__content {
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--unit-16);
-  max-width: 90vw;
-  max-height: 90vh;
+// ── Close button ──────────────────────────────────────────────────────
+// Pinned to the dialog's top-right corner with 16px padding all-round —
+// the padding both insets the icon + label 16px from the viewport edges
+// AND inflates the click target (so the corner is clickable, not just
+// the icon glyph). Clicking bubbles up to the dialog-level click handler
+// which calls close() — no separate JS hook needed for the button.
+.media-lightbox__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 
-  > :is(img, video) {
-    max-width: 100%;
-    min-height: 0; // allow flex shrinking when the caption pushes height
-    max-height: calc(90vh - 80px); // reserve space for the caption card
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    // Solid grey backing so media with transparent regions (e.g. PNGs with
-    // alpha) doesn't show the dark backdrop bleeding through.
-    background: var(--grey-media);
-    cursor: default;
-    will-change: transform;
+  // Reset button chrome.
+  margin: 0;
+  padding: var(--unit-16);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--type-size);
+  line-height: var(--line-height-tight);
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--unit-8);
+  white-space: nowrap;
+
+  // Muted by default, full white on hover/focus — matches the nav's
+  // text-state vocabulary. `currentColor` on the icon picks this up.
+  color: var(--text-inverse-muted);
+  // Opacity transition matches .__content's fade so the close button
+  // appears/disappears in sync with the rest of the dialog (the close
+  // is a sibling of .__content, not inside it, so it needs its own
+  // transition + .is-closing override).
+  opacity: 1;
+  transition: color 0.15s ease, opacity var(--dur-fast) var(--ease-out);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--text-inverse);
+    }
+  }
+
+  &:focus-visible {
+    color: var(--text-inverse);
+    outline: 2px solid var(--text-inverse);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
-// White caption card below the media. Fades in alongside the FLIP so
-// the open animation mirrors the close — both directions move media,
-// backdrop and caption together rather than staging the caption.
-.media-lightbox__caption {
+.media-lightbox__close-icon {
+  display: block;
+  flex: 0 0 14px;
+}
+
+// Content layout — flex container that fills the dialog's content area
+// (= viewport minus the dialog's 16px padding all-round). Direction is
+// chosen by JS based on viewport/media aspect ratio; CSS applies it here.
+//
+//   Above:  flex column-reverse — caption spans the full content width
+//           on top, media fills the remaining height below (anchored to
+//           the bottom of the frame via object-position).
+//   Right:  flex row — media sized to its aspect-ratio fit against the
+//           content height, caption flexes into the remaining width.
+//
+// `align-items: stretch` is the default and is what lets:
+//   - the caption stretch to full content width in column-reverse
+//   - the media wrapper stretch to full content height in row
+// so the items size correctly without per-item width/height declarations.
+.media-lightbox__content {
   margin: 0;
-  padding: var(--unit-12) var(--unit-20);
-  max-width: 100%;
-  background: #fff;
-  color: var(--text-primary);
-  font-size: var(--type-size);
-  font-weight: var(--weight-regular);
-  line-height: var(--line-height);
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  gap: var(--unit-16);
+  min-width: 0;
+  min-height: 0;
+  // Fast fade — matches the backdrop's transition so both arrive together.
   opacity: 1;
-  transition: opacity 200ms ease;
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 @starting-style {
-  .media-lightbox[open] .media-lightbox__caption {
+  .media-lightbox[open] .media-lightbox__content {
     opacity: 0;
   }
 }
 
-.media-lightbox.is-closing .media-lightbox__caption {
+.media-lightbox.is-closing .media-lightbox__content {
   opacity: 0;
-  transition: opacity 200ms ease;
+}
+
+// Close button fades in/out alongside .__content.
+@starting-style {
+  .media-lightbox[open] .media-lightbox__close {
+    opacity: 0;
+  }
+}
+
+.media-lightbox.is-closing .media-lightbox__close {
+  opacity: 0;
+}
+
+// DOM order is [media, caption]. `column-reverse` puts caption on top.
+// `justify-content: flex-start` in column-reverse packs the items at the
+// MAIN AXIS START — which is the BOTTOM of the container, since the axis
+// runs bottom-to-top in reverse. Net effect: caption + media cluster at
+// the bottom of the lightbox, with the empty leftover space above.
+.media-lightbox[data-caption-position="above"] .media-lightbox__content {
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+}
+.media-lightbox[data-caption-position="right"] .media-lightbox__content {
+  flex-direction: row;
+}
+
+// Media wrapper — exact width/height set inline by `fitMedia()` in
+// media-lightbox.ts. JS computes the AR-preserving fit based on the
+// viewport, dialog padding, and the rendered caption's size, then writes
+// `width: <Npx>; height: <Npx>` to this element. Pure-CSS approaches
+// (aspect-ratio + max-* + flex item) fight with `align-items: stretch`
+// and flex shrink in ways that produced overflow or zero-sized boxes;
+// computing once in JS sidesteps all of it.
+//
+// `flex: 0 0 auto` means the wrapper doesn't grow or shrink relative to
+// what JS set. `display: block` keeps it a simple sized container — img
+// fills it via `width/height: 100%` below.
+.media-lightbox__media {
+  flex: 0 0 auto;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+}
+
+.media-lightbox__media > :is(img, video) {
+  // Fill the wrapper element fully; `object-fit: contain` then scales the
+  // image content (up OR down) to fit within the wrapper bounds with the
+  // original aspect ratio preserved. `width/height: auto` would only ever
+  // constrain a too-big image — a too-small source (e.g. an in-page 800×
+  // 600 thumbnail before the Cloudinary upgrade lands) wouldn't grow to
+  // use the available space.
+  //
+  // `object-position: left bottom` anchors the content to the bottom-
+  // left of the wrapper — media reads as left-aligned within the
+  // lightbox and bottom-aligned within its frame, so it sits against
+  // the caption divider directly above it in the vertical-stack case.
+  // Letterboxing falls on the top / right and shows the dark backdrop,
+  // so there's no visible grey bar (background removed; transparent
+  // media regions also blend into the backdrop instead of showing a
+  // grey backing — acceptable trade-off for the consistent dark frame).
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left bottom;
+  cursor: default;
+}
+
+// Caption — light text on the dark backdrop, no card chrome. Text is
+// always left-aligned. A `--border-inverse` divider runs along the edge
+// of the caption that faces the media (bottom when caption is above,
+// left when caption is to the right).
+.media-lightbox__caption {
+  margin: 0;
+  color: var(--text-inverse);
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height);
+  text-align: left;
+
+  // Empty captions take no layout space (so flex doesn't reserve the gap).
+  &:empty {
+    display: none;
+  }
+
+  // Above the media: caption spans the full content width (= lightbox
+  // width minus the dialog's 16px padding all-round). `flex: 0 0 auto`
+  // keeps the caption height to its content; the column's `align-items:
+  // stretch` default takes care of the cross-axis stretch to full width.
+  // `max-width: none` overrides the global `p, ul { max-width: 600px }`
+  // body-copy rule which would otherwise cap the caption mid-width.
+  //
+  // Stack between text and media:
+  //   text → 16px padding → divider → 16px flex gap → media
+  // The 16px flex gap on .__content is the "gap between media and caption"
+  // proper; the matching padding gives the divider breathing room from
+  // the text on the other side.
+  .media-lightbox[data-caption-position="above"] & {
+    flex: 0 0 auto;
+    max-width: none;
+    border-bottom: var(--border-inverse);
+    padding-bottom: var(--unit-16);
+  }
+
+  // To the right of the media: caption column sits next to the media,
+  // capped width so long captions don't sprawl into the empty space.
+  // `align-self: stretch` makes the caption span the full content height
+  // — that way the left-edge divider runs the full height of the lightbox
+  // frame, not just the height of the text. Text inside is anchored to
+  // the bottom of the stretched column via nested column flex + justify-
+  // content: flex-end (matches the design's bottom-right caption).
+  .media-lightbox[data-caption-position="right"] & {
+    flex: 0 1 auto;
+    max-width: 280px;
+    align-self: stretch;
+    border-left: var(--border-inverse);
+    padding-left: var(--unit-16);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 }

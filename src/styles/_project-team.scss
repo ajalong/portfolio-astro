@@ -5,12 +5,12 @@
 .project-team-toolbar {
   margin-bottom: var(--section-spacing);
 
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: $breakpoint-medium) {
     margin-bottom: var(--unit-40);
   }
 
   .kicker {
-    margin-bottom: var(--unit-4);
+    margin-bottom: var(--unit-16);
   }
 }
 
@@ -19,7 +19,6 @@
   @include surface-hover-strong;
   display: block;
   width: 100%;
-  max-width: 600px;
   padding: 32px;
   border: none;
   border-radius: var(--radius-lg);
@@ -27,20 +26,6 @@
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
-}
-
-.my-role-card p {
-  max-width: none;
-}
-
-.my-role-heading {
-  max-width: none;
-  margin: 0 0 var(--text-spacing-standard);
-  font-size: var(--type-size-lg);
-  font-weight: var(--weight-regular);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-primary);
 }
 
 .my-role-card__row {
@@ -67,7 +52,7 @@
 
   // Hide on mobile so the bio/CTA text can take the card's full width
   // instead of being inset by the 52px avatar + 12px gap.
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: $breakpoint-medium) {
     display: none;
   }
 }
@@ -95,6 +80,7 @@
 }
 
 .my-role-card__bio {
+  // Inherits the standard 600px max-width from the global `p` rule.
   margin: 14px 0 0 64px; // 52px avatar + 12px gap
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
@@ -102,37 +88,126 @@
   color: var(--text-secondary);
   white-space: pre-wrap;
 
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: $breakpoint-medium) {
     margin-left: 0;
   }
 }
 
-.my-role-card__cta {
-  @include link-underline-zip;
-  display: inline-flex;
+// Footer row: small avatar stack (first 2 other team members + a "+N" badge
+// for the remainder) on the left, "See everyone's role" link on the right.
+// Aligns with the bio's text column (52px avatar + 12px gap = 64px indent)
+// on desktop, drops the indent below 460px to match the bio behaviour.
+.my-role-card__footer {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 32px;
-  margin-left: 64px; // 52px avatar + 12px gap — aligns with name/bio text
+  gap: var(--unit-12);
+  margin-top: var(--unit-32);
+  margin-left: 64px;
+
+  @media screen and (max-width: $breakpoint-medium) {
+    margin-left: 0;
+  }
+}
+
+.my-role-card__avatar-stack {
+  display: flex;
+  align-items: center;
+  gap: var(--unit-4);
+}
+
+%my-role-stack-circle {
+  // `grid` with `place-items: center` is the most reliable way to centre an
+  // inline glyph (text or image) inside a fixed-size circle — line-height,
+  // baseline, and descenders all collapse into the cell.
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+}
+
+.my-role-card__avatar-stack-item {
+  @extend %my-role-stack-circle;
+  background: #eaeaea;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.my-role-card__avatar-stack-more {
+  @extend %my-role-stack-circle;
+  background: #eaeaea;
+  font-size: 11px;
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  color: var(--text-secondary);
+}
+
+.my-role-card__link {
+  @include link-underline-zip;
   font-size: var(--type-size);
   font-weight: 400;
-
-  svg {
-    flex-shrink: 0;
-    opacity: 0.6;
-  }
-
-  @media screen and (max-width: 1000px) {
-    margin-left: 0;
-  }
 }
 
-// Trigger zip animation when the whole card is hovered, not just the CTA text
-@media (hover: hover) and (pointer: fine) {
-  .my-role-card:hover .my-role-card__cta {
-    background-image: var(--zip-hover-gradient);
-    background-size: 200% var(--button-rim-width);
-    background-position: 100% 100%;
+// The card itself carries `data-zip-on-hover`, so card-hover triggers the
+// `.my-role-card__link`'s zip animation via the `link-underline-zip` mixin
+// (see _rim.scss) — no custom hover-propagation rule needed here.
+
+// Project team card group — a unified rounded cluster containing the role
+// card and the org cards. Mirrors the body card-group pattern: 12px outer
+// radius with overflow clip, 4px inner gaps, 4px inner card radii (the
+// cluster's clip rounds the outer corners to match).
+//
+// Layout: role card on top, orgs in a horizontal row beneath. The orgs are
+// wrapped in their own flex row (`.project-team-card-group__orgs`) so they
+// can be hidden as a unit on mobile and so the wrapper itself becomes the
+// flex container for the per-org `flex: 1` equal-width sizing.
+//
+// The cluster's own width is set by the toolbar's page-grid span
+// (see _project-layout.scss): cols 2-5 below $breakpoint-large, narrowing
+// to cols 2-4 at ≥$breakpoint-large.
+.project-team-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--unit-4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+// Inner role card drops its standalone 12px radius — the cluster's overflow
+// clip handles outer corners and the inner item carries the 4px treatment
+// matching `.card-group > *` in _cards.scss.
+.project-team-card-group > .my-role-card {
+  border-radius: var(--radius-sm);
+}
+
+// Org row: horizontal flex, each org card stretches to equal width.
+// `min-width: 0` on the children lets `flex: 1` shrink them below their
+// intrinsic content width — needed because OrgCard's caption can be long
+// enough to force the cell wider than 1fr otherwise.
+.project-team-card-group__orgs {
+  display: flex;
+  flex-direction: row;
+  gap: var(--unit-4);
+
+  > .org-card {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  // Hidden when JS detects that any card's text wraps onto multiple lines —
+  // the trigger is content + container width, not a clean viewport
+  // breakpoint, so the toggle lives in project-orgs-overflow.ts. When any
+  // single card overflows, the whole row hides (all-or-nothing) so the
+  // strip never reads as half-broken. The full team list still surfaces
+  // each member's org affiliation via the role-card overlay.
+  &[data-overflowing] {
+    display: none;
   }
 }
 
@@ -149,8 +224,8 @@ html.project-team-panel-open {
   place-items: center;
   padding: 24px 40px;
   background: rgb(0 0 0 / 0.2);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
   opacity: 0;
   transition: opacity 220ms ease;
   pointer-events: none;
@@ -179,8 +254,8 @@ html.project-team-panel-open {
   display: flex;
   flex-direction: column;
   background: rgb(249 249 251 / 0.96);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
   border: 1px solid rgb(0 0 0 / 0.07);
   box-shadow: var(--shadow-panel);
   overflow: hidden;
@@ -308,50 +383,10 @@ html.project-team-panel-open {
   padding: 14px 12px;
 }
 
-// Avatar + name/role row — always center-aligned
-.project-team-list__row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 14px;
-}
-
-.project-team-avatar {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  overflow: hidden;
-  border-radius: var(--radius-avatar);
-  background: #eaeaea;
-
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.project-team-list__meta {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.project-team-name-row {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 2px;
-}
-
-.project-team-name {
-  margin: 0;
-  font-size: var(--type-size);
-  font-weight: var(--weight-regular);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-primary);
-}
+// The avatar + name/role row inside each list item now uses the shared
+// `.attribution` primitive (see _cards.scss). Only the team-list-specific
+// chrome lives here: the trailing LinkedIn icon and the bio paragraph that
+// sits below the row.
 
 .project-team-li-icon {
   flex-shrink: 0;
@@ -367,16 +402,8 @@ html.project-team-panel-open {
   }
 }
 
-.project-team-role {
-  margin: 0;
-  font-size: var(--type-size);
-  font-weight: var(--weight-regular);
-  line-height: 1.4;
-  color: var(--text-secondary);
-}
-
 .project-team-list__bio {
-  margin: 8px 0 0 70px; // 56px avatar + 14px gap
+  margin: 8px 0 0 70px; // 56px avatar + 14px gap — aligns with attribution__cite
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
   line-height: 1.55;

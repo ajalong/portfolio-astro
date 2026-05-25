@@ -49,6 +49,16 @@ const IMAGE_THUMB_POSTER_TRANSFORMS = [
   'so_0', // first-frame extraction from the source video
 ];
 
+// Homepage showcase images (top-right + bottom-right slots). Larger than
+// thumbnails (these are hero-ish), kept under a reasonable cap so phones
+// don't fetch a 4K asset for a 600px slot.
+const IMAGE_SHOWCASE_TRANSFORMS = [
+  'f_auto',
+  'q_auto:best',
+  'c_limit',
+  'w_1400',
+];
+
 function isVideoExt(filename) {
   return VIDEO_EXT_RE.test(filename);
 }
@@ -137,6 +147,20 @@ export function resolveThumbnails(frontmatter = {}) {
     poster: frontmatter.thumbnailImage ?? null,
     video: frontmatter.thumbnailVideo ?? null,
   };
+}
+
+// Build a showcase image URL from a public-id (relative to the project's
+// `mediaBase`, extension included). Returns null when either the public-id
+// or mediaBase is missing — callers should treat the slot as empty.
+export function buildShowcaseImageUrl(publicId, frontmatter = {}) {
+  const { mediaBase, mediaVersion } = frontmatter;
+  if (!publicId || !mediaBase) return null;
+  return buildCloudinaryUrl({
+    endpoint: 'image/upload',
+    transforms: IMAGE_SHOWCASE_TRANSFORMS,
+    version: mediaVersion,
+    publicId: `${mediaBase.replace(/\/$/, '')}/${publicId.replace(/^\//, '')}`,
+  });
 }
 
 export const __INTERNAL__ = {

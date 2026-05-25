@@ -1,0 +1,157 @@
+---
+import IconArrowLeft from './icons/IconArrowLeft.astro';
+import IconChevronDown from './icons/IconChevronDown.astro';
+
+/**
+ * Standard-viewport section nav. Used on BOTH project pages and the home
+ * page — the structure (bar + dropdown), styling (.nav-sd*), and
+ * script (nav-sd.ts) are identical; only the bar's back/center
+ * content differs, driven by props.
+ *
+ * Below $breakpoint-large only. A fixed bar pinned 16px from the top of
+ * the viewport, spanning the page-grid content width (--page-gutter-x
+ * left and right).
+ *
+ * Bar layout (3 equal-width cells):
+ *
+ *   ← alanlong.design     |     GSK     |     System architecture ⌄
+ *      (back cell)            (center)      (active section + toggle)
+ *
+ * The right-hand toggle opens a dropdown menu below the bar containing
+ * the section jump-links — same set as NavLg, same active-section
+ * tracking. Both navs subscribe to `trackActiveSection`; this one updates
+ * the bar's section label + the menu's data-active state from there.
+ *
+ * Props for context adaptation:
+ *
+ *   backHref       — back link target. Default "/" (home). Ignored when
+ *                    `showBackLink` is false.
+ *   backLabel      — long-form back-cell text. Default "alanlong.design".
+ *   backLabelShort — short-form back-cell text shown when the back cell
+ *                    is too narrow for the long label (container query
+ *                    in _nav-sd.scss). Default "Back".
+ *   centerLabel    — middle-cell text. Default derived from URL slug
+ *                    (uppercased) for project pages; empty string on
+ *                    home leaves the cell blank.
+ *   ariaLabel      — <nav> aria-label. Default "Case study sections".
+ *   showBackLink   — when true (default) the back cell is a link with
+ *                    the back arrow + hover state. When false (used on
+ *                    the home page, where "back" has no destination),
+ *                    the cell renders as a static label only — no arrow,
+ *                    no link, no hover. The label text still shows.
+ */
+
+interface SectionEntry {
+  id: string;
+  label: string;
+  children?: SectionEntry[];
+}
+
+interface Props {
+  sections: SectionEntry[];
+  backHref?: string;
+  backLabel?: string;
+  backLabelShort?: string;
+  centerLabel?: string;
+  ariaLabel?: string;
+  showBackLink?: boolean;
+}
+
+// Default center label is derived from the URL slug for project pages
+// (`/project/gsk` → `GSK`). Empty on any other page.
+const slugMatch = Astro.url.pathname.match(/^\/project\/([^/]+)/);
+const defaultCenterLabel = slugMatch ? slugMatch[1].toUpperCase() : '';
+
+const {
+  sections,
+  backHref = '/',
+  backLabel = 'alanlong.design',
+  backLabelShort = 'Back',
+  centerLabel = defaultCenterLabel,
+  ariaLabel = 'Case study sections',
+  showBackLink = true,
+} = Astro.props as Props;
+
+// Flatten the nested section config — same as NavLg.
+type FlatEntry = SectionEntry & { depth: number };
+function flatten(items: SectionEntry[], depth = 0, out: FlatEntry[] = []): FlatEntry[] {
+  for (const it of items) {
+    out.push({ id: it.id, label: it.label, depth });
+    if (it.children?.length) flatten(it.children, depth + 1, out);
+  }
+  return out;
+}
+const flatSections = flatten(sections);
+// Default closed-state section label: the first section. Script swaps this
+// out for the actually-active section as soon as `trackActiveSection` reports.
+const defaultActiveLabel = flatSections[0]?.label ?? '';
+---
+
+{sections && sections.length > 0 && (
+  <nav
+    class="nav-sd"
+    aria-label={ariaLabel}
+    data-nav-sd
+  >
+    <div class="nav-sd__bar">
+      {showBackLink ? (
+        <a class="nav-sd__back" href={backHref}>
+          <IconArrowLeft class="nav-sd__back-arrow" />
+          {/* Two labels: the long one shows by default; a container query
+              on the back cell swaps to the short one when the cell isn't
+              wide enough to hold the long label without truncation. */}
+          <span class="nav-sd__back-label nav-sd__back-label--long">{backLabel}</span>
+          <span class="nav-sd__back-label nav-sd__back-label--short">{backLabelShort}</span>
+        </a>
+      ) : (
+        <span class="nav-sd__back nav-sd__back--static">
+          <span class="nav-sd__back-label nav-sd__back-label--long">{backLabel}</span>
+          <span class="nav-sd__back-label nav-sd__back-label--short">{backLabelShort}</span>
+        </span>
+      )}
+      <span class="nav-sd__project">{centerLabel}</span>
+      <button
+        class="nav-sd__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-sd-menu"
+        data-nav-sd-toggle
+      >
+        <span class="nav-sd__section-label">
+          <span class="nav-sd__section-label-track" data-nav-sd-active-label>
+            <span class="nav-sd__section-label-item">{defaultActiveLabel}</span>
+          </span>
+        </span>
+        <IconChevronDown class="nav-sd__chevron" />
+      </button>
+    </div>
+    <div
+      id="nav-sd-menu"
+      class="nav-sd__menu"
+      hidden
+      data-nav-sd-menu
+    >
+      <div class="nav-sd__menu-group">
+        {flatSections.map((s) => (
+          <a
+            class="nav-sd__link"
+            href={`#${s.id}`}
+            data-section-id={s.id}
+            data-label={s.label}
+            data-depth={s.depth || null}
+          >
+            {s.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </nav>
+)}
+
+<script>
+  import { initNavSd } from '../scripts/nav-sd';
+
+  document.addEventListener('astro:page-load', () => {
+    initNavSd();
+  });
+</script>

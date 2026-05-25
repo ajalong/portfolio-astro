@@ -1,6 +1,6 @@
 export function initCaptionFade() {
-  const nav = document.querySelector('.project-section-index');
-  const captions = document.querySelectorAll('.media-caption');
+  const nav = document.querySelector('.project-nav-lg');
+  const captions = document.querySelectorAll('.media-caption, .media-caption-group');
 
   if (!nav || !captions.length) return;
 

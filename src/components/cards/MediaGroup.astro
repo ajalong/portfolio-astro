@@ -1,0 +1,35 @@
+---
+/**
+ * Rounded "media cluster" wrapping multiple media-blocks with tight 4px
+ * gaps. Mirrors the CardGroup pattern but for body media (images and
+ * videos). The images inside still get the standard remark/rehype
+ * processing — pair detection, video tag swap, srcset, Cloudinary
+ * optimisation — so authoring stays as plain markdown image syntax.
+ *
+ * Authoring (MDX):
+ *   <MediaGroup>
+ *   ![first image alt](one.jpg "first caption")
+ *   ![second image alt](two.jpg "second caption")
+ *
+ *   ![third image alt](three.jpg "third caption")
+ *   </MediaGroup>
+ *
+ * Visual contract: 12px outer radius + overflow clip, 4px gap between
+ * inner media-blocks. The cluster spans the same body content cols as a
+ * CardGroup (cols 2-5 by default) so its 12px envelope sits on the figures'
+ * outer corners. Captions in cols 1/6 are hidden inside the cluster — the
+ * cluster's own visual envelope replaces the need for them.
+ *
+ * `pageSpan` opts the cluster into a different content-width span
+ * (mirroring CardGroup's prop), same default of 4 cols.
+ */
+interface Props {
+  pageSpan?: number;
+  class?: string;
+}
+const { pageSpan, class: className } = Astro.props as Props;
+const style = pageSpan ? `--page-span: ${pageSpan}` : undefined;
+---
+<div class:list={['media-group', className]} style={style}>
+  <slot />
+</div>

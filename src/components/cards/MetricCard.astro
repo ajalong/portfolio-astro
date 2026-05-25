@@ -1,0 +1,33 @@
+---
+/**
+ * Metric card: large value + label, optional supporting description.
+ *
+ * <MetricCard value="66,800" label="GSK employees worldwide" />
+ * <MetricCard value="WCAG 2.1 AA" label="Compliant" description="Colour accessibility solved at the token layer" />
+ *
+ * Inside a <CardGroup>:
+ *   `span`    — claims N inner columns (default 1).
+ *   `rowSpan` — claims N inner rows (default 1). Used by the homepage
+ *               showcase's left "tall" card; CardGroup's grid honours
+ *               --card-row-span on any direct child.
+ */
+interface Props {
+  value: string;
+  label: string;
+  description?: string;
+  span?: number;
+  rowSpan?: number;
+}
+const { value, label, description, span = 1, rowSpan = 1 } = Astro.props as Props;
+const styleParts: string[] = [];
+if (span > 1) styleParts.push(`--card-span: ${span}`);
+if (rowSpan > 1) styleParts.push(`--card-row-span: ${rowSpan}`);
+const style = styleParts.length ? styleParts.join('; ') : undefined;
+---
+<div class="metric-card" style={style}>
+  <div class="metric-card__head">
+    <p class="metric-card__value">{value}</p>
+    <p class="metric-card__label">{label}</p>
+  </div>
+  {description && <p class="metric-card__description">{description}</p>}
+</div>

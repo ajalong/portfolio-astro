@@ -1,29 +1,38 @@
-// Jump-to-section nav for project case studies.
-//
-// Desktop/tablet (≥1001px): placed in col 6, stacks vertically and sticks.
-// Mobile (≤1000px): hidden entirely.
+// Jump-to-section nav for project case studies — large-viewport variant.
+// Sticky sidebar in col 6 of the page grid (see _project-layout.scss for
+// placement). At ≤($breakpoint-large - 1px) this nav is hidden entirely;
+// the standard-viewport variant `NavSd` (see _nav-sd.scss)
+// takes over.
 @use "tokens" as *;
 @use "rim" as *;
 
-.project-section-index {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  row-gap: var(--unit-32);
-  pointer-events: auto;
-  position: sticky;
-  top: var(--page-gutter-y);
-  // Whole nav is inset by --unit-16 so the jump-link group's ::before rail
-  // sits in a padding channel, flush with the nav's left edge.
-  padding-left: var(--unit-16);
+.nav-lg {
+  display: none;
+}
 
-  @media screen and (max-width: 1000px) {
-    display: none;
+@media screen and (min-width: $breakpoint-large) {
+  .nav-lg {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    row-gap: var(--unit-32);
+    pointer-events: auto;
+    position: sticky;
+    top: var(--page-gutter-y);
+    // Whole nav is inset by --unit-16 so the jump-link group's ::before rail
+    // sits in a padding channel, flush with the nav's left edge.
+    padding-left: var(--unit-16);
+
+    // Captions also live in col 6 (see `.media-caption--right` in
+    // _project-layout.scss) and would otherwise bleed through this
+    // background-less nav as they scroll past. Instead of obscuring the
+    // captions here, we fade them out on scroll using a scroll-driven
+    // animation defined in _project-layout.scss.
   }
 }
 
-.project-section-index__group {
+.nav-lg__group {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -77,7 +86,7 @@
   }
 }
 
-.project-section-index__permalink {
+.nav-lg__permalink {
   display: block;
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
@@ -87,7 +96,7 @@
 
 // Plain-text counterpart to __back used on the home page where the second
 // line is the section name ("Portfolio") rather than a back link.
-.project-section-index__site-section {
+.nav-lg__site-section {
   display: block;
   padding: var(--unit-4) 0;
   font-size: var(--type-size);
@@ -96,7 +105,7 @@
   color: var(--text-secondary);
 }
 
-.project-section-index__back {
+.nav-lg__back {
   @include link-underline-zip;
   padding: var(--unit-4) 0;
   // Tight line-height so the zip underline hugs the text the same way it
@@ -117,7 +126,7 @@
   }
 }
 
-.project-section-index__link {
+.nav-lg__link {
   display: inline-flex;
   flex-direction: column;
   padding: var(--unit-4) 0;
@@ -146,7 +155,7 @@
   }
 }
 
-.project-section-index__contact-link {
+.nav-lg__contact-link {
   @include link-underline-zip;
   padding: var(--unit-4) 0;
   line-height: 1;
@@ -166,6 +175,16 @@
 // sit flush against the very top of the viewport when jumped to.
 // Covers <section id> nodes inside both <article> (case-study sections)
 // and <main> (e.g. the team panel's "My role" section).
+//
+// Below large the floating .nav-sd bar sits at the top of the
+// viewport — without the nav clearance, jumping to a section would
+// scroll its kicker behind the bar. Stack the clearance under the
+// existing --page-gutter-y so the same visual breathing room (between
+// nav bottom and section kicker) is preserved across viewports.
 body.project-page main section[id] {
   scroll-margin-top: var(--page-gutter-y);
+
+  @media screen and (max-width: ($breakpoint-large - 1px)) {
+    scroll-margin-top: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
+  }
 }

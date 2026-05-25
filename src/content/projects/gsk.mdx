@@ -1,5 +1,5 @@
 ---
-title: Core Design System
+title: GSK’s first company-wide design system on which all GSK products are built.
 client: GSK
 slug: gsk
 summary: A company-wide design system to make GSK's bold new brand accessible across all digital products.
@@ -8,10 +8,41 @@ mediaBase: alan.design/gsk
 thumbnail: wolffolins/WolffOlins_GSK_CaseStudy_16_hfms2k
 order: 1
 year: 2024
-sector: Design System
+industry: Pharma
+theme: Design System
 brand:
   primary: "#FFB600"
   secondary: "#F36633"
+showcaseMedia:
+  topRight:
+    src: transparent/gsk-components-16_9_tiethz.png
+    alt: GSK design system components shown together on a transparent background.
+  bottomRight:
+    src: transparent/gsk-getting_started-16_9_weuihs.png
+    alt: GSK design system getting-started guide on a transparent background.
+impactMetrics:
+  - value: WCAG 2.1 AA
+    label: Compliant
+    description: Colour accessibility solved at the token layer
+  - value: 5/5
+    label: Product teams adopted
+    description: Working group members drove adoption within teams
+  - value: 100%
+    label: Fully documented
+    description: Rationale and usage guidelines throughout
+orgs:
+  - name: GSK
+    caption: Client
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/alan.design/organisations/org-gsk_xz9zky
+    url: https://www.gsk.com/en-gb/
+  - name: Interbrand
+    caption: My employer
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/alan.design/organisations/org-interbrand_ychtay
+    url: https://interbrand.com/
+  - name: Wolff Olins
+    caption: Branding agency
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/alan.design/organisations/org-wolff_olins_lxqlqh
+    url: https://wolffolins.com/
 roleSummary: |
   Designed and led the adoption of GSK's first company-wide design system, from audit through to initial release. Defined the system architecture, built the core component library and the iOS and Android extensions, and resolved the rebrand's accessibility issues. Ran the cross-team working group whose buy-in carried the system into each product team at rollout.
 team:
@@ -58,6 +89,11 @@ team:
     linkedin: https://www.linkedin.com/in/jonwarden/
 ---
 
+import CardGroup from "../../components/cards/CardGroup.astro";
+import MediaGroup from "../../components/cards/MediaGroup.astro";
+import MetricCard from "../../components/cards/MetricCard.astro";
+import TestimonialCard from "../../components/cards/TestimonialCard.astro";
+
 _Context_
 
 ## An accessible design system for big biopharma
@@ -66,10 +102,28 @@ GSK are a FTSE 100 biopharma giant with numerous digital products. They span bra
 
 In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with the new identity.
 
+<CardGroup columns={3} rows={2} flow="vertical">
+  <MetricCard value="66,800" label="GSK employees worldwide" />
+  <MetricCard value="70" label="Countries operated in" />
+  <MetricCard
+    value=">2bn"
+    label="Doses of medicines and vaccines supplied in 2025"
+  />
+  <MetricCard
+    value="1.3bn"
+    label="Patients reached in lower income countries"
+  />
+  <MetricCard value="13.2%" label="Reduction in childhood mortality rate" />
+  <MetricCard value="#2" label="Access to Medicine Index 2025" />
+</CardGroup>
+
+<MediaGroup>
 ![New GSK logo built from DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_1600/v1777997705/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb-2_heywv6.mp4 "New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.")
 ![GSK employees on the Living Gradient — Wolff Olins.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_fill,ar_1.0,w_900/alan.design/gsk/wolffolins/G015A6N_qtqi8k.jpg "GSK employees on the Living Gradient created by Wolff Olins.")
 
 ![GSK's new brand in action at their London HQ.](wolffolins/G0168BT_i3cocf.webp "GSK's new brand in action at their London HQ.")
+
+</MediaGroup>
 
 _Problem_
 
@@ -92,6 +146,7 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 - **A lean core component set** covering only what could be truly generalised across GSK, so teams build on it rather than be confined by it.
 - **iOS and Android extensions** of the core library, giving native teams the building blocks to align with each platform's UX paradigms.
 
+<MediaGroup>
 ![Getting Started section of the design system, explaining the core system's role.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/gsk/gsk-introduction_lpbm2a.png "Getting Started section of the design system. Explains the core system's role and relationship to product teams' work.")
 
 ![Card component in light mode, labelled with primitive and semantic tokens.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/v1778026305/alan.design/gsk/gsk-tokens_in_action-light_m7onmf.png "An example card component in light mode.")
@@ -99,6 +154,8 @@ An audit of the 2022 rebrand guidelines revealed they lacked the necessary found
 
 ![Toggle-switch component in light and dark mode, animating between states.](gskdesignsystem_general_components.mp4 "Core UI components, for example a toggle switch, in light and dark mode from the design system.")
 ![GSK podcast iOS app screen rotation in light and dark mode.](gskdesignsystem_podcasts.mp4 "A GSK podcast iOS app built from design system components in light and dark mode.")
+
+</MediaGroup>
 
 _Implementation_
 
@@ -122,6 +179,23 @@ The system is doing what it was built to do. Accessibility issues are resolved, 
 - **Rolling out company-wide** across GSK's digital teams following the initial release.
 - **Proved the system in production** on gsk.com and GSK Brandhub.
 
+<CardGroup columns={3} rows={2}>
+  {/* Metrics live in frontmatter (`impactMetrics`) so the homepage
+      showcase can pull the same data without parsing this body. Iterate
+      here so the impact section + homepage stay in lockstep. */}
+  {frontmatter.impactMetrics?.map((m) => (
+    <MetricCard value={m.value} label={m.label} description={m.description} />
+  ))}
+  <TestimonialCard
+    author="Anna Morrison"
+    role="Senior Brand Manager, GSK"
+    headshot="https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/anna-morrison"
+  >
+    Receiving so much positive feedback already, people are really impressed
+    with how good this all is.
+  </TestimonialCard>
+</CardGroup>
+
 _Lessons learned_
 
 ## Systematising design for a large organisation
@@ -134,7 +208,3 @@ This project also presented a unique opportunity to align product teams that, du
 - **A focus on scope enabled strong adoption.** A smaller set of well-considered components gave teams room to build on the system rather than be restrained by it.
 - **Accessibility has to live at the token layer.** Fixing issues around colour at the token layer meant every adopting team inherited the fixes without extra work.
 - **Brand and design system work is best done together.** Co-authoring the system with GSK's brand team meant decisions were made collaboratively throughout the project, rather than reviewed only at the point of sign-off.
-
-> "Receiving so much positive feedback already, people are really impressed with how good all is – Thank you so much Interbrand!"
->
-> — Anna Morrison, GSK Senior Brand Manager

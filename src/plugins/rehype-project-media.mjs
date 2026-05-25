@@ -50,12 +50,13 @@ const IMAGE_DEFAULT_WIDTH = 1200;
 const VIDEO_DEFAULT_WIDTH = 1600;
 
 // `sizes` attribute by layout context. Values are the rendered CSS width.
-// Single full-width image: cols 2–5 of a 6-col article grid on ≥1000 px,
-// full-bleed minus page padding on mobile.
-const SIZES_FULL = '(min-width: 1000px) 60vw, 92vw';
-// Pair: half of the article grid on ≥1000 px, half-viewport on mobile (the
-// pair stays 2-col at all sizes per `_project-layout.scss`).
-const SIZES_PAIR = '(min-width: 1000px) 30vw, 46vw';
+// Single full-width image: cols 2–5 of a 6-col article grid on ≥461 px
+// (matching `$breakpoint-medium + 1` in _tokens.scss), full-bleed minus page
+// padding on phone-portrait below.
+const SIZES_FULL = '(min-width: 461px) 60vw, 92vw';
+// Pair: half of the article grid on ≥461 px, half-viewport on phone-portrait
+// (the pair stays 2-col at all sizes per `_project-layout.scss`).
+const SIZES_PAIR = '(min-width: 461px) 30vw, 46vw';
 
 // `widthOverride` semantics:
 //   number    — replace any existing width with this one (used per srcset entry)
@@ -440,6 +441,9 @@ export default function rehypeProjectMedia() {
     };
 
     processChildren(tree);
-    visit(tree, 'element', processChildren);
+    // Also descend into MDX JSX components (e.g. <MediaGroup>…</MediaGroup>)
+    // so markdown images nested inside JSX wrappers still get the
+    // image-paragraph → media-block transformation.
+    visit(tree, ['element', 'mdxJsxFlowElement'], processChildren);
   };
 }

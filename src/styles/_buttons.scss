@@ -9,3 +9,39 @@
 .project-team-panel__close {
   overflow: visible;
 }
+
+// ── Primary button ──────────────────────────────────────────────────────
+// Standard text on the darkest neutral, 12 × 20 padding, 4px radius.
+// Works as either <button class="btn-primary"> or <a class="btn-primary">
+// — inline-flex centring + reset chrome covers both.
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--unit-8) var(--unit-20);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--grey1);
+  color: var(--text-inverse);
+  font-family: inherit;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  text-decoration: none;
+  cursor: pointer;
+  // Hover dims slightly — matches the muted/full text-state vocabulary
+  // used on the nav (subtle opacity change rather than a colour shift,
+  // since the bg is already at the deepest neutral).
+  transition: opacity 0.15s ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--grey1);
+    outline-offset: 2px;
+  }
+}

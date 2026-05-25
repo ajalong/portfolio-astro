@@ -1,0 +1,34 @@
+---
+/**
+ * Organisation card: logo + name + caption. Used in the top-right sidebar
+ * cluster (client / employer / partner agencies).
+ *
+ * Authored via frontmatter (see `orgs:` in src/content/config.ts) and rendered
+ * by the project layout — see ProjectTeamPanel. Renders as an external link
+ * when `url` is provided; otherwise as a static card.
+ */
+interface Props {
+  name: string;
+  caption: string;
+  logo?: string;
+  url?: string;
+}
+const { name, caption, logo, url } = Astro.props as Props;
+const Tag = url ? 'a' : 'div';
+const linkProps = url
+  ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
+  : {};
+---
+<Tag class="org-card" {...linkProps}>
+  <div class="attribution">
+    {logo && (
+      <div class="attribution__avatar">
+        <img src={logo} alt="" width="112" height="112" loading="lazy" />
+      </div>
+    )}
+    <div class="attribution__cite">
+      <p class="attribution__name">{name}</p>
+      <p class="attribution__role">{caption}</p>
+    </div>
+  </div>
+</Tag>

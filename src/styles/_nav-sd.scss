@@ -1,0 +1,377 @@
+// Project page standard-viewport section nav — fixed top bar + dropdown.
+//
+// Visible on mobile + medium (< $breakpoint-large). At ≥ large, NavLg
+// (the sticky sidebar) takes over and this nav is hidden. Both navs share
+// the section data + active-state tracking via `project-active-section.ts`,
+// but each owns its own DOM and visual treatment.
+//
+// Visual contract (matches the design):
+//   - Bar: pill, fixed 16px from viewport top, spans content width
+//     (--page-gutter-x left + right inset).
+//   - Bar contents: back link (alanlong.design) | project shortname |
+//     toggle (active section label + chevron). Three flex sections.
+//   - Menu: rounded panel below the bar, dark surface + blur. Contains the
+//     section jump-links with a left-rail active indicator (same pattern
+//     as NavLg, inverted colours).
+@use "tokens" as *;
+@use "rim" as *;
+
+// ── Outer wrapper ────────────────────────────────────────────────────────
+// Fixed positioning lives here so the bar floats above page content. The
+// wrapper has no visual chrome — just the positioning + grid that lays the
+// bar and menu out.
+.nav-sd {
+  position: fixed;
+  top: var(--unit-16);
+  left: var(--page-gutter-x);
+  right: var(--page-gutter-x);
+  z-index: 30;
+  pointer-events: none; // children re-enable; lets clicks through the gap
+                       // between bar and menu when the menu is open
+
+  // Hidden at ≥large where NavLg takes over.
+  @media screen and (min-width: $breakpoint-large) {
+    display: none;
+  }
+}
+
+// ── Bar ──────────────────────────────────────────────────────────────────
+// Three equal columns (like card-group): back link | project shortname |
+// toggle. `minmax(0, 1fr)` (rather than plain `1fr`) lets each cell shrink
+// below its content's intrinsic width, which is what makes the inner text
+// truncation work — without it a long label would push the column wider
+// than 1/3 of the bar.
+.nav-sd__bar {
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--unit-16);
+  padding: var(--unit-12) var(--unit-16);
+  background: var(--bg-dark);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius-lg);
+  color: var(--text-inverse);
+  font-size: var(--type-size);
+  line-height: var(--line-height-tight);
+}
+
+// ── Back cell (col 1) ────────────────────────────────────────────────────
+// Aligns to the start of its grid cell. Carries a container query so the
+// long "alanlong.design" label can swap to the short "Back" once the cell
+// gets too narrow to comfortably hold it.
+//
+// `container-type: inline-size` opts the element into being the queryable
+// container for descendant @container rules. `min-width: 0` is needed so
+// the grid cell can actually constrain the element below its content
+// width — without it the back link would refuse to shrink and the swap
+// would never trigger.
+.nav-sd__back {
+  container-type: inline-size;
+  container-name: nav-sd-back;
+
+  display: flex;
+  align-items: center;
+  gap: var(--unit-8);
+  min-width: 0;
+  // Muted by default, full white on hover/focus — applies to both the
+  // label text and the arrow SVG (which uses currentColor).
+  color: var(--text-inverse-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:not(.nav-sd__back--static):hover {
+      color: var(--text-inverse);
+    }
+  }
+
+  &:not(.nav-sd__back--static):focus-visible {
+    color: var(--text-inverse);
+    outline: 2px solid var(--text-inverse);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// Static variant: used on the home page where "back" has no destination.
+// Renders as a span (so no pointer cursor, no link affordance); the
+// :not() selectors above keep the hover/focus colour shift from firing.
+
+// IconArrowLeft component sets its own 14×14 size. We just give it a flex
+// reservation so it doesn't shrink when the cell is tight, and ensure it
+// inherits the nav's inverse text colour via `currentColor` (set on .back).
+.nav-sd__back-arrow {
+  display: block;
+  flex: 0 0 14px;
+}
+
+// Both labels share the truncation chrome — when shown, either may need
+// `text-overflow: ellipsis` if the cell is mid-narrow (e.g. "alanlong.…"
+// before the swap point).
+.nav-sd__back-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Default: long label shown, short hidden.
+.nav-sd__back-label--short {
+  display: none;
+}
+
+// Swap point — the cell width below which "alanlong.design" stops being a
+// reasonable thing to show. The value is the smallest inline-size at which
+// the long label still fits without truncation (arrow + gap + label glyphs
+// at the current font size). Iterate as needed.
+@container nav-sd-back (max-width: 130px) {
+  .nav-sd__back-label--long {
+    display: none;
+  }
+  .nav-sd__back-label--short {
+    display: inline;
+  }
+}
+
+// ── Project cell (col 2) ─────────────────────────────────────────────────
+// Centered within its cell. Short text by design (e.g. "GSK"), but
+// truncation chrome is there in case a project gets a longer shortname.
+.nav-sd__project {
+  justify-self: center;
+  max-width: 100%;
+  color: var(--text-inverse);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Toggle cell (col 3) ──────────────────────────────────────────────────
+// Right-aligned. Inner layout: section label (shrinks + truncates) +
+// chevron (fixed). `justify-content: flex-end` pushes both to the cell's
+// right edge; the label uses `flex: 0 1 auto` so short labels sit at
+// their natural width close to the chevron, and longer labels shrink to
+// fit (and then ellipsis from the right end).
+.nav-sd__toggle {
+  // Reset button chrome.
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--unit-8);
+  min-width: 0;
+  width: 100%;
+
+  // Muted by default, full white on hover/focus — propagates to the
+  // section-label items and chevron SVG (both use currentColor / inherit).
+  color: var(--text-inverse-muted);
+  transition: color 0.15s ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--text-inverse);
+    }
+  }
+
+  &:focus-visible {
+    color: var(--text-inverse);
+    outline: 2px solid var(--text-inverse);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// Three-layer structure to animate the section name on scroll:
+//
+//   .__section-label  → flex item, clips the visible area to one line
+//   .__section-label-track → vertically stacks one-or-more items, slides up
+//                            (JS sets translateY when the active section
+//                            changes) so the old text exits the clip and
+//                            the incoming text takes its place
+//   .__section-label-item  → one line of text; carries the truncation chrome
+//
+// On `prefers-reduced-motion: reduce`, the JS skips the animation and
+// rewrites textContent in place — the structure still works statically.
+// Label fills the available space in the toggle cell (`flex: 1 1 0`) and
+// anchors text to the right (`text-align: right`). The "fill the cell"
+// part is what keeps the label width stable — without it, the label width
+// would track the wider of the in-flight items during the slide, then snap
+// to the new (often shorter) item's width on cleanup, causing the text to
+// jump rightward as the flex parent re-packs against `flex-end`.
+//
+// With the label width stable, the items inside (which are display:block
+// and fill the label width) also have a stable width — the slide becomes
+// purely vertical and the text's right edge never moves.
+.nav-sd__section-label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  height: calc(var(--type-size) * var(--line-height-tight));
+  text-align: right;
+  // Colour inherits from .nav-sd__toggle so the hover/focus state
+  // there propagates to the label text without needing its own rule.
+}
+
+.nav-sd__section-label-track {
+  display: block;
+  // Speed: a little brisker than animate-ui's default; same easing curve
+  // we use for the project-team panel slide so the motion vocabulary
+  // stays consistent across the site.
+  transition: transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+// Items fill the label width (block-level) so each item's text is
+// right-aligned to the same anchor — no horizontal shift between the
+// old item exiting and the new item arriving.
+.nav-sd__section-label-item {
+  display: block;
+  height: calc(var(--type-size) * var(--line-height-tight));
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-sd__section-label-track {
+    transition: none;
+  }
+}
+
+// IconChevronDown rotates 180° when the toggle is open. Both the down and
+// up icons are available as separate components, but here we deliberately
+// reuse the single down-pointing asset and rotate for the smooth open/close
+// animation; swapping to IconChevronUp on state change would be a hard cut
+// (and adds DOM either way).
+.nav-sd__chevron {
+  display: block;
+  flex: 0 0 14px;
+  transition: transform 0.2s ease;
+}
+
+.nav-sd__toggle[aria-expanded="true"] .nav-sd__chevron {
+  transform: rotate(180deg);
+}
+
+// ── Menu ─────────────────────────────────────────────────────────────────
+// Positioned below the bar, hanging from the right edge so the dropdown
+// visually attaches to the toggle button. The bar + menu share the same
+// dark surface treatment.
+.nav-sd__menu {
+  pointer-events: auto;
+  margin-top: var(--unit-4);
+  margin-left: auto;        // right-align under the bar
+  width: max-content;
+  max-width: 100%;
+  padding: var(--unit-16) var(--unit-20) var(--unit-16) var(--unit-16);
+  background: var(--bg-dark);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius-lg);
+  color: var(--text-inverse);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+// Mobile: stretch the menu to the full nav width so the dropdown reads
+// as a single block under the bar. On medium the default (content-sized,
+// right-aligned under the toggle) is kept.
+@media screen and (max-width: $breakpoint-medium) {
+  .nav-sd__menu {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+// Rail container — mirrors `.nav-lg__group:nth-child(2)` in
+// _nav-lg.scss. The rail track + active indicator are positioned
+// absolutely against the group's left edge; the group itself supplies a
+// 16px left padding (via the menu's padding above) so the rail sits in a
+// padding channel flush with the menu edge.
+.nav-sd__menu-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: var(--unit-4);
+
+  // Grey track — full height of the group, dim white against the dark bg.
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--unit-16));
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  // Active indicator — JS sets --active-top/--active-height to the active
+  // link's offsetTop/offsetHeight; transitions animate the slide.
+  &::after {
+    content: "";
+    position: absolute;
+    left: calc(-1 * var(--unit-16));
+    top: var(--active-top, 0);
+    height: var(--active-height, 0);
+    width: 2px;
+    background-color: var(--text-inverse);
+    opacity: 0;
+    transition:
+      top 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  &[data-has-active]::after {
+    opacity: 1;
+  }
+
+  // Skip the slide on first paint so the bar doesn't animate in from top:0.
+  &[data-init]::after {
+    transition: opacity 0.2s ease;
+  }
+}
+
+.nav-sd__link {
+  display: inline-flex;
+  padding: var(--unit-4) 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  color: var(--text-inverse-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+
+  &[data-depth="1"] {
+    padding-left: var(--unit-12);
+  }
+  &[data-depth="2"] {
+    padding-left: calc(var(--unit-12) * 2);
+  }
+
+  &:hover {
+    color: var(--text-inverse);
+  }
+
+  &[data-active] {
+    color: var(--text-inverse);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-inverse);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}

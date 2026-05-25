@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { PROJECT_THUMBNAIL_ALTS } from '../../data/projectThumbnailAlts';
 import { resolveThumbnails } from '../../lib/cloudinary.mjs';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const sorted = [...published].sort((a, b) => a.data.order - b.data.order);
 
   return sorted.map((project, i) => ({
-    params: { slug: project.slug },
+    params: { slug: project.data.slug ?? project.id },
     props: { project, nextProject: sorted[(i + 1) % sorted.length] },
   }));
 }
@@ -24,23 +24,23 @@ interface Props {
 
 const { project, nextProject } = Astro.props as Props;
 
-const { title, client, metaDescription, year, sector, roleTitle, roleSummary, brand } = project.data;
+const { title, client, metaDescription, year, sector, industry, theme, roleTitle, roleSummary, brand } = project.data;
 const { poster: thumbnailImage } = resolveThumbnails(project.data);
 
 const nextThumbs = resolveThumbnails(nextProject.data);
 const nextProjectCard = {
-  href: `/project/${nextProject.slug}`,
+  href: `/project/${nextProject.data.slug ?? nextProject.id}`,
   title: nextProject.data.title,
   client: nextProject.data.client,
   summary: nextProject.data.summary,
   thumbnailSrc: nextThumbs.poster,
   thumbnailVideo: nextThumbs.video,
-  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[nextProject.slug] ?? nextProject.data.title,
+  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[nextProject.data.slug ?? nextProject.id] ?? nextProject.data.title,
   brandPrimary: nextProject.data.brand?.primary,
   brandSecondary: nextProject.data.brand?.secondary,
 };
 
-const { Content } = await project.render();
+const { Content } = await render(project);
 
 // Section index is auto-derived from the markdown body. Each italic-only
 // paragraph (`_Kicker_`) immediately followed by a heading (`##` or `###`)
@@ -94,7 +94,10 @@ const sectionIndex = parseSectionIndex(project.body, !!project.data.team?.length
   image={thumbnailImage}
   year={year}
   sector={sector}
+  industry={industry}
+  theme={theme}
   team={project.data.team}
+  orgs={project.data.orgs}
   nextProject={nextProjectCard}
   {sectionIndex}
   {roleTitle}

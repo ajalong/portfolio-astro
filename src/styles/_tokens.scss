@@ -25,8 +25,60 @@
   initial-value: #f0c781;
 }
 
-// My role card — neutral grey at 40% opacity so the page background bleeds through
-$bg-card: rgba(230, 230, 230, 0.4);
+// ─────────────────────────── Breakpoints ────────────────────────────────
+//
+// Convention: **desktop-first**. Default rules describe the largest layout
+// (the design's primary canvas) and `@media (max-width: …)` queries cascade
+// down to narrower viewports. `(min-width: …)` is reserved for rules that
+// must not exist on smaller screens at all (the page-grid subgrid scaffold,
+// the sticky section nav). The rationale: the site is designed for and
+// ideally consumed on desktop — mobile is the adaptation, not the floor —
+// and matching the cascade direction to the design intent keeps the CSS
+// readable, with each component's default rules describing what it *is*
+// and the @media queries describing how it *bends*. Mixing the two
+// directions would split the mental model and clash with the scaffold,
+// which is already desktop-first.
+//
+// Three named viewport layouts, two breakpoints between them:
+//
+//   mobile  :   0   – 400 px   (≤ $breakpoint-medium)
+//   medium  : 401   – 1079 px  (between the two)
+//   large   : 1080+ px         (≥ $breakpoint-large)
+//
+// `$breakpoint-large` (1080) anchors the page-grid scaffold — at and above
+// it the 6-col subgrid is active and components address page cols directly
+// (card groups, media blocks, captions, the sticky section nav). Below
+// large the layout collapses to a stacked single column.
+//
+// `$breakpoint-medium` (400) sits inside the stacked range and acts as the
+// mobile/medium boundary — both ranges use the stacked layout, but medium
+// gets a bigger horizontal page margin than phone-portrait (see the
+// medium-only `--page-gutter-x` override below the stacked-layout re-tune).
+// Other spacing tokens (block-spacing, section-spacing, text-spacing) are
+// shared across mobile + medium; only the gutter differs.
+//
+// At ≥large the layout also narrows card-groups and the project-team
+// toolbar from cols 2–5 (full body content) to cols 2–4 (3 page cols),
+// trading some width back for a calmer canvas now that there's room.
+//
+// All component-level @media rules across the codebase reference these two
+// tokens rather than bare `460px` / `1080px` literals, so shifting either
+// boundary updates every dependent component in lockstep.
+//
+// Convention is still **desktop-first** — see the convention block above.
+// Container queries aren't needed yet because every component inside the
+// page-grid has a width that's a deterministic function of the viewport;
+// if we later place a component outside the page-grid (sidebar, modal),
+// that component will need a container query instead.
+$breakpoint-medium: 460px;
+$breakpoint-large: 1080px;
+
+// Card fill — neutral grey at 40% opacity so the page background bleeds
+// through. Used by the "My role" card and the body card variants (MetricCard,
+// TestimonialCard, OrgCard). Exposed below as the `--bg-card` CSS custom
+// property; this Sass alias is kept so existing partials that `@use "tokens"`
+// continue to work without churn.
+$bg-card: var(--bg-card);
 // Hover: mirrors the page background's full bg__fg + bg__base stack —
 // radial white wash + linear white wash on top of the brand-colour
 // gradient. Same stops as .bg__fg / .bg__base, just scaled to the card
@@ -102,7 +154,33 @@ $bg-card-hover-gradient:
   --backgroundColor: #f9f9fb;
   --buttonBackground: #fafafa;
   --buttonBackgroundActive: #ebebeb;
+  /*
+   * Card fill — translucent neutral grey so the page background bleeds
+   * through. Shared by the "My role" card and the body card variants
+   * (MetricCard, TestimonialCard, OrgCard).
+   */
+  --bg-card: rgba(230, 230, 230, 0.4);
+  /*
+   * Dark translucent surface — used by dark-on-page overlays (the standard-
+   * viewport section nav, etc.). The page background bleeds through at 80%
+   * opacity and the shared `--blur` filter does the rest.
+   */
+  --bg-dark: rgba(8, 8, 8, 0.8);
   --border: 1px solid #eaeaea;
+  /*
+   * Divider on dark surfaces — used by the lightbox (caption ↔ media
+   * separator) and any future dark-surface UI that needs a thin neutral
+   * separator. Light grey at 20% opacity reads as a faint line against
+   * --bg-dark without competing with the content.
+   */
+  --border-inverse: 1px solid rgba(255, 255, 255, 0.2);
+
+  /*
+   * Shared backdrop-filter for all on-page overlays (project section nav,
+   * project team panel, etc.). One token so the blur character is consistent
+   * across the site — change here and every overlay updates in lockstep.
+   */
+  --blur: blur(32px) saturate(140%);
   --button-rim-width: 1.4px;
   --text-underline-width: 1px;
   --secondaryBorderColor: #f2f2f2;
@@ -165,6 +243,23 @@ $bg-card-hover-gradient:
   --section-spacing:    var(--unit-88);  /* section ↔ section on desktop */
   --page-gutter:        var(--unit-112); /* legacy alias — prefer --page-gutter-y */
 
+  /*
+   * Floating .nav-sd bar dimensions — referenced by _project-layout
+   * to reserve clearance for the nav at the top of the page on standard
+   * viewports (mobile + medium). The height is composed from the nav's own
+   * vertical padding + line-height, so changing the nav's padding/font-size
+   * needs a matching update here.
+   *
+   * --nav-sd-top-offset : the nav's distance from the viewport top
+   * --nav-sd-height     : the nav element's own intrinsic height
+   * --nav-sd-clearance  : top-offset + height — the page area the nav
+   *                       overlays; add this to padding-top to push content
+   *                       below the nav bottom edge.
+   */
+  --nav-sd-top-offset:  var(--unit-16);
+  --nav-sd-height:      calc(var(--unit-12) * 2 + var(--type-size) * var(--line-height-tight));
+  --nav-sd-clearance:   calc(var(--nav-sd-top-offset) + var(--nav-sd-height));
+
   /* ─────────── Layout grid ─────────── */
   --grid-gap:           var(--unit-16);  /* gutter between grid columns */
   --page-gutter-y:      var(--unit-88);  /* space from viewport top to title */
@@ -196,8 +291,14 @@ $bg-card-hover-gradient:
   --page-tx-fg:     600ms;  /* fg cover or reveal */
 }
 
-/* Mobile re-tune — tokens shift at 1000px so per-rule media queries are unnecessary */
-@media screen and (max-width: 1000px) {
+/* Stacked-layout re-tune — applies across mobile + medium (anything below
+ * $breakpoint-large where the page-grid scaffold isn't active). Spacing
+ * tokens shift to their tighter "stacked" values so per-rule @media queries
+ * are unnecessary. --page-gutter-x is overridden again at medium widths
+ * (below) to give the layout more breathing room than mobile's 16px without
+ * the page-grid lining things up at large.
+ */
+@media screen and (max-width: ($breakpoint-large - 1px)) {
   :root {
     --text-spacing-tight: var(--unit-24);
     --text-spacing-standard:       var(--unit-32);
@@ -205,6 +306,17 @@ $bg-card-hover-gradient:
     --section-spacing:    var(--unit-40);
     --page-gutter-y:      var(--unit-40);
     --page-gutter-x:      var(--unit-16);
+  }
+}
+
+/* Medium-only override: bigger horizontal page margin than mobile so the
+ * stacked layout reads with more breathing room at 401–1079 widths. Inside
+ * a `and (min-width: …)` clamp so it only kicks in above mobile. The 40px
+ * value is a starting point; tweak as the medium layout matures.
+ */
+@media screen and (min-width: ($breakpoint-medium + 1px)) and (max-width: ($breakpoint-large - 1px)) {
+  :root {
+    --page-gutter-x:      var(--unit-40);
   }
 }
 

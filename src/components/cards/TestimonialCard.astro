@@ -1,0 +1,40 @@
+---
+/**
+ * Testimonial card: quote (children) + attribution row (headshot + name + role).
+ *
+ * <TestimonialCard
+ *   author="Anna Morrison"
+ *   role="Senior Brand Manager, GSK"
+ *   headshot="alan.design/linkedin/anna-morrison"
+ *   span={3}
+ * >
+ *   Receiving so much positive feedback already…
+ * </TestimonialCard>
+ *
+ * Quote lives in the default slot so longer quotes read naturally in MDX.
+ * `headshot` is a direct image URL — same shape as `team[*].headshot`.
+ */
+interface Props {
+  author: string;
+  role?: string;
+  headshot?: string;
+  span?: number;
+}
+const { author, role, headshot, span = 1 } = Astro.props as Props;
+---
+<figure class="testimonial-card" style={span > 1 ? `--card-span: ${span};` : undefined}>
+  <blockquote class="testimonial-card__quote">
+    <slot />
+  </blockquote>
+  <figcaption class="attribution">
+    {headshot && (
+      <div class="attribution__avatar">
+        <img src={headshot} alt="" width="56" height="56" loading="lazy" />
+      </div>
+    )}
+    <div class="attribution__cite">
+      <p class="attribution__name">{author}</p>
+      {role && <p class="attribution__role">{role}</p>}
+    </div>
+  </figcaption>
+</figure>

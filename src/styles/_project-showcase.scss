@@ -1,0 +1,248 @@
+// Homepage featured-project showcase.
+//
+// Sits above the existing .project-list on the home page. Built on top of
+// the .card-group primitive (12px outer radius, 4px inner gap, 4px inner
+// card radii — same shell vocabulary as the body card-groups inside
+// project pages).
+//
+// Layout differs by viewport:
+//
+//   Large + medium (4-col × 3-row card-group):
+//     Row 1: [ A (2×1, 16:9) ][ B (2×1, 16:9)        ]
+//     Row 2: [ C (1×2, fill) ][ D (1×1, fill) ][ F (2×2, 16:9) ]
+//     Row 3: [ ↑ C ↑         ][ E (1×1, fill) ][ ↑ F ↑         ]
+//
+//     Row heights are driven by the image cards' locked aspect ratios:
+//     B sets row 1 height; F (spanning rows 2–3) sets the combined
+//     height of rows 2 + 3. The MetricCards in the C/D/E slots have
+//     `aspect-ratio: auto` (see the showcase override below) and
+//     stretch to fill whatever vertical space their slot allocates.
+//
+//     Source order is A, B, C, D, F, E (see the comment in
+//     index.astro).
+//
+//   Mobile (2-col, via .card-group's mobile-drop rule in _cards.scss) —
+//   TODO: the mobile layout that was authored for the old 5-card grid
+//   no longer matches now that we have 6 cards and the source order
+//   changed. The reshuffle rule below still targets card 2 (B); it
+//   needs a design pass once the mobile layout for 6 cards is decided.
+//
+// Placeholder cards for now — content slots will land in a follow-up.
+@use "tokens" as *;
+@use "rim" as *;
+
+.project-showcase {
+  // Bottom spacing before the existing project-list. Match the section-
+  // spacing token so the rhythm reads as a normal page section break.
+  margin-bottom: var(--section-spacing);
+}
+
+// The entire card-group is one big link to the featured project. Uses
+// the same `surface-hover-strong` mixin as `.my-role-card` — gradient
+// bloom that shows through the cards' semi-transparent `--bg-card` fill
+// (the mixin overlay sits at z-index: -1, behind the card-group's
+// contents). `border-radius` matches the card-group's outer radius so
+// the overlay (which inherits border-radius) clips correctly. The inner
+// "See the project" button is rendered as a `<span>` rather than a
+// nested `<a>` — visual affordance only, the outer link handles clicks.
+.project-showcase__link {
+  @include surface-hover-strong;
+  display: block;
+  border-radius: var(--radius-lg);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+// Placeholder card chrome. The .card-group rule already gives each direct
+// child the bg-card fill + 4px radius + padding; this just adds an
+// aspect-ratio so the empty placeholders have visible height. Selectors
+// key off the `--card-span` / `--card-row-span` custom properties set
+// inline on each card in index.astro. Once real content lands these
+// will size from their content instead.
+
+// 1×1 default (D, E) — square.
+.project-showcase__card {
+  aspect-ratio: 1 / 1;
+}
+
+// 2×1 (A, B) — wide. `:not([style*="--card-row-span"])` keeps this rule
+// from matching F (which carries both span vars).
+.project-showcase__card[style*="--card-span: 2"]:not([style*="--card-row-span"]) {
+  aspect-ratio: 16 / 9;
+}
+
+// 1×2 (C) — tall. Symmetric `:not()` so it doesn't catch F. Not
+// currently in use (C is a MetricCard, which uses the auto-aspect
+// override below). Kept for any future non-metric tall card.
+.project-showcase__card[style*="--card-row-span: 2"]:not([style*="--card-span"]) {
+  aspect-ratio: 1 / 2;
+}
+
+// 2×2 (F) — locked 16:9 so the image card's shape matches B's. F's
+// height sets the combined height of rows 2 + 3 (≈ (2c+gap) × 9/16);
+// each individual row track ends up roughly half that. The metric
+// cards in those rows fill the resulting space.
+.project-showcase__card[style*="--card-span: 2"][style*="--card-row-span: 2"] {
+  aspect-ratio: 16 / 9;
+}
+
+// Hover-state bridge for the card-group: at rest each card keeps its
+// default 40% `--bg-card` (per the generic `.card-group > *` rule), so
+// the gaps between cards stay visible as separation. On hover we drop
+// the cards' grey almost to transparent (10%) so the link wrapper's
+// surface-hover-strong gradient — which sits behind everything in the
+// link's stacking context — reads through the cards at nearly the same
+// strength as it does through the gaps. The result feels like one
+// continuous gradient washing across the whole group rather than a
+// patchwork of "gradient in gaps, grey-dimmed gradient on cards".
+//
+// Transition the bg-color so the cards fade with the gradient rather
+// than snapping; matched 300ms duration to surface-hover-strong's own
+// opacity ease.
+.project-showcase .card-group > * {
+  transition: background-color 300ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-showcase__link:hover .card-group > * {
+    background-color: rgba(230, 230, 230, 0.1);
+  }
+}
+
+// Lock the showcase's card-group to the exact aspect-ratio the layout
+// implies so the image cards (B + F) render at 16:9 without the grid
+// stretching them. Geometry:
+//
+//   • B width = F width = 2c+g (2 cols + 1 inter-col gap)
+//   • B + F locked 16:9 → height = (2c+g) × 9/16
+//   • Grid total height = B_h + row-gap + F_h = ~2 × B_h + g
+//   • Grid total width  = W = 4c + 3g
+//   • → Grid aspect ≈ 16/9 (gaps drop out in the limit)
+//
+// Rows distribute as 2fr / 1fr / 1fr because row 1 (B/A) is twice the
+// height of each of rows 2 and 3 (which together hold F at 16:9).
+// Without these, `align-items: stretch` (grid default) wins and F
+// stretches to whatever slot the auto-rows produce, breaking 16:9.
+.project-showcase .card-group {
+  aspect-ratio: 16 / 9;
+  grid-template-rows: 2fr 1fr 1fr;
+}
+
+// MetricCards in the showcase: drop the component's intrinsic 16:9 so the
+// bento row tracks (set by the card-group's locked aspect-ratio above)
+// drive each metric card's height. Without this, .metric-card's
+// `aspect-ratio: 16/9` fights the grid and rows would collapse to the
+// metric cards' preferred shape rather than the bento layout's.
+.project-showcase .metric-card {
+  aspect-ratio: auto;
+  // Without an explicit min-height: 0, MetricCard's content height becomes
+  // the row track's min-size — and if content is taller than the row
+  // track that the card-group's locked aspect-ratio implies, rows grow
+  // and F stretches off-16:9. Allowing the card to shrink below its
+  // intrinsic content height keeps the bento geometry intact.
+  min-height: 0;
+  // Hide any overflowing content rather than letting it push the row
+  // taller. If we hit this in practice, that's the signal to either
+  // shorten metric copy or revisit the bento proportions.
+  overflow: hidden;
+}
+
+// D and E (the two short middle-column cards) drop the description — at
+// the reduced row height there isn't room for value + label + description,
+// and the short label carries enough context on its own. C keeps its
+// description because it has the full 2-row height to work with.
+// Targeting via the absence of `--card-row-span` cleanly distinguishes
+// D + E (no row-span) from C (which sets row-span to 2).
+.project-showcase .metric-card:not([style*="--card-row-span"]) .metric-card__description {
+  display: none;
+}
+
+// Image-bearing cards (top-right / bottom-right): drop the card-group's
+// default 20px padding and clip the image to the card's rounded corners
+// so it bleeds edge-to-edge. `:has()` targets only cards that actually
+// contain a media element — text-content cards (e.g. A) keep their
+// padding. Same pattern as `.card-group:has(> .testimonial-card)` in
+// _cards.scss.
+.project-showcase__card:has(> .project-showcase__media) {
+  padding: 0;
+  overflow: hidden;
+}
+
+// The image itself fills the (now padding-free) card. `object-fit:
+// contain` is a safety belt — the source asset is 16:9 and the card is
+// locked to 16:9, so contain == cover in practice; if a non-16:9 asset
+// is ever swapped in, contain preserves it without cropping.
+.project-showcase__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+// Feature card (top-left) — carries the project title, kickers, and CTA.
+// Content sits at the top with a vertical stack; the button anchors 32px
+// below the kickers. Aspect-ratio comes from the [--card-span: 2]
+// selector above (16:9); the flex column lays out the inner blocks.
+//
+// Stack:
+//   title → 16px → kickers → 32px → button
+//
+// 16px lives on the inner `.project-showcase__copy` flex gap (title ↔
+// kickers). 32px lives on the outer `.project-showcase__card--feature`
+// flex gap (copy block ↔ button).
+.project-showcase__card--feature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--unit-32);
+}
+
+.project-showcase__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--unit-16);
+}
+
+// Selector specificity (0,2,0) — has to beat the global
+// `.page_container h2 { margin: 32px 0 16px }` rule in _base.scss
+// which has (0,1,1) via the `h2` type selector.
+.project-showcase .project-showcase__title {
+  // Reset the inherited chunk spacing so the 16px gap to the kickers
+  // (set on .__copy's flex gap) is the entire spacing below the title.
+  margin: 0;
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+// Industry + theme kickers, side-by-side. Same vocabulary as the project
+// page's `.profile-info .project-header-kickers` rule in _project-layout.
+// Colour matches `.metric-card__label` (--text-secondary) so the kickers
+// and the metric labels in the same card-group read at the same weight.
+.project-showcase__kickers {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--unit-16);
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  color: var(--text-secondary);
+}
+
+// Mobile reshuffle — STALE: written for the previous 5-card layout where
+// card 2 (B) was a desktop "row 1 right" that needed to become a tall
+// left-column card on mobile. Still applied here because it doesn't
+// actively break anything for the 6-card grid, but the mobile layout
+// for the new 6-card composition hasn't been designed yet. Revisit
+// this rule (and add cases for C / F's row-span) once the mobile
+// layout lands.
+@media screen and (max-width: $breakpoint-medium) {
+  .project-showcase .card-group > :nth-child(2) {
+    grid-column: span 1;
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+}

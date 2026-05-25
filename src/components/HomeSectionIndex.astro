@@ -2,8 +2,8 @@
 /**
  * Home page sticky nav — jump-to-project + contact + social links.
  *
- * Mirrors ProjectSectionIndex's structure and reuses the same CSS classes
- * (`.project-section-index*`) and JS (`initProjectSectionIndex`). The only
+ * Mirrors NavLg's structure and reuses the same CSS classes
+ * (`.nav-lg*`) and JS (`initNavLg`). The only
  * differences from a project page nav:
  *
  *  - Group 1's second line is plain text (e.g. "Updated April 2026") rather
@@ -31,18 +31,18 @@ const { projects, subtitle } = Astro.props as Props;
 ---
 
 <nav
-  class="project-section-index"
+  class="nav-lg"
   aria-label="Site sections"
-  data-project-section-index
+  data-nav-lg
 >
-  <div class="project-section-index__group">
-    <span class="project-section-index__permalink">alanlong.design</span>
-    <span class="project-section-index__site-section">{subtitle}</span>
+  <div class="nav-lg__group">
+    <span class="nav-lg__permalink">alanlong.design</span>
+    <span class="nav-lg__site-section">{subtitle}</span>
   </div>
-  <div class="project-section-index__group">
+  <div class="nav-lg__group">
     {projects.map((p) => (
       <a
-        class="project-section-index__link"
+        class="nav-lg__link"
         href={`#${p.id}`}
         data-section-id={p.id}
         data-label={p.label}
@@ -51,15 +51,15 @@ const { projects, subtitle } = Astro.props as Props;
       </a>
     ))}
   </div>
-  <div class="project-section-index__group">
+  <div class="nav-lg__group">
     <a
-      class="project-section-index__contact-link"
+      class="nav-lg__contact-link"
       href="mailto:alan@ajalong.com"
     >
       alan@ajalong.com
     </a>
     <a
-      class="project-section-index__contact-link"
+      class="nav-lg__contact-link"
       href="/Alan-Long-Resume-2026.pdf"
       target="_blank"
       rel="noopener noreferrer"
@@ -67,9 +67,9 @@ const { projects, subtitle } = Astro.props as Props;
       Resume-2026.pdf
     </a>
   </div>
-  <div class="project-section-index__group">
+  <div class="nav-lg__group">
     <a
-      class="project-section-index__contact-link"
+      class="nav-lg__contact-link"
       href="https://linkedin.com/in/alanalberglong"
       target="_blank"
       rel="noopener noreferrer"
@@ -77,7 +77,7 @@ const { projects, subtitle } = Astro.props as Props;
       Linkedin
     </a>
     <a
-      class="project-section-index__contact-link"
+      class="nav-lg__contact-link"
       href="https://dribbble.com/alalo"
       target="_blank"
       rel="noopener noreferrer"
@@ -85,7 +85,7 @@ const { projects, subtitle } = Astro.props as Props;
       Dribbble
     </a>
     <a
-      class="project-section-index__contact-link"
+      class="nav-lg__contact-link"
       href="https://github.com/ajalong"
       target="_blank"
       rel="noopener noreferrer"
@@ -96,9 +96,9 @@ const { projects, subtitle } = Astro.props as Props;
 </nav>
 
 <script>
-  import { initProjectSectionIndex } from '../scripts/project-section-index';
+  import { initNavLg } from '../scripts/nav-lg';
 
   document.addEventListener('astro:page-load', () => {
-    initProjectSectionIndex();
+    initNavLg();
   });
 </script>

@@ -2,8 +2,10 @@
 import BaseLayout from './BaseLayout.astro';
 import ProjectTeamPanel from '../components/ProjectTeamPanel.astro';
 import ProjectNavbar from '../components/ProjectNavbar.astro';
-import ProjectSectionIndex from '../components/ProjectSectionIndex.astro';
+import NavLg from '../components/NavLg.astro';
+import NavSd from '../components/NavSd.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import IconClose from '../components/icons/IconClose.astro';
 
 interface NextProjectCard {
   href: string;
@@ -24,6 +26,13 @@ interface TeamMember {
   description?: string;
 }
 
+interface OrgEntry {
+  name: string;
+  caption: string;
+  logo?: string;
+  url?: string;
+}
+
 interface SectionIndexEntry {
   id: string;
   label: string;
@@ -37,8 +46,11 @@ interface Props {
   url?: string;
   nextProject?: NextProjectCard;
   team?: TeamMember[];
+  orgs?: OrgEntry[];
   year?: number;
   sector?: string;
+  industry?: string;
+  theme?: string;
   sectionIndex?: SectionIndexEntry[];
   roleTitle?: string;
   roleSummary?: string;
@@ -46,8 +58,8 @@ interface Props {
   brandSecondary?: string;
 }
 
-const { title, client, description, image, url, nextProject, team, year, sector, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
-const clientWithYear = client;
+const { title, client, description, image, url, nextProject, team, orgs, year, sector, industry, theme, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
+const headerKickers = [industry, theme].filter(Boolean) as string[];
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
 ---
@@ -60,13 +72,22 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
           <div class="display-name">
             <h1>{title}</h1>
           </div>
-          <p>{clientWithYear}</p>
+          {headerKickers.length > 0 && (
+            <p class="kicker project-header-kickers">
+              {headerKickers.map((label) => <span>{label}</span>)}
+            </p>
+          )}
         </div>
       </div>
     </header>
-    {showSectionIndex && <ProjectSectionIndex sections={sectionIndex} />}
+    {showSectionIndex && (
+      <>
+        <NavLg sections={sectionIndex} />
+        <NavSd sections={sectionIndex} />
+      </>
+    )}
     <main>
-      {showTeamPanel && <ProjectTeamPanel team={team} {roleTitle} {roleSummary} />}
+      {showTeamPanel && <ProjectTeamPanel team={team} {orgs} {roleTitle} {roleSummary} />}
       <slot />
     </main>
     <footer id="page-permalink-footer">
@@ -101,7 +122,19 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     </footer>
   </div>
   <dialog class="media-lightbox" data-media-lightbox aria-label="Expanded media">
-    <div class="media-lightbox__content" data-media-lightbox-content></div>
+    <button
+      class="media-lightbox__close"
+      type="button"
+      data-media-lightbox-close
+      aria-label="Close"
+    >
+      <IconClose class="media-lightbox__close-icon" />
+      <span class="media-lightbox__close-label">Close</span>
+    </button>
+    <div class="media-lightbox__content">
+      <div class="media-lightbox__media" data-media-lightbox-media></div>
+      <p class="media-lightbox__caption" data-media-lightbox-caption></p>
+    </div>
   </dialog>
   <script>
     import { initProjectNavFromInternal } from '../scripts/project-nav-visibility';

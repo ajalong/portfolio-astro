@@ -103,11 +103,29 @@ $cta-secondary-inner-glow-active:
   }
 }
 
-// Subtle surface hover — faint background tint. Default for list rows and less prominent surfaces.
+// Subtle surface hover — faint darkening on top of whatever background the
+// element already has. Implemented as a ::after overlay (rather than swapping
+// `background-color`) so it works on cards that carry their own fill — a
+// translucent `--bg-card` tint, say — without lightening them on hover.
 @mixin surface-hover {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: rgb(0 0 0 / 0.04);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background: rgb(0 0 0 / 0.03);
+    &:hover::after {
+      opacity: 1;
     }
   }
 }
@@ -216,8 +234,14 @@ $cta-secondary-inner-glow-active:
     background-color: var(--secondaryBorderColor);
   }
 
+  // The zip-hover state fires on direct link hover AND when any ancestor
+  // with `[data-zip-on-hover]` is hovered — useful for links inside cards
+  // where the whole card should trigger the link's animation, not just
+  // pointing directly at the link text. Add the data attribute to the
+  // card element (e.g. `<button class="my-role-card" data-zip-on-hover>`).
   @media (hover: hover) and (pointer: fine) {
-    &:hover {
+    &:hover,
+    [data-zip-on-hover]:hover & {
       text-decoration-color: transparent;
       background-image: var(--zip-hover-gradient);
       background-size: 200% var(--text-underline-width);

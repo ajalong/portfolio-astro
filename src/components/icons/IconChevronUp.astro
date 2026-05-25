@@ -1,0 +1,25 @@
+---
+/**
+ * 14×14 up-pointing chevron. Stroke uses `currentColor` so the icon inherits
+ * its parent's text colour — set `color` on a containing element to recolour.
+ *
+ * Path coordinates are the vertical mirror of IconChevronDown around y=7.
+ * Kept as explicit values (rather than a CSS rotate flip on the down-pointing
+ * source) so the SVG is semantically what its filename says.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props as Props;
+---
+<svg
+  class={className}
+  width="14"
+  height="14"
+  viewBox="0 0 14 14"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <path d="M3.5 8.75L7 5.25L10.5 8.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

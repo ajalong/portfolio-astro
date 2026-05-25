@@ -4,7 +4,7 @@
 // Cols 2–5   : header (h1 + intro) and project list
 // Col 6      : sticky section-index nav (HomeSectionIndex)
 //
-// Mobile (≤1000px): the grid collapses to a single stacked column. The
+// Mobile (≤460px): the grid collapses to a single stacked column. The
 // sticky nav's first two groups (the "alanlong.design / Portfolio" header
 // and the project jump-links) are hidden — visitors scroll directly through
 // the cards. The contact + social groups stay visible inline at the bottom.
@@ -27,7 +27,7 @@ body.home .page_container {
   padding: var(--page-gutter-y) var(--page-gutter-x) var(--unit-88);
 }
 
-@media screen and (min-width: 1001px) {
+@media screen and (min-width: $breakpoint-large) {
   body.home .page_container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -49,7 +49,7 @@ body.home .page_container {
 
   // Sticky nav lives in col 6, spanning both rows so it lines up with the
   // header at the top of the page.
-  body.home .page_container > .project-section-index {
+  body.home .page_container > .nav-lg {
     grid-column: 6;
     grid-row: 1 / -1;
     align-self: start;
@@ -63,7 +63,10 @@ body.home header {
   // Match the section-spacing rhythm used between project sections.
   padding-bottom: var(--section-spacing);
 
-  @media screen and (max-width: 1000px) {
+  // Below large the page is stacked and the header sits directly above the
+  // project list — drop the bottom padding entirely so the gap is just the
+  // flex-column `gap` between page_container children.
+  @media screen and (max-width: ($breakpoint-large - 1px)) {
     padding-bottom: 0;
   }
 }
@@ -126,27 +129,23 @@ body.home .about {
   }
 }
 
-// ─────────── Mobile ───────────
+// ─────────── Below large (mobile + medium) ───────────
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: ($breakpoint-large - 1px)) {
   body.home .page_container {
     display: flex;
     flex-direction: column;
     gap: var(--unit-40);
+    // Match the project-page rule: clearance for the floating .project-
+    // nav-sd bar at the top of the viewport. Stacks the nav clearance on
+    // top of --page-gutter-y so the visual spacing between nav bottom
+    // and the page header stays at --page-gutter-y.
+    padding-top: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
   }
 
-  // Override the desktop hide rule from _project-section-index.scss: at
-  // mobile we keep the contact + social groups visible inline.
-  body.home .project-section-index {
-    display: flex;
-    position: static;
-    padding-left: 0;
-  }
-
-  // Hide groups 1 (heading) and 2 (project jump-links) on mobile.
-  // Group 2's left-rail indicator goes with it via the same selector.
-  body.home .project-section-index__group:nth-child(1),
-  body.home .project-section-index__group:nth-child(2) {
-    display: none;
-  }
+  // HomeSectionIndex (.nav-lg) was previously kept visible at
+  // mobile to surface contact + social inline. With HomeNavSd now
+  // covering the section-jump UX below large, leave HomeSectionIndex
+  // hidden here (the base .nav-lg { display: none } rule from
+  // _nav-lg.scss takes effect with no override needed).
 }

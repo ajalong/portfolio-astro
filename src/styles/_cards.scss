@@ -1,0 +1,427 @@
+/*
+ * Card + media cluster primitives used inside case-study bodies.
+ *
+ *   .card-group   — N-col grid of cards (MetricCard / TestimonialCard / etc).
+ *   .media-group  — subgrid of media-blocks (images / videos).
+ *
+ * The two are intentionally separate — they share visual vocabulary (12px
+ * outer radius, 4px inner gap, 4px inner items) but have meaningfully
+ * different internal layouts and inner-item structures, so a one-class-
+ * with-variants abstraction obscured more than it helped. Each owns its
+ * own rules; the small "shell" lines (radius + overflow) duplicate in
+ * both — cheap, and reading either rule tells you what the cluster is
+ * without bouncing across a base+variant pair.
+ *
+ * Authored as <CardGroup> / <MediaGroup>. Either takes a `pageSpan` prop
+ * to opt into a different cluster width; both default to cols 2-5.
+ */
+
+@use "tokens" as *;
+@use "rim" as *;
+
+// Card fill (`--bg-card`) is tokenised in _tokens.scss and shared with the
+// "My role" card so all cards on the page read as the same material.
+$card-radius-inner: 4px;
+$card-gap-inner: 4px;
+$card-padding: var(--unit-20);
+
+// ── CardGroup ──────────────────────────────────────────────────────────────
+// N-column internal grid with 4px gap. Cards (any direct child) get the
+// shared inner-card chrome — fill, 4px radius, padding, optional column
+// span. The cluster's `overflow: hidden` reshapes the corner cards' outer
+// edges to the 12px cluster envelope.
+//
+// `minmax(0, 1fr)` (rather than plain `1fr`) lets the column shrink below
+// content min-content width — necessary for cards that use `aspect-ratio`,
+// which would otherwise force the column up to their aspect-derived width
+// and overflow the parent.
+//
+// `align-items: stretch` + `justify-items: stretch` pin each card to fill
+// its grid cell on both axes. Without that, `align-items: normal` (the spec
+// default) preserves item aspect-ratios instead of stretching, which here
+// causes aspect-ratio cards to derive width from height and overflow the
+// parent column. Stretch makes aspect-ratio behave as a *height floor*
+// instead — the cell can grow taller than the aspect-derived height if a
+// sibling needs more room, but width stays pinned to the column track.
+//
+// Column counts hold at every viewport — metric clusters keep their
+// declared layout on mobile rather than collapsing to a single stack.
+.card-group {
+  display: grid;
+  grid-template-columns: repeat(var(--card-group-columns, 3), minmax(0, 1fr));
+  // Row tracks: when `--card-group-rows` is set (via the `rows` prop), the
+  // grid uses those explicit `1fr` tracks. Required for `flow="vertical"`
+  // so column-fill knows when to wrap; also used by testimonial clusters
+  // (below) to separate metric rows from the testimonial's own auto row.
+  grid-template-rows: repeat(var(--card-group-rows, 1), 1fr);
+  grid-auto-rows: 1fr;
+  gap: $card-gap-inner;
+  align-items: stretch;
+  justify-items: stretch;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  > * {
+    background: var(--bg-card);
+    border-radius: $card-radius-inner;
+    padding: $card-padding;
+    grid-column: span var(--card-span, 1);
+    // Row-span is opt-in via `--card-row-span`. Default 1 keeps every
+    // existing caller unchanged; only the homepage showcase currently
+    // sets values > 1 (for cards that occupy a 2-row tall track).
+    grid-row: span var(--card-row-span, 1);
+  }
+}
+
+// Column-fill ordering (CardGroup's `flow="vertical"` prop). Class instead of
+// inline style so the mobile-drop rule below can flip it back to row-flow.
+.card-group--vertical-flow {
+  grid-auto-flow: column;
+}
+
+// A card cluster that also holds a testimonial. The testimonial always spans
+// the full row and sits in its own content-sized row (the trailing `auto`
+// track), so its height never stretches the metric cards. The metric rows
+// above it are `1fr` and equalise to the tallest *metric* card.
+.card-group > .testimonial-card {
+  grid-column: 1 / -1;
+}
+
+.card-group:has(> .testimonial-card) {
+  grid-template-rows: 1fr auto;
+
+  // Mobile: add a trailing `auto` track for the testimonial. The generic
+  // mobile-drop rule below handles the column override + row-flow reset.
+  @media screen and (max-width: $breakpoint-medium) {
+    grid-template-rows: repeat(var(--card-group-rows, 1), 1fr) auto;
+  }
+}
+
+// Mobile drop — every card-group narrows to a 2-col grid below the stack
+// breakpoint, regardless of its authored column count or fill direction. The
+// 2-col template is the practical maximum for phone-portrait widths where the
+// page-grid stack point sits (460px); any more would crush cards to
+// unreadable widths. Row-flow is forced so column-fill groups (`flow=
+// "vertical"`) don't push cards into implicit overflow columns once the
+// declared col count drops from N to 2.
+@media screen and (max-width: $breakpoint-medium) {
+  .card-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+  }
+
+  // Odd-first metric: when a cluster holds an odd number of metric cards
+  // the first one spans the full row — the rest then pair up cleanly two-
+  // per-row rather than leaving a lone card stranded. The 16:9 aspect is
+  // dropped here; at full-cluster width it would force an oversized height,
+  // so the card sizes to its content (still equalised to the other rows
+  // by `grid-auto-rows: 1fr`).
+  .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
+    grid-column: 1 / -1;
+    aspect-ratio: auto;
+  }
+}
+
+// ── MediaGroup ─────────────────────────────────────────────────────────────
+// Two distinct treatments by viewport:
+//
+//   Below large: subgrid is gone (no page-grid scaffold). The cluster falls
+//   back to a flex column with a 12px outer radius + overflow clip that
+//   gives the unified rounded envelope — figures drop to 4px inner corners
+//   and the cluster's clip rounds the outer edges to match. Marginal
+//   captions are hidden (there's no col 6 to reach anyway); alt text on
+//   the <img>/<video> covers screen readers, and the lightbox surfaces the
+//   caption on tap-to-expand.
+//
+//   At large: cluster span extends to cols 2-6 so single-figure captions
+//   can reach col 6 (matching standalone media-blocks). The unified cluster
+//   envelope is dropped — figures keep their individual 4px inner radius,
+//   and the tight 4px row gap is what reads as "cluster". Pair captions
+//   stay hidden because the pair uses flex (for a true 4px gap between
+//   figures, which subgrid can't deliver) and the caption-group has no
+//   slot in that flex layout.
+.media-group {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+@media screen and (min-width: $breakpoint-large) {
+  // Cluster span extends to cols 2-6 (5 sub-cols) so col 6 is available
+  // for the caption rules to address. `pageSpan` prop on MediaGroup still
+  // overrides via --page-span inline; default of 5 gives the col-6 reach.
+  body.project-page :is(article, article > section) > .media-group {
+    grid-column: 2 / span var(--page-span, 5);
+
+    display: grid;
+    grid-template-columns: subgrid;
+    column-gap: var(--grid-gap);
+    row-gap: var(--unit-4);
+
+    // Drop the unified rounded envelope at large — the cluster bounding box
+    // now extends into the caption col, so the radius would round the wrong
+    // edges. Figures keep their 4px inner corners (rule below).
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  // Media-blocks span the full cluster width (cols 2-6) so caption children
+  // can address the rightmost sub-col (= page col 6). Visual content is
+  // constrained inside the media-block by the figure placement rules below.
+  body.project-page article .media-group > .media-block {
+    grid-column: 1 / -1;
+  }
+
+  // Single (non-pair) figures sit in cluster cols 1 to -2 (= page cols 2-5),
+  // matching the visual width the cluster had before extending to col 6.
+  .media-group .media-block > figure.media-full {
+    grid-column: 1 / -2;
+  }
+
+  .media-group .media-block figure {
+    border-radius: $card-radius-inner;
+  }
+
+  // Pairs inside a cluster swap subgrid for a flex layout — `gap` can be a
+  // true 4px (the cluster's inner gap vocabulary) without subgrid
+  // redistributing the saved space into the figure tracks. Pair is
+  // constrained to cluster cols 1 to -2 so figures stay in page cols 2-5;
+  // col 6 sits empty for pair rows (pair captions hidden — see below).
+  body.project-page article .media-group > .media-block--pair {
+    display: flex;
+    gap: var(--unit-4);
+    grid-column: 1 / -2;
+  }
+
+  .media-group .media-block--pair > figure.media-full {
+    grid-column: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Pair captions stay hidden — see header comment for the trade-off.
+  .media-group .media-block--pair :is(.media-caption, .media-caption-group) {
+    display: none;
+  }
+}
+
+// Below large (mobile + medium): cluster is a flex column, captions hidden
+// (no col 6 to reach, and the cluster's own visual envelope replaces the
+// marginal caption treatment). The shell + radius still apply.
+@media screen and (max-width: ($breakpoint-large - 1px)) {
+  .media-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-4);
+  }
+
+  .media-group .media-block figure {
+    border-radius: $card-radius-inner;
+  }
+
+  .media-group :is(.media-caption, .media-caption-group) {
+    display: none;
+  }
+}
+
+// ── Page-grid span (.card-group) ──────────────────────────────────────────
+// Only meaningful at ≥$breakpoint-large where the page-grid scaffold is
+// active. Below large the article isn't a grid, so this rule has nothing to
+// address — clusters fall through to default block layout (full width
+// within the article's content rails).
+//
+// .card-group narrows to cols 2–4 (3 page cols), matching the project-team
+// toolbar rule in _project-layout.scss. The narrower card span reads better
+// at the wide viewport where there's room to spare.
+//
+// .media-group's grid-column is set up in its own scaffold block above
+// (cols 2-6, so col 6 is available for single-figure captions). Don't
+// re-set it here.
+//
+// Either component can opt into a different span by setting the `pageSpan`
+// prop — the component writes `--page-span` inline, which the var fallback
+// in the rule below then applies.
+@media screen and (min-width: $breakpoint-large) {
+  body.project-page :is(article, article > section) > .card-group {
+    grid-column: 2 / span var(--page-span, 3);
+  }
+}
+
+// ── MetricCard ────────────────────────────────────────────────────────────
+// Big numeric value on top, label beneath. Optional supporting `description`
+// pinned to the bottom — when present, the head + description sit at opposite
+// ends of the card so adjacent metric cards visually align value-to-value
+// and description-to-description regardless of label length.
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--unit-8);
+  // 16:9 acts as the minimum aspect ratio — the card always reads at least
+  // this wide-format, and grows vertically if content needs more room.
+  // `aspect-ratio` is a "preferred" sizing hint that yields to intrinsic
+  // content height when needed, so this is a floor, not a fixed ratio.
+  aspect-ratio: 16 / 9;
+  // 20 / 24 — slightly taller padding gives the value+label stack room
+  // vertically, with extra side breathing room so labels don't crowd the
+  // card edge when they wrap.
+  padding: var(--unit-20) var(--unit-24);
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--unit-4);
+  }
+
+  &__value {
+    margin: 0;
+    font-size: var(--type-size-lg);
+    font-weight: var(--weight-regular);
+    color: var(--text-primary);
+    line-height: var(--line-height-tight);
+  }
+
+  &__label,
+  &__description {
+    margin: 0;
+    font-size: var(--type-size);
+    color: var(--text-secondary);
+    line-height: var(--line-height);
+  }
+
+  // Drop the supporting description on mobile — the value + label carry the
+  // metric, and the narrower cards don't have room for the extra line.
+  &__description {
+    @media screen and (max-width: $breakpoint-medium) {
+      display: none;
+    }
+  }
+}
+
+// ── TestimonialCard ────────────────────────────────────────────────────────
+// Quote at the top, attribution row pinned to the bottom. Sized to fit
+// alongside metric cards when sharing a CardGroup row.
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--unit-48);
+  // Roomier than the shared card padding (--unit-20) — the testimonial body
+  // is longer than a metric and benefits from more breathing room around it.
+  padding: var(--unit-24);
+
+  &__quote {
+    // Reset global blockquote chrome (border, padding, indent, default
+    // colour) but keep the inherited `max-width: 600px` so the quote
+    // measure matches body paragraphs across the page.
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: var(--type-size-lg);
+    line-height: var(--line-height);
+    color: var(--text-primary);
+
+    // MDX wraps loose slot text in a <p>; render the curly quotes inline on
+    // that paragraph so they flow as punctuation, not as separate flex items.
+    // The opening quote hangs into the negative left margin so the body text
+    // starts flush with the card edge — `hanging-punctuation: first` does
+    // this natively in Safari, and the negative margin is the cross-browser
+    // fallback.
+    > p {
+      margin: 0;
+      // Override the global `p { color: var(--text-secondary) }` rule —
+      // the testimonial quote reads as primary copy, not muted.
+      color: var(--text-primary);
+      hanging-punctuation: first allow-end last;
+
+      &::before {
+        content: open-quote;
+        margin-left: -0.4em;
+      }
+      &::after { content: close-quote; }
+    }
+  }
+
+}
+
+// ── Attribution row ───────────────────────────────────────────────────────
+// Shared person-attribution primitive: circular avatar + name + role text.
+// Used by .testimonial-card (figure's figcaption) and by the project team
+// list (each member's row). Keeps the two visually consistent across the
+// site — change here and both pick it up.
+.attribution {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__avatar {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-avatar);
+    overflow: hidden;
+    background: #eaeaea;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__cite {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  // Name + optional trailing inline content (e.g. LinkedIn icon on the team
+  // list). The name itself sits in &__name; the icon is a sibling.
+  &__name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: var(--type-size);
+    font-weight: var(--weight-regular);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+  }
+
+  &__role {
+    margin: 0;
+    font-size: var(--type-size);
+    font-weight: var(--weight-regular);
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+}
+
+// ── OrgCard ────────────────────────────────────────────────────────────────
+// Sidebar org credit — composes the shared `.attribution` primitive for the
+// logo + name + caption layout. The only deviation: org logos are squares
+// (zero radius) where attribution avatars are circles.
+//
+// Rendered by the project layout (not body MDX), see ProjectTeamPanel.
+// When `url` is provided the card renders as an <a> with the standard surface
+// hover (same treatment as `.project-team-list__link`).
+.org-card {
+  @include surface-hover;
+  display: block;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: var(--unit-12) var(--unit-16);
+  color: inherit;
+  text-decoration: none;
+
+  // Square logos — override `.attribution__avatar`'s circular border-radius.
+  .attribution__avatar {
+    border-radius: 0;
+  }
+}

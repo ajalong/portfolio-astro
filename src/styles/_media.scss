@@ -56,7 +56,7 @@ figure.media-full[data-aspect="1:1"] {
 }
 
 // Pair stacks vertically on mobile; side-by-side layout is desktop-only (via subgrid).
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: $breakpoint-medium) {
   .media-block--pair {
     display: flex;
     flex-direction: column;

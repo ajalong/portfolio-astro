@@ -166,6 +166,13 @@ $bg-card-hover-gradient:
    * opacity and the shared `--blur` filter does the rest.
    */
   --bg-dark: rgba(8, 8, 8, 0.8);
+  /*
+   * Light translucent surface — companion to --bg-dark for light-on-page
+   * overlays (the standard-viewport section nav on light pages). Same 80%
+   * opacity character so it reads as a solid pill against the page bg,
+   * with the shared --blur filter softening the bleed-through.
+   */
+  --bg-light: rgba(230, 230, 230, 0.8);
   --border: 1px solid #eaeaea;
   /*
    * Divider on dark surfaces — used by the lightbox (caption ↔ media
@@ -181,6 +188,20 @@ $bg-card-hover-gradient:
    * across the site — change here and every overlay updates in lockstep.
    */
   --blur: blur(32px) saturate(140%);
+
+  /*
+   * ─────────── Motion ───────────
+   * Standard fade in/out — used for opacity transitions that should feel
+   * uniform across the site (nav labels appearing/disappearing on scroll,
+   * UI chrome showing/hiding, etc.). Reuses the same easing curve as the
+   * nav rail indicator so transition vocabulary stays consistent.
+   *
+   * Canonical usage:
+   *   transition: opacity var(--fade-duration) var(--fade-easing);
+   */
+  --fade-duration: 200ms;
+  --fade-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
   --button-rim-width: 1.4px;
   --text-underline-width: 1px;
   --secondaryBorderColor: #f2f2f2;

@@ -24,6 +24,14 @@ export function initNavSd(): void {
   const activeLabelTrack = nav.querySelector<HTMLElement>('[data-nav-sd-active-label]');
   if (!toggle || !menu || !activeLabelTrack) return;
 
+  // Center label ("alanlong.design/<slug>"). Hidden while at the top of
+  // the page (active = first section, or null = scrolled above all
+  // sections) so the URL only appears once the reader has moved past the
+  // intro. Project pages have non-empty text; on the home page the span
+  // is empty and the fade is a no-op visually.
+  const projectLabel = nav.querySelector<HTMLElement>('[data-nav-sd-project]');
+  const hasProjectLabel = !!projectLabel && (projectLabel.textContent ?? '').trim().length > 0;
+
   const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a[data-section-id]'));
   if (links.length === 0) return;
 
@@ -179,9 +187,18 @@ export function initNavSd(): void {
   // mirroring the NavLg approach.
   let firstFire = true;
 
+  const firstSectionId = links[0]?.dataset.sectionId ?? null;
+
+  const syncProjectLabel = (activeId: string | null): void => {
+    if (!hasProjectLabel || !projectLabel) return;
+    const atTop = activeId === null || activeId === firstSectionId;
+    projectLabel.toggleAttribute('data-hidden', atTop);
+  };
+
   trackActiveSection(targets, (activeId) => {
     const link = applyActiveState(activeId);
     updateBarLabel(link);
+    syncProjectLabel(activeId);
 
     if (firstFire) {
       firstFire = false;

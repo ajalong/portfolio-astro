@@ -26,19 +26,19 @@ import IconChevronDown from './icons/IconChevronDown.astro';
  *
  *   backHref       — back link target. Default "/" (home). Ignored when
  *                    `showBackLink` is false.
- *   backLabel      — long-form back-cell text. Default "alanlong.design".
- *   backLabelShort — short-form back-cell text shown when the back cell
- *                    is too narrow for the long label (container query
- *                    in _nav-sd.scss). Default "Back".
- *   centerLabel    — middle-cell text. Default derived from URL slug
- *                    (uppercased) for project pages; empty string on
- *                    home leaves the cell blank.
+ *   backLabel      — back-cell text. Default "Back".
+ *   centerLabel    — middle-cell text (medium viewport ≥ $breakpoint-medium).
+ *                    Default "alanlong.design/<slug>" on `/project/<slug>`
+ *                    pages; empty string elsewhere leaves the cell blank.
+ *   centerLabelShort — middle-cell text on mobile (≤ $breakpoint-medium)
+ *                    where the full URL gets cramped. Default "<slug>".
+ *                    Pass an explicit empty string to keep mobile blank.
  *   ariaLabel      — <nav> aria-label. Default "Case study sections".
  *   showBackLink   — when true (default) the back cell is a link with
- *                    the back arrow + hover state. When false (used on
- *                    the home page, where "back" has no destination),
- *                    the cell renders as a static label only — no arrow,
- *                    no link, no hover. The label text still shows.
+ *                    the back arrow. When false (used on the home page,
+ *                    where "back" has no destination), the cell renders
+ *                    as a static label only — no arrow, no link. The
+ *                    label text still shows.
  */
 
 interface SectionEntry {
@@ -51,23 +51,25 @@ interface Props {
   sections: SectionEntry[];
   backHref?: string;
   backLabel?: string;
-  backLabelShort?: string;
   centerLabel?: string;
+  centerLabelShort?: string;
   ariaLabel?: string;
   showBackLink?: boolean;
 }
 
-// Default center label is derived from the URL slug for project pages
-// (`/project/gsk` → `GSK`). Empty on any other page.
+// Default center labels are derived from the URL slug for project pages.
+// `/project/gsk` → full "alanlong.design/gsk" (medium+), short "gsk"
+// (mobile). Both empty on any other page.
 const slugMatch = Astro.url.pathname.match(/^\/project\/([^/]+)/);
-const defaultCenterLabel = slugMatch ? slugMatch[1].toUpperCase() : '';
+const defaultCenterLabel = slugMatch ? `alanlong.design/${slugMatch[1]}` : '';
+const defaultCenterLabelShort = slugMatch ? slugMatch[1] : '';
 
 const {
   sections,
   backHref = '/',
-  backLabel = 'alanlong.design',
-  backLabelShort = 'Back',
+  backLabel = 'Back',
   centerLabel = defaultCenterLabel,
+  centerLabelShort = defaultCenterLabelShort,
   ariaLabel = 'Case study sections',
   showBackLink = true,
 } = Astro.props as Props;
@@ -97,19 +99,23 @@ const defaultActiveLabel = flatSections[0]?.label ?? '';
       {showBackLink ? (
         <a class="nav-sd__back" href={backHref}>
           <IconArrowLeft class="nav-sd__back-arrow" />
-          {/* Two labels: the long one shows by default; a container query
-              on the back cell swaps to the short one when the cell isn't
-              wide enough to hold the long label without truncation. */}
-          <span class="nav-sd__back-label nav-sd__back-label--long">{backLabel}</span>
-          <span class="nav-sd__back-label nav-sd__back-label--short">{backLabelShort}</span>
+          <span class="nav-sd__back-label">{backLabel}</span>
         </a>
       ) : (
         <span class="nav-sd__back nav-sd__back--static">
-          <span class="nav-sd__back-label nav-sd__back-label--long">{backLabel}</span>
-          <span class="nav-sd__back-label nav-sd__back-label--short">{backLabelShort}</span>
+          <span class="nav-sd__back-label">{backLabel}</span>
         </span>
       )}
-      <span class="nav-sd__project">{centerLabel}</span>
+      {/* Starts hidden (data-hidden) so it doesn't flash in at the top
+          of the page before the script syncs to the active section.
+          nav-sd.ts removes the attribute once the user scrolls past the
+          first section, re-adds it when they return to the top.
+          Two variants: full text on medium+, short text on mobile —
+          swapped via display rules in _nav-sd.scss. */}
+      <span class="nav-sd__project" data-nav-sd-project data-hidden>
+        <span class="nav-sd__project-full">{centerLabel}</span>
+        <span class="nav-sd__project-short">{centerLabelShort}</span>
+      </span>
       <button
         class="nav-sd__toggle"
         type="button"

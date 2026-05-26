@@ -1,0 +1,67 @@
+---
+/**
+ * Progressive blur cap — frosted-glass effect at the top of the viewport
+ * for content scrolling underneath. Stacks N backdrop-filter layers with
+ * doubling blur radii, each masked to an overlapping horizontal slice
+ * via linear-gradient. Net effect: a perceptually smooth Gaussian
+ * falloff from heavy blur at the top edge to ~zero at the bottom edge.
+ *
+ * Why N layers, not one with a single mask:
+ * A single backdrop-filter + mask gives a hard halo at the mask edge
+ * (blur intensity is binary inside the mask, only opacity varies).
+ * Doubling N times and overlapping the slices approximates a continuous
+ * Gaussian curve and eliminates the halo.
+ *
+ * Performance:
+ *   - 8 backdrop-filter layers is GPU-heavy. The smallest radii
+ *     (≤0.5px) are nearly free; 5px/10px dominate cost. `contain:
+ *     layout paint` on the wrapper scopes repaints.
+ *   - `prefers-reduced-transparency: reduce` collapses the stack to a
+ *     single linear-gradient fade with no blur — cheap and accessible.
+ *
+ * Mask percentages are relative to the component's height, not the
+ * viewport — so the height prop is what shifts where the falloff lands.
+ */
+interface Props {
+  height?: string;
+}
+const { height = '180px' } = Astro.props as Props;
+
+// Layer table: blur radius doubles each step. Each layer's mask is a
+// 4-stop gradient that fades in below, holds in its band, fades out
+// above (handing the visible area to the next-heavier layer). The top
+// two layers degenerate to 3- and 2-stop gradients — no fade-out
+// because they own the very top edge.
+type Layer = { blur: number; stops: number[] };
+const layers: Layer[] = [
+  { blur: 0.078125, stops: [0,    12.5, 25,   37.5] },
+  { blur: 0.15625,  stops: [12.5, 25,   37.5, 50  ] },
+  { blur: 0.3125,   stops: [25,   37.5, 50,   62.5] },
+  { blur: 0.625,    stops: [37.5, 50,   62.5, 75  ] },
+  { blur: 1.25,     stops: [50,   62.5, 75,   87.5] },
+  { blur: 2.5,      stops: [62.5, 75,   87.5, 100 ] },
+  { blur: 5,        stops: [75,   87.5, 100        ] },
+  { blur: 10,       stops: [87.5, 100               ] },
+];
+
+function maskGradient(stops: number[]): string {
+  const opacities =
+    stops.length === 4 ? [0, 1, 1, 0]
+    : stops.length === 3 ? [0, 1, 1]
+    : [0, 1];
+  const segments = stops.map((s, i) => `rgba(0,0,0,${opacities[i]}) ${s}%`).join(', ');
+  return `linear-gradient(to top, ${segments})`;
+}
+---
+
+<div class="progressive-blur" style={`--pb-height: ${height};`} aria-hidden="true">
+  {layers.map((l, i) => {
+    const mask = maskGradient(l.stops);
+    return (
+      <div
+        class="progressive-blur__layer"
+        style={`z-index: ${i + 1}; backdrop-filter: blur(${l.blur}px); -webkit-backdrop-filter: blur(${l.blur}px); mask-image: ${mask}; -webkit-mask-image: ${mask};`}
+      />
+    );
+  })}
+</div>

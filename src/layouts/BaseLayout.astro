@@ -2,6 +2,7 @@
 import '../styles/global.scss';
 import { ClientRouter } from 'astro:transitions';
 import Background from '../components/Background.astro';
+import ProgressiveBlur from '../components/ProgressiveBlur.astro';
 
 interface Props {
   title: string;
@@ -70,6 +71,7 @@ const canonicalUrl = url ?? new URL(Astro.url.pathname, site).toString();
       : undefined}
   >
     <Background />
+    <ProgressiveBlur />
     <slot />
     <script>
       import { initThumbnailVideoHover } from '../scripts/thumbnail-video-hover';

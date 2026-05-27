@@ -5,7 +5,6 @@ import ProjectNavbar from '../components/ProjectNavbar.astro';
 import NavLg from '../components/NavLg.astro';
 import NavSd from '../components/NavSd.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import IconClose from '../components/icons/IconClose.astro';
 
 interface NextProjectCard {
   href: string;
@@ -83,7 +82,7 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
     {showSectionIndex && (
       <>
         <NavLg sections={sectionIndex} />
-        <NavSd sections={sectionIndex} />
+        <NavSd sections={sectionIndex} centerLabelShort={client} />
       </>
     )}
     <main>
@@ -128,8 +127,7 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
       data-media-lightbox-close
       aria-label="Close"
     >
-      <IconClose class="media-lightbox__close-icon" />
-      <span class="media-lightbox__close-label">Close</span>
+      Close
     </button>
     <div class="media-lightbox__content">
       <div class="media-lightbox__media" data-media-lightbox-media></div>

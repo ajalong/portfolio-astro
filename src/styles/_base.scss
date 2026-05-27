@@ -19,7 +19,34 @@ body {
   line-height: var(--line-height);
   color: var(--text-primary);
   -webkit-text-size-adjust: none;
+
+  // Font rendering hints — match Figma/design-tool output as closely as
+  // platform support allows. All four are progressive enhancements:
+  // unsupported engines ignore them silently. The two `font-smoothing`
+  // properties are the most impactful; without them Chrome/Safari on
+  // macOS render subpixel-antialiased text, which appears noticeably
+  // heavier than Figma's grayscale rendering.
+  //
+  //   -webkit-font-smoothing: antialiased   — Chrome / Safari on macOS
+  //   -moz-osx-font-smoothing: grayscale    — Firefox on macOS
+  //   text-rendering: optimizeLegibility    — enables kerning + ligatures
+  //                                            at small sizes too (browsers
+  //                                            normally only do this above
+  //                                            ~20px). Avoid the heavier
+  //                                            `geometricPrecision` — it can
+  //                                            cause layout jank on long
+  //                                            text in some engines.
+  //   font-feature-settings: 'kern'         — explicit kerning. Belt and
+  //                                            braces alongside the
+  //                                            `text-rendering` hint.
+  //
+  // Windows/Linux engines don't expose comparable controls beyond their
+  // OS-level ClearType / fontconfig stack — these are no-ops there and
+  // text renders as the user's system prefers.
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1;
 }
 
 section {
@@ -65,6 +92,18 @@ ul {
 .testimonial-attr {
   font-size: var(--type-size);
   font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+/*
+ * Source note — quiet attribution line placed after a figure, card group, or
+ * other content drawn from an external source. Sits a step below body text.
+ * Vertical-rhythm tightening for project pages lives in _project-layout.scss
+ * (`.card-group + .source-note`, `.media-group + .source-note`, etc.) so it
+ * cooperates with the flow-space system instead of fighting it.
+ */
+.source-note {
+  font-size: var(--type-size-sm, 14px);
   color: var(--text-secondary);
 }
 

@@ -257,7 +257,8 @@
 
 // Properties common to both non-desktop layouts: drop the bento's
 // locked aspect-ratio + fr row tracks, hide F, restore the metric-card
-// 16:9 floor (the desktop override sets it to `auto`).
+// 16:9 floor (the desktop override sets it to `auto`), and release the
+// bento's content clamps so cards can size to their content.
 @mixin _non-desktop-base($trigger) {
   #{$trigger} .card-group {
     grid-auto-flow: row;
@@ -272,8 +273,17 @@
   // Each metric card sizes to a 16:9 floor in non-desktop layouts so
   // they read as cards rather than thin bands; aspect-ratio yields to
   // content if labels need more height.
+  //
+  // `min-height: auto` + `overflow: visible` release the desktop bento's
+  // content clamps (set on `.project-showcase .metric-card` above) — in
+  // the bento those clamps stop a card from blowing up the locked grid
+  // geometry, but here the grid rows are content-sized (`auto` tracks),
+  // so the clamps would clip labels that wrap to a second line without
+  // serving any layout purpose.
   #{$trigger} .metric-card {
     aspect-ratio: 16 / 9;
+    min-height: auto;
+    overflow: visible;
   }
 }
 
@@ -361,6 +371,15 @@
     grid-template-rows: auto auto auto auto;
   }
 
+  // Metric cards hug their content in ultra-narrow — drop even the 16:9
+  // floor that _non-desktop-base sets. At this width 16:9 would still
+  // be wider than each card's stacked content + the label wrapping room
+  // it needs, so the floor would add empty height. Pure content sizing
+  // here; the base mixin's min-height/overflow release lets that flow.
+  #{$trigger} .metric-card {
+    aspect-ratio: auto;
+  }
+
   #{$trigger} .card-group > .project-showcase__card--feature {
     grid-column: 1 / -1;
     grid-row: 1;
@@ -384,11 +403,12 @@
     grid-row: 4;
   }
 
-  // Generic odd-first-metric override — restate C's placement here.
+  // Generic odd-first-metric override — restate C's placement here. No
+  // longer sets aspect-ratio: 16/9 since the metric-card rule above
+  // already releases the aspect lock for every card in ultra-narrow.
   #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
     grid-column: 1;
     grid-row: 2 / span 2;
-    aspect-ratio: 16 / 9;
   }
 }
 

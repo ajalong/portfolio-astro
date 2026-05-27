@@ -31,8 +31,13 @@ import IconChevronDown from './icons/IconChevronDown.astro';
  *                    Default "alanlong.design/<slug>" on `/project/<slug>`
  *                    pages; empty string elsewhere leaves the cell blank.
  *   centerLabelShort — middle-cell text on mobile (≤ $breakpoint-medium)
- *                    where the full URL gets cramped. Default "<slug>".
- *                    Pass an explicit empty string to keep mobile blank.
+ *                    where the full URL gets cramped. Project pages pass
+ *                    the client name (e.g. "GSK") so the compact label
+ *                    reads as the project identity rather than a URL
+ *                    fragment. Defaults to the bare slug as a fallback
+ *                    for callers that don't pass anything (e.g. preview
+ *                    routes); pass an explicit empty string to keep
+ *                    mobile blank.
  *   ariaLabel      — <nav> aria-label. Default "Case study sections".
  *   showBackLink   — when true (default) the back cell is a link with
  *                    the back arrow. When false (used on the home page,
@@ -97,7 +102,7 @@ const defaultActiveLabel = flatSections[0]?.label ?? '';
   >
     <div class="nav-sd__bar">
       {showBackLink ? (
-        <a class="nav-sd__back" href={backHref}>
+        <a class="nav-sd__back btn-secondary" href={backHref}>
           <IconArrowLeft class="nav-sd__back-arrow" />
           <span class="nav-sd__back-label">{backLabel}</span>
         </a>
@@ -117,7 +122,7 @@ const defaultActiveLabel = flatSections[0]?.label ?? '';
         <span class="nav-sd__project-short">{centerLabelShort}</span>
       </span>
       <button
-        class="nav-sd__toggle"
+        class="nav-sd__toggle btn-secondary"
         type="button"
         aria-expanded="false"
         aria-controls="nav-sd-menu"

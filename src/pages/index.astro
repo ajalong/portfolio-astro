@@ -9,6 +9,8 @@ import NavSd from '../components/NavSd.astro';
 import CardGroup from '../components/cards/CardGroup.astro';
 import Card from '../components/cards/Card.astro';
 import MetricCard from '../components/cards/MetricCard.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import { homeLogos } from '../data/homeLogos';
 import { resolveThumbnails, buildShowcaseImageUrl } from '../lib/cloudinary.mjs';
 
 const allProjects = await getCollection('projects');
@@ -87,6 +89,7 @@ const showcaseBrandStyle = featuredProject?.data.brand
         project list becomes the section dropdown. Shared component with
         the project pages (same structure + script + styles). */}
     <NavSd sections={navProjects} showBackLink={false} backLabel="alanlong.design" centerLabel="" centerLabelShort="" ariaLabel="Home sections" />
+    <LogoCarousel logos={homeLogos} />
     <main>
       {/* Featured-project showcase — a new item layout in development. Lives
           above the existing `.project-list` so the new and old can be

@@ -74,51 +74,82 @@ $card-padding: var(--unit-20);
 }
 
 // Column-fill ordering (CardGroup's `flow="vertical"` prop). Class instead of
-// inline style so the mobile-drop rule below can flip it back to row-flow.
+// inline style so the compact mixin can flip it back to row-flow.
 .card-group--vertical-flow {
   grid-auto-flow: column;
 }
 
-// A card cluster that also holds a testimonial. The testimonial always spans
-// the full row and sits in its own content-sized row (the trailing `auto`
-// track), so its height never stretches the metric cards. The metric rows
-// above it are `1fr` and equalise to the tallest *metric* card.
+// A card cluster that also holds a testimonial. The testimonial always
+// spans the full row and sits in its own content-sized row (the trailing
+// `auto` track), so its height never stretches the metric cards.
 .card-group > .testimonial-card {
   grid-column: 1 / -1;
 }
 
 .card-group:has(> .testimonial-card) {
   grid-template-rows: 1fr auto;
+}
 
-  // Mobile: add a trailing `auto` track for the testimonial. The generic
-  // mobile-drop rule below handles the column override + row-flow reset.
-  @media screen and (max-width: $breakpoint-medium) {
+// ── Compact layout ────────────────────────────────────────────────────────
+//
+// Two discrete layouts, two snap thresholds. No in-between reflow, no
+// invented intermediate layouts.
+//
+//   > $card-group-stack-point-dense (~898px):
+//       authored N-col layout (3-col by default).
+//   $card-group-stack-point (~628px) .. $card-group-stack-point-dense:
+//       2-col with descriptions visible — description-bearing clusters
+//       drop here when 3-col cards can no longer hold landscape with
+//       descriptions, but 2-col cards are still wide enough to fit them.
+//   < $card-group-stack-point (~628px):
+//       2-col compact for every cluster. Descriptions hidden — 2-col
+//       cards have narrowed past the width where they can hold
+//       descriptions in landscape. Odd-first metric span turns an
+//       odd-count cluster into a clean "lead row + paired rows" layout.
+@mixin card-group-compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  // Row-flow so column-fill (flow=vertical) clusters don't push cards
+  // into implicit overflow columns once the declared col count drops.
+  grid-auto-flow: row;
+
+  // Testimonial clusters need an explicit row track per authored metric
+  // row + a trailing auto row for the testimonial. Without this the
+  // testimonial's auto row would overflow into implicit 1fr territory
+  // when there are more metrics than fit in one compact row.
+  &:has(> .testimonial-card) {
     grid-template-rows: repeat(var(--card-group-rows, 1), 1fr) auto;
+  }
+
+  // Odd-first metric span: when a cluster holds an odd number of
+  // metric cards the first one spans the full row — the rest then
+  // pair up cleanly two-per-row rather than leaving a lone card
+  // stranded. The 16:9 aspect is dropped here; at full-cluster width
+  // it would force an oversized height, so the card sizes to its
+  // content (still equalised to the other rows by `grid-auto-rows`).
+  > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
+    grid-column: 1 / -1;
+    aspect-ratio: auto;
   }
 }
 
-// Mobile drop — every card-group narrows to a 2-col grid below the stack
-// breakpoint, regardless of its authored column count or fill direction. The
-// 2-col template is the practical maximum for phone-portrait widths where the
-// page-grid stack point sits (460px); any more would crush cards to
-// unreadable widths. Row-flow is forced so column-fill groups (`flow=
-// "vertical"`) don't push cards into implicit overflow columns once the
-// declared col count drops from N to 2.
-@media screen and (max-width: $breakpoint-medium) {
-  .card-group {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-flow: row;
+// Dense snap: description-bearing clusters jump to compact 2-col sooner
+// because 3-col cards can no longer hold landscape with descriptions
+// visible. Descriptions stay visible — 2-col cards are still wide enough.
+@media screen and (max-width: $card-group-stack-point-dense) {
+  .card-group:has(.metric-card__description) {
+    @include card-group-compact;
   }
+}
 
-  // Odd-first metric: when a cluster holds an odd number of metric cards
-  // the first one spans the full row — the rest then pair up cleanly two-
-  // per-row rather than leaving a lone card stranded. The 16:9 aspect is
-  // dropped here; at full-cluster width it would force an oversized height,
-  // so the card sizes to its content (still equalised to the other rows
-  // by `grid-auto-rows: 1fr`).
-  .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
-    grid-column: 1 / -1;
-    aspect-ratio: auto;
+// Baseline snap: every card-group jumps to compact 2-col. Descriptions
+// hidden here — at this viewport 2-col cards have narrowed past the
+// width where they can hold descriptions in landscape proportion.
+@media screen and (max-width: $card-group-stack-point) {
+  .card-group {
+    @include card-group-compact;
+  }
+  .metric-card__description {
+    display: none;
   }
 }
 
@@ -293,13 +324,10 @@ $card-padding: var(--unit-20);
     line-height: var(--line-height);
   }
 
-  // Drop the supporting description on mobile — the value + label carry the
-  // metric, and the narrower cards don't have room for the extra line.
-  &__description {
-    @media screen and (max-width: $breakpoint-medium) {
-      display: none;
-    }
-  }
+  // No @media rule here — descriptions are hidden by the compact-mode
+  // mixin (see `card-group-compact` in this file) so the hide stays in
+  // lockstep with the layout snap. A cluster shows or hides descriptions
+  // based on whether it's in compact mode, not at a fixed viewport.
 }
 
 // ── TestimonialCard ────────────────────────────────────────────────────────

@@ -1,0 +1,77 @@
+---
+/**
+ * Auto-scrolling logo marquee. Full-colour SVG logos that loop
+ * horizontally — pauses on hover; while paused the user can drag the
+ * track horizontally to scrub through logos at their own pace.
+ *
+ * Authoring:
+ *   <LogoCarousel logos={homeLogos} />
+ *
+ * Source-of-truth lives in `src/data/homeLogos.ts` (typed standalone
+ * list, independent of the projects collection). Each `src` is a path
+ * under `public/` (e.g. `/logos/gsk.svg`). SVG is vector-perfect at
+ * any size, so the CSS `height: 32px` on the `<img>` controls render
+ * size with no source-side processing needed.
+ *
+ * Rendering:
+ *   - SSR emits ONE set of logos. The init script (logo-carousel.ts)
+ *     measures the original set against the container and clones the
+ *     items as many times as needed for the track to exceed 2× the
+ *     container width — without that, sparse logo lists leave the
+ *     carousel half-empty mid-loop. The animation translates by the
+ *     measured single-set width plus one inter-item gap (the seamless
+ *     repeat distance) so each loop lands on a visually identical
+ *     position with no sideways snap.
+ *   - Edges fade via a mask-image on the wrapper so logos slide in/out
+ *     of view rather than appearing/disappearing at hard edges.
+ *
+ * Page-scroll safety:
+ *   - The carousel doesn't capture wheel events, so vertical page
+ *     scroll always passes through.
+ *   - `touch-action: pan-y` on the wrapper hands vertical touch to the
+ *     page natively; horizontal touch fires pointer events the script
+ *     interprets as drag-scroll (only while paused on hover).
+ */
+import type { HomeLogo } from '../data/homeLogos';
+
+interface Props {
+  logos: HomeLogo[];
+  /** Optional accessible label for the carousel region. */
+  ariaLabel?: string;
+}
+
+const {
+  logos,
+  ariaLabel = 'Selected clients and partners',
+} = Astro.props as Props;
+
+// SSR emits one canonical set; the init script clones as many copies
+// as it needs at runtime once it has the container's measured width.
+// Cloned items are marked aria-hidden by the script so screen readers
+// only announce each logo once.
+---
+
+{logos.length > 0 && (
+  <div class="logo-carousel" data-logo-carousel role="region" aria-label={ariaLabel}>
+    <ul class="logo-carousel__track" data-logo-carousel-track>
+      {logos.map((logo) => (
+        <li class="logo-carousel__item">
+          <img
+            src={logo.src}
+            alt={logo.name}
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<script>
+  import { initLogoCarousels } from '../scripts/logo-carousel';
+  document.addEventListener('astro:page-load', () => {
+    initLogoCarousels();
+  });
+</script>

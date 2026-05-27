@@ -11,24 +11,32 @@
   left: 0;
   width: 100%;
   height: var(--pb-height, 120px);
-  // Above page content (~z 1), below NavSd (z 30) so the nav text
-  // visually rests on the glass cap rather than punching through it.
-  z-index: 25;
+  // Above page content (~z 1) and above the project team panel (z 250) so
+  // the frosted top edge persists through the overlay state, visually
+  // anchoring the overlay to the same depth model as the underlying page.
+  // NavSd sits one step higher (z 265) so its text reads on the glass.
+  z-index: 260;
   pointer-events: none;
   // Scopes paint to this subtree so backdrop-filter recomputes don't
   // invalidate ancestors on scroll.
   contain: layout paint;
 
-  // White tint on top of the blur stack. The nav has no background of
-  // its own, so this gradient provides the contrast its text reads
-  // against. z-index 9 puts it above every blur layer (z 1..8) — it
-  // tints the *result* of the blur rather than getting blurred itself.
+  // Background-colour tint on top of the blur stack. The nav has no
+  // background of its own, so this gradient provides the contrast its
+  // text reads against. z-index 9 puts it above every blur layer
+  // (z 1..N) — it tints the *result* of the blur rather than getting
+  // blurred itself.
+  //
+  // Uses `--backgroundColor` (#F9F9FB, the page off-white) rather than
+  // pure white so the cap blends seamlessly into the page background
+  // above it — and so a cap mounted inside an overlay (e.g. the project
+  // team panel chrome) sits on the same surface family as `--bg-panel`.
   //
   // Stops follow a quadratic ease-in curve (alpha = t²) from alpha 0
   // (bottom) → 1 (top), sampled at 0/20/40/60/80/100%. Slow start at
   // the bottom (content fades in gently as it scrolls into the cap),
   // accelerating to fully opaque at the top edge with no ease-out —
-  // the top hits 1 at full speed so the nav text sits on a solid white
+  // the top hits 1 at full speed so the nav text sits on a solid
   // ground rather than a translucent haze.
   &::after {
     content: "";
@@ -38,12 +46,12 @@
     pointer-events: none;
     background: linear-gradient(
       to top,
-      rgba(255, 255, 255, 0)    0%,
-      rgba(255, 255, 255, 0.04) 20%,
-      rgba(255, 255, 255, 0.16) 40%,
-      rgba(255, 255, 255, 0.36) 60%,
-      rgba(255, 255, 255, 0.64) 80%,
-      rgba(255, 255, 255, 1)    100%
+      rgb(from var(--backgroundColor) r g b / 0)    0%,
+      rgb(from var(--backgroundColor) r g b / 0.04) 20%,
+      rgb(from var(--backgroundColor) r g b / 0.16) 40%,
+      rgb(from var(--backgroundColor) r g b / 0.36) 60%,
+      rgb(from var(--backgroundColor) r g b / 0.64) 80%,
+      rgb(from var(--backgroundColor) r g b / 1)    100%
     );
   }
 }
@@ -54,7 +62,7 @@
   pointer-events: none;
 }
 
-// Reduced-transparency fallback: collapse the 8-layer stack to a single
+// Reduced-transparency fallback: collapse the blur stack to a single
 // cheap linear-gradient fade. Same visual intent (content softens into
 // the top edge) without backdrop-filter cost or visual transparency.
 // Safari respects prefers-reduced-transparency on iOS/macOS when the

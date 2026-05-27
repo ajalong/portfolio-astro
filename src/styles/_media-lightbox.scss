@@ -91,9 +91,7 @@ dialog.media-lightbox[open] {
   line-height: var(--line-height-tight);
   cursor: pointer;
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--unit-8);
+  display: inline-block;
   white-space: nowrap;
 
   // Muted by default, full white on hover/focus — matches the nav's
@@ -118,11 +116,6 @@ dialog.media-lightbox[open] {
     outline-offset: 2px;
     border-radius: 2px;
   }
-}
-
-.media-lightbox__close-icon {
-  display: block;
-  flex: 0 0 14px;
 }
 
 // Content layout — flex container that fills the dialog's content area

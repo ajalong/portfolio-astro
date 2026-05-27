@@ -26,7 +26,10 @@
   top: var(--unit-16);
   left: var(--page-gutter-x);
   right: var(--page-gutter-x);
-  z-index: 30;
+  // Sits one step above the progressive blur cap (z 260) so the bar text
+  // reads on the glass. Both stack above the project team panel (z 250) so
+  // the cap + nav persist into the overlay state.
+  z-index: 265;
   pointer-events: none; // children re-enable; lets clicks through the gap
                        // between bar and menu when the menu is open
 
@@ -49,40 +52,47 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: var(--unit-16);
-  // No horizontal padding — left/right content sits flush with page
-  // gutters (the wrapper already insets by --page-gutter-x). Vertical
-  // padding kept for tap-target comfort within the progressive-blur cap.
-  padding: var(--unit-12) 0;
+  // No padding — the back/toggle buttons (.btn-secondary) own the bar's
+  // vertical rhythm via their own 12px vertical padding, and horizontal
+  // alignment is handled by the wrapper's --page-gutter-x inset + each
+  // button's negative margin offset (see .nav-sd__back / .nav-sd__toggle).
+  padding: 0;
   color: var(--text-primary);
   font-size: var(--type-size);
   line-height: var(--line-height-tight);
 }
 
 // ── Back cell (col 1) ────────────────────────────────────────────────────
-// Aligns to the start of its grid cell. `min-width: 0` lets the grid cell
-// constrain the link below its content width so the label can truncate
-// with ellipsis if the cell ever gets too narrow.
+// The link variant carries `.btn-secondary` (display, padding, colour,
+// hover, focus-visible all come from there). The negative left margin
+// counter-offsets the button's 20px left padding so the arrow icon sits
+// flush with the wrapper's --page-gutter-x — i.e. the text aligns with
+// the page's main content even though the hover surface extends outward.
+// `min-width: 0` lets the grid cell constrain the link below its
+// content width so the label can truncate with ellipsis if the cell
+// ever gets too narrow.
 .nav-sd__back {
-  display: flex;
-  align-items: center;
-  gap: var(--unit-8);
+  // `justify-self: start` stops the grid cell stretching the link to
+  // full-cell width — the hover surface should hug the visible content,
+  // not span the entire 1fr column.
+  justify-self: start;
   min-width: 0;
-  // Primary throughout — applies to label text and the arrow SVG
-  // (which uses currentColor).
-  color: var(--text-primary);
-  text-decoration: none;
   white-space: nowrap;
-
-  &:not(.nav-sd__back--static):focus-visible {
-    outline: 2px solid var(--text-primary);
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
+  margin-left: calc(var(--unit-20) * -1);
 }
 
 // Static variant: used on the home page where "back" has no destination.
-// Renders as a span (so no pointer cursor, no link affordance); the
-// :not() selectors above keep the hover/focus colour shift from firing.
+// Renders as a <span> (no .btn-secondary), so no hover/focus chrome and
+// the cell stays inert. The original .nav-sd__back rules above keep the
+// truncation behaviour; we override the negative margin so the static
+// label still sits at the grid cell's left edge.
+.nav-sd__back--static {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--unit-8);
+  margin-left: 0;
+  color: var(--text-primary);
+}
 
 // IconArrowLeft component sets its own 14×14 size. We just give it a flex
 // reservation so it doesn't shrink when the cell is tight; it inherits
@@ -147,35 +157,22 @@
 
 // ── Toggle cell (col 3) ──────────────────────────────────────────────────
 // Right-aligned. Inner layout: section label (shrinks + truncates) +
-// chevron (fixed). `justify-content: flex-end` pushes both to the cell's
-// right edge; the label uses `flex: 0 1 auto` so short labels sit at
-// their natural width close to the chevron, and longer labels shrink to
-// fit (and then ellipsis from the right end).
+// chevron (fixed). The toggle carries `.btn-secondary` (chrome reset,
+// padding, colour, hover, focus-visible from there).
+//
+//   - `justify-self: end` + `max-width: 100%` makes the toggle hug its
+//     content + button padding while still capping at the cell's 1fr
+//     width — when the bar gets tight the toggle compresses and the
+//     label inside truncates (see .nav-sd__section-label below).
+//   - `min-width: 0` lets it shrink below its content's natural width.
+//   - `margin-right: calc(var(--unit-20) * -1)` counter-offsets the
+//     button's 20px right padding so the chevron sits flush with the
+//     wrapper's --page-gutter-x (matching the back arrow on the left).
 .nav-sd__toggle {
-  // Reset button chrome.
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--unit-8);
+  justify-self: end;
   min-width: 0;
-  width: 100%;
-
-  // Primary throughout — propagates to the section-label items and
-  // chevron SVG (both use currentColor / inherit).
-  color: var(--text-primary);
-
-  &:focus-visible {
-    outline: 2px solid var(--text-primary);
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
+  max-width: 100%;
+  margin-right: calc(var(--unit-20) * -1);
 }
 
 // Three-layer structure to animate the section name on scroll:
@@ -189,18 +186,18 @@
 //
 // On `prefers-reduced-motion: reduce`, the JS skips the animation and
 // rewrites textContent in place — the structure still works statically.
-// Label fills the available space in the toggle cell (`flex: 1 1 0`) and
-// anchors text to the right (`text-align: right`). The "fill the cell"
-// part is what keeps the label width stable — without it, the label width
-// would track the wider of the in-flight items during the slide, then snap
-// to the new (often shorter) item's width on cleanup, causing the text to
-// jump rightward as the flex parent re-packs against `flex-end`.
 //
-// With the label width stable, the items inside (which are display:block
-// and fill the label width) also have a stable width — the slide becomes
-// purely vertical and the text's right edge never moves.
+// Label is sized to its content (`flex: 0 1 auto`) so the toggle hugs the
+// current section name + the chevron + button padding. The toggle's right
+// edge is the anchor (pinned via `justify-self: end` + the negative right
+// margin), and `text-align: right` keeps the text's right edge flush with
+// the label's right edge — so even though the toggle's *left* edge moves
+// as labels of different lengths swap in, the text's right edge never
+// shifts horizontally during the slide. `min-width: 0` lets the label
+// shrink below content width so the item inside can truncate when the
+// cell is too tight.
 .nav-sd__section-label {
-  flex: 1 1 0;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   height: calc(var(--type-size) * var(--line-height-tight));
@@ -240,10 +237,12 @@
 // reuse the single down-pointing asset and rotate for the smooth open/close
 // animation; swapping to IconChevronUp on state change would be a hard cut
 // (and adds DOM either way).
+// Same timing as the menu's open/close fade so the chevron lands its
+// rotation as the menu finishes appearing.
 .nav-sd__chevron {
   display: block;
   flex: 0 0 14px;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .nav-sd__toggle[aria-expanded="true"] .nav-sd__chevron {
@@ -252,9 +251,20 @@
 
 // ── Menu ─────────────────────────────────────────────────────────────────
 // Positioned below the bar, hanging from the right edge so the dropdown
-// visually attaches to the toggle button. The menu carries its own light
-// surface (--bg-light + blur) — the bar is transparent, but a dropdown
-// list needs a backing of its own to read as a discrete panel.
+// visually attaches to the toggle button. Reads as a discrete light panel
+// — same vocabulary as the project-team overlay card (--bg-panel, hairline
+// border, layered drop shadow, shared --blur backdrop-filter) so the site's
+// overlay surfaces all share one look. The menu sits below the ProgressiveBlur
+// cap; once it extends past the cap's falloff, the backdrop-filter takes over
+// and keeps content scrolling underneath softly blurred.
+//
+// Open/close motion: fade + a 4px downward drop, sharing the lightbox's
+// --dur-fast + --ease-out timing so the site's overlay motion vocabulary
+// stays unified. `transition-behavior: allow-discrete` lets the
+// `[hidden] { display: none }` rule participate in the transition stack —
+// on close the discrete `display` swap is held back until after the fade
+// finishes. `@starting-style` defines the from-state used when the menu
+// first appears (its at-rest state is opacity 1 / translateY 0).
 .nav-sd__menu {
   pointer-events: auto;
   margin-top: var(--unit-4);
@@ -262,14 +272,31 @@
   width: max-content;
   max-width: 100%;
   padding: var(--unit-16) var(--unit-20) var(--unit-16) var(--unit-16);
-  background: var(--bg-light);
+  background: var(--bg-panel);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-panel-color);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
   color: var(--text-primary);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    display var(--dur-fast) allow-discrete;
 
   &[hidden] {
     display: none;
+    opacity: 0;
+    transform: translateY(calc(var(--unit-4) * -1));
+  }
+}
+
+@starting-style {
+  .nav-sd__menu:not([hidden]) {
+    opacity: 0;
+    transform: translateY(calc(var(--unit-4) * -1));
   }
 }
 
@@ -283,85 +310,89 @@
   }
 }
 
-// Rail container — mirrors `.nav-lg__group:nth-child(2)` in
-// _nav-lg.scss. The rail track + active indicator are positioned
-// absolutely against the group's left edge; the group itself supplies a
-// 16px left padding (via the menu's padding above) so the rail sits in a
-// padding channel flush with the menu edge.
+// Menu list container. No more left-rail track / active indicator — each
+// link now reads its own row, with hover and active state communicated by
+// a row-level background (see `.nav-sd__link` below), matching the people
+// overlay's list-item vocabulary.
 .nav-sd__menu-group {
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  row-gap: var(--unit-4);
-
-  // Grey track — full height of the group, dim black against the light bg.
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(-1 * var(--unit-16));
-    width: 2px;
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  // Active indicator — JS sets --active-top/--active-height to the active
-  // link's offsetTop/offsetHeight; transitions animate the slide.
-  &::after {
-    content: "";
-    position: absolute;
-    left: calc(-1 * var(--unit-16));
-    top: var(--active-top, 0);
-    height: var(--active-height, 0);
-    width: 2px;
-    background-color: var(--text-primary);
-    opacity: 0;
-    transition:
-      top 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.2s ease;
-  }
-
-  &[data-has-active]::after {
-    opacity: 1;
-  }
-
-  // Skip the slide on first paint so the bar doesn't animate in from top:0.
-  &[data-init]::after {
-    transition: opacity 0.2s ease;
-  }
 }
 
+// Section jump-link row. Same hover vocabulary as `.project-team-list__link`
+// in the people overlay: full-row hover background via `surface-hover`,
+// inheriting `--radius-sm` corners so the tint reads as a defined row
+// rather than a loose underline. Depth indents drive a custom property
+// (`--row-indent`) used by both the row's `padding-left` and the active-
+// state dot's `left` position, so the dot always sits at the row's
+// "leading-edge" anchor regardless of nesting depth.
+//
+// Active state: a CSS-drawn dot is positioned absolutely in the reserved
+// `--unit-4` + `--unit-8` channel inside the row's left padding (i.e. the
+// row's text always sits inset from that channel — same x for every row
+// regardless of active state). On change-of-active, colour transitions on
+// the row and opacity transitions on the dot, both on the shared
+// `--dur-fast` / `--ease-out` motion cadence. Width is constant across
+// active-state changes, so `width: max-content` on the menu stays stable.
 .nav-sd__link {
-  display: inline-flex;
-  padding: var(--unit-4) 0;
+  @include surface-hover;
+
+  --row-indent: var(--unit-12);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  // Reserve the dot channel (--unit-4 width + --unit-8 gap) inside the
+  // row's leading padding so the text never reflows when an item gains
+  // or loses the dot.
+  padding: var(--unit-8) var(--unit-12) var(--unit-8)
+    calc(var(--row-indent) + var(--unit-4) + var(--unit-8));
+  border-radius: var(--radius-sm);
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);
   color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color var(--dur-fast) var(--ease-out);
   white-space: nowrap;
 
-  &[data-depth="1"] {
-    padding-left: var(--unit-12);
-  }
-  &[data-depth="2"] {
-    padding-left: calc(var(--unit-12) * 2);
+  &::before {
+    // Dot lives in the reserved channel and animates opacity on
+    // active-state changes. `currentColor`-style coupling via `background`
+    // keeps it warm-accent in active state and the same colour during the
+    // fade-out (when the row's `color` is also transitioning).
+    content: '';
+    position: absolute;
+    left: var(--row-indent);
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--unit-4);
+    height: var(--unit-4);
+    border-radius: var(--radius-avatar);
+    background: var(--text-accent);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
   }
 
-  &:hover {
-    color: var(--text-primary);
+  &[data-depth="1"] { --row-indent: var(--unit-24); } // base 12 + 12 indent
+  &[data-depth="2"] { --row-indent: var(--unit-36); } // base 12 + 24 indent
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--text-primary);
+    }
   }
 
   &[data-active] {
-    color: var(--text-primary);
+    color: var(--text-accent);
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   &:focus-visible {
     outline: 2px solid var(--text-primary);
     outline-offset: 2px;
-    border-radius: 2px;
   }
 }

@@ -6,9 +6,9 @@
  * - Click outside the menu closes it. Escape key closes it.
  * - Section link click: smooth-scrolls to the section and closes the menu.
  * - Subscribes to `trackActiveSection` (shared with NavLg) to update
- *   both the bar's section label and the menu's active link styling.
- * - Drives the menu's rail indicator via --active-top / --active-height on
- *   the menu-group element, mirroring the NavLg pattern.
+ *   both the bar's section label and the menu's active link styling
+ *   (data-active attribute → row colour shift; the menu has no rail
+ *   indicator — the active state is communicated by colour alone).
  */
 import { trackActiveSection } from './project-active-section';
 
@@ -46,8 +46,6 @@ export function initNavSd(): void {
     linkById.set(id, link);
     targets.push(target);
   }
-
-  const menuGroup = (links[0]?.closest('.nav-sd__menu-group') as HTMLElement | null) ?? null;
 
   // ── Open / close ──────────────────────────────────────────────────────
   const setOpen = (open: boolean): void => {
@@ -99,17 +97,6 @@ export function initNavSd(): void {
       }
     }
     return activeLink;
-  };
-
-  const moveIndicator = (link: HTMLAnchorElement | null): void => {
-    if (!menuGroup) return;
-    if (link) {
-      menuGroup.style.setProperty('--active-top', `${link.offsetTop}px`);
-      menuGroup.style.setProperty('--active-height', `${link.offsetHeight}px`);
-      menuGroup.setAttribute('data-has-active', '');
-    } else {
-      menuGroup.removeAttribute('data-has-active');
-    }
   };
 
   // ── Bar label swap (animated) ─────────────────────────────────────────
@@ -183,10 +170,6 @@ export function initNavSd(): void {
     activeLabelTrack.addEventListener('transitionend', onEnd);
   };
 
-  // First fire pre-positions the indicator without animating from top:0,
-  // mirroring the NavLg approach.
-  let firstFire = true;
-
   const firstSectionId = links[0]?.dataset.sectionId ?? null;
 
   const syncProjectLabel = (activeId: string | null): void => {
@@ -199,23 +182,5 @@ export function initNavSd(): void {
     const link = applyActiveState(activeId);
     updateBarLabel(link);
     syncProjectLabel(activeId);
-
-    if (firstFire) {
-      firstFire = false;
-      if (menuGroup && link) {
-        menuGroup.setAttribute('data-init', '');
-        menuGroup.style.setProperty('--active-top', `${link.offsetTop}px`);
-        menuGroup.style.setProperty('--active-height', `${link.offsetHeight}px`);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            menuGroup.setAttribute('data-has-active', '');
-            window.setTimeout(() => menuGroup.removeAttribute('data-init'), 260);
-          });
-        });
-      }
-      return;
-    }
-
-    moveIndicator(link);
   });
 }

@@ -73,6 +73,42 @@
 $breakpoint-medium: 460px;
 $breakpoint-large: 1080px;
 
+// Content-derived snap points for CardGroup.
+//
+// Two discrete layouts: the authored N-col grid, and a defined compact
+// fallback (2-col, row-flow, odd-first span, descriptions hidden — see
+// the @include card-group-compact block in _cards.scss). The layout
+// snaps to compact at the viewport where 3-col can no longer give each
+// card the width it needs to stay landscape.
+//
+// Two thresholds because the content floor differs by what's in the
+// cluster — descriptions raise the floor, so description-bearing
+// clusters snap sooner. No more, no less: the value of each threshold
+// is derived from the content; there are no in-between fluid layouts.
+//
+// MetricCard derivation (see `.metric-card` in _cards.scss):
+//   value (--type-size-lg, line-height-tight) + gap (--unit-4) +
+//   label (--type-size, line-height) + padding-y (--unit-20 × 2)
+//     ≈ 29 + 4 + 22 + 40 = ~95px content floor (no description).
+//   Width to maintain 16:9: 95 × 16/9 ≈ 169px → rounded up to 180px for
+//   breathing room before the aspect-ratio yields.
+//
+// Description adds an extra ~2 lines at the typical column widths;
+// 270px is the empirical sweet spot tested at 666–900px viewports —
+// each card holds value + label + a 1–2 line description while still
+// reading landscape. Bump this if a future content variant needs more.
+$card-min-landscape-width:       180px;
+$card-min-landscape-width-dense: 270px;
+
+// Each stack point: viewport width below which a 3-col cluster can no
+// longer give each card its minimum landscape width, accounting for
+// the inter-card gap (--unit-4) and the medium-viewport page gutter
+// (--unit-40). Derived, not arbitrary.
+//   baseline (no description): 3 × 180 + 8 + 80 = 628px
+//   dense (with description):  3 × 270 + 8 + 80 = 898px
+$card-group-stack-point:       (3 * $card-min-landscape-width       + 2 * 4px + 2 * 40px);
+$card-group-stack-point-dense: (3 * $card-min-landscape-width-dense + 2 * 4px + 2 * 40px);
+
 // Card fill — neutral grey at 40% opacity so the page background bleeds
 // through. Used by the "My role" card and the body card variants (MetricCard,
 // TestimonialCard, OrgCard). Exposed below as the `--bg-card` CSS custom
@@ -173,7 +209,30 @@ $bg-card-hover-gradient:
    * with the shared --blur filter softening the bleed-through.
    */
   --bg-light: rgba(230, 230, 230, 0.8);
+  /*
+   * Panel surface — nearly-opaque off-white based on the page background,
+   * not the grey used by --bg-card / --bg-light. Used by the project team
+   * overlay card: reads as a discrete light panel while still letting 4%
+   * of the brand-gradient page bg bleed through (so the panel picks up a
+   * touch of the page's warmth instead of reading as a clinical white box).
+   */
+  --bg-panel: rgba(249, 249, 251, 0.96);
+  /*
+   * Hover tint — faint black darken applied on top of whatever fill the
+   * element already has. Consumed by the `surface-hover` mixin (`::after`
+   * overlay on cards with translucent fills) and by row-style elements
+   * that swap their `background-color` directly on hover. One token so
+   * all hover surfaces share the same darken character.
+   */
+  --bg-hover: rgb(0 0 0 / 0.04);
   --border: 1px solid #eaeaea;
+  /*
+   * Hairline border colour used on light-surface overlays — the project
+   * team panel card, the section-nav dropdown menu, and the open-state
+   * outline on `.btn-secondary[aria-expanded="true"]`. One token so all
+   * three overlay edges sit in lockstep.
+   */
+  --border-panel-color: rgb(0 0 0 / 0.07);
   /*
    * Divider on dark surfaces — used by the lightbox (caption ↔ media
    * separator) and any future dark-surface UI that needs a thin neutral
@@ -217,7 +276,7 @@ $bg-card-hover-gradient:
    * Round icon-only buttons use `border-radius: 50%` directly — circles
    * aren't a third variant, they're a different shape concept. */
   --radius-sm: 4px;       /* small clickable: list rows, link rows */
-  --radius-lg: 12px;      /* large clickable: cards, surface-hover-strong */
+  --radius-lg: 8px;       /* large clickable: cards, surface-hover-strong */
   --radius-avatar: 9999px;/* avatar images — large enough to circle any square photo */
 
   /* ─────────── Spacing primitives (4px grid) ─────────── */
@@ -259,6 +318,7 @@ $bg-card-hover-gradient:
   --nudge:              var(--unit-2);   /* micro-gap, e.g. kicker ↔ heading */
   --text-spacing-tight: var(--unit-16);  /* heading ↔ first paragraph */
   --text-spacing-standard:       var(--unit-28);  /* between related paragraphs */
+  --source-spacing:     var(--unit-12);  /* source / attribution ↔ cited content */
   --block-spacing:      var(--unit-64);  /* text ↔ media transitions */
   --header-offset:      var(--unit-56);  /* clearance below fixed mobile header */
   --section-spacing:    var(--unit-88);  /* section ↔ section on desktop */
@@ -285,6 +345,14 @@ $bg-card-hover-gradient:
   --grid-gap:           var(--unit-16);  /* gutter between grid columns */
   --page-gutter-y:      var(--unit-88);  /* space from viewport top to title */
   --page-gutter-x:      var(--unit-16);  /* space from viewport left/right to grid */
+
+  /* Progressive-blur cap height. Matches the .page_container's effective
+   * top padding so the cap ends right where the page title starts at
+   * scroll=0 — the title isn't blurred on initial load; blur engages as
+   * content scrolls past. Used by ProgressiveBlur (BaseLayout) and
+   * overridden alongside --page-gutter-y on stacked viewports below to
+   * include the NavSd clearance. */
+  --cap-height: var(--page-gutter-y);
 
   /* ─────────── Motion: durations ─────────── */
   --dur-instant:  100ms;  /* outline / focus snaps */
@@ -327,6 +395,10 @@ $bg-card-hover-gradient:
     --section-spacing:    var(--unit-40);
     --page-gutter-y:      var(--unit-40);
     --page-gutter-x:      var(--unit-16);
+    /* Stacked viewports include the NavSd clearance in the cap — the
+     * .page_container's padding-top stacks gutter + nav-clearance to push
+     * the title below the floating nav, and the cap matches. */
+    --cap-height: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
   }
 }
 

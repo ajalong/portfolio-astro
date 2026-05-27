@@ -93,14 +93,13 @@ import CardGroup from "../../components/cards/CardGroup.astro";
 import MediaGroup from "../../components/cards/MediaGroup.astro";
 import MetricCard from "../../components/cards/MetricCard.astro";
 import TestimonialCard from "../../components/cards/TestimonialCard.astro";
+import SourceNote from "../../components/SourceNote.astro";
 
 _Context_
 
 ## An accessible design system for big biopharma
 
 GSK are a FTSE 100 biopharma giant with numerous digital products. They span brand-led content for the general public, to scientific tools for industry professionals.
-
-In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with the new identity.
 
 <CardGroup columns={3} rows={2} flow="vertical">
   <MetricCard value="66,800" label="GSK employees worldwide" />
@@ -116,6 +115,14 @@ In 2022 they rebranded as they spun off their consumer business. The new identit
   <MetricCard value="13.2%" label="Reduction in childhood mortality rate" />
   <MetricCard value="#2" label="Access to Medicine Index 2025" />
 </CardGroup>
+<SourceNote
+  href="https://www.gsk.com/en-gb/company/gsk-at-a-glance/"
+  text="GSK at a glance"
+/>
+
+In 2022 they rebranded as they spun off their consumer business. The new identity featured bold forms and striking scientific imagery. GSK came to me needing a core design system that could underpin all their products and services and align them with the new identity.
+
+For context on the 2022 rebrand, see [Wolff Olins’s case study](https://wolffolins.com/work/gsk).
 
 <MediaGroup>
 ![New GSK logo built from DNA Twist and Precision point holding shapes.](https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto:best,c_limit,w_1600/v1777997705/alan.design/gsk/wolffolins/WolffOlins_GSK_CaseStudy_03_lssslb-2_heywv6.mp4 "New GSK logo created by Wolff Olins with DNA Twist and Precision point holding shapes.")

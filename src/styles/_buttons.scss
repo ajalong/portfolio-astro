@@ -1,19 +1,24 @@
-// Button helpers shared between the project nav button and the team-panel
-// close button. The pill-button-interaction mixin draws an iridescent rim
-// via a ::before pseudo with negative inset, so the host needs visible
-// overflow.
+// Site-wide button variants.
+//
+// Two shapes today:
+//   .btn-primary   — solid on the darkest neutral, white text. CTAs.
+//   .btn-secondary — transparent at rest, primary text. Nav-level controls
+//                    (NavSd back/toggle). Hover swap reuses --bg-hover from
+//                    the people overlay list rows so the interaction
+//                    vocabulary is shared across the site.
+//
+// Both work as either <button class="btn-*"> or <a class="btn-*"> — the
+// inline-flex centring + chrome reset covers both.
 @use "tokens" as *;
-@use "rim" as *;
 
-.project-nav-btn,
-.project-team-panel__close {
+// The project home/menu button still uses the pill-button-interaction
+// rim, whose ::before pseudo overflows the host's edges.
+.project-nav-btn {
   overflow: visible;
 }
 
 // ── Primary button ──────────────────────────────────────────────────────
-// Standard text on the darkest neutral, 12 × 20 padding, 4px radius.
-// Works as either <button class="btn-primary"> or <a class="btn-primary">
-// — inline-flex centring + reset chrome covers both.
+// Standard text on the darkest neutral, 8 × 20 padding, 4px radius.
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -43,5 +48,58 @@
   &:focus-visible {
     outline: 2px solid var(--grey1);
     outline-offset: 2px;
+  }
+}
+
+// ── Secondary button ────────────────────────────────────────────────────
+// Transparent at rest, primary text, 12 × 20 padding so the bar height
+// stays the same when the NavSd back/toggle adopt this class (the bar's
+// previous vertical padding moves onto the button). Hover swaps the bg
+// to --bg-hover — the same tint used by team-panel list rows.
+//
+// Hover is scoped to the interactive tags (<a>, <button>) so the
+// `.nav-sd__back--static` <span> variant stays inert.
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--unit-8);
+  padding: var(--unit-12) var(--unit-20);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+
+  &:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+
+  // Open/expanded state — adopts the overlay surface vocabulary
+  // (--bg-panel + hairline outline + shared --blur). Used by the
+  // NavSd toggle while its dropdown menu is open (aria-expanded="true");
+  // any other btn-secondary that toggles an expandable widget gets it
+  // for free. Box-shadow stands in for `border` so the button's outer
+  // dimensions don't change between rest and open states.
+  &[aria-expanded='true'] {
+    background-color: var(--bg-panel);
+    box-shadow: inset 0 0 0 1px var(--border-panel-color);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(a, button).btn-secondary:hover {
+    background-color: var(--bg-hover);
   }
 }

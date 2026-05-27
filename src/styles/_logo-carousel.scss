@@ -1,0 +1,164 @@
+// Auto-scrolling logo marquee. Pure CSS animation; the script in
+// logo-carousel.ts only handles measurement, clone management, and
+// off-screen / hidden-tab pause for performance.
+@use "tokens" as *;
+
+.logo-carousel {
+  // Tunables.
+  //   --logo-carousel-height — total banner height (including padding).
+  //   --logo-carousel-padding — vertical padding above and below the
+  //                              logo row; logos themselves fill the
+  //                              remaining content height.
+  //   --logo-carousel-gap     — horizontal spacing between logos.
+  //   --logo-carousel-pps     — scroll speed in pixels-per-second.
+  //                              Constant regardless of number of logos:
+  //                              the script computes animation-duration
+  //                              from this and the measured set width
+  //                              so a longer roster doesn't speed up.
+  --logo-carousel-height: 88px;
+  --logo-carousel-padding: 12px;
+  --logo-carousel-gap: var(--unit-48);
+  --logo-carousel-pps: 25;
+  --logo-carousel-edge-fade: 80px;
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: var(--logo-carousel-height);
+  padding-block: var(--logo-carousel-padding);
+  // Card-style envelope — same surface fill + outer radius as project
+  // cards. The rounded corners clip the scrolling track cleanly.
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  // Belt: tell the engine this subtree manages its own paint, so
+  // updates inside the carousel don't invalidate ancestors.
+  contain: layout paint;
+
+  // Edge-fade overlays — fade the outermost ~80px of each side from
+  // the rendered card-surface colour to transparent, so logos
+  // dissolve into the edge rather than abruptly meeting the rounded
+  // corner. Hardcoded rgb because `--bg-card` is semi-transparent;
+  // see comment in the colour value below.
+  //
+  // Quadratic ease-in alpha (1 → 0.64 → 0.36 → 0.16 → 0.04 → 0)
+  // mirrors the page's progressive-blur tint curve.
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--logo-carousel-edge-fade);
+    z-index: 2;
+    pointer-events: none;
+  }
+  // `rgb(241, 241, 243)` = `rgba(230, 230, 230, 0.4)` (--bg-card)
+  // composited over `#F9F9FB` (--backgroundColor). Hardcoded so the
+  // fade fully obscures the logo at the edge rather than veiling it.
+  &::before {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      rgb(241, 241, 243)        0%,
+      rgba(241, 241, 243, 0.64) 20%,
+      rgba(241, 241, 243, 0.36) 40%,
+      rgba(241, 241, 243, 0.16) 60%,
+      rgba(241, 241, 243, 0.04) 80%,
+      rgba(241, 241, 243, 0)    100%
+    );
+  }
+  &::after {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      rgb(241, 241, 243)        0%,
+      rgba(241, 241, 243, 0.64) 20%,
+      rgba(241, 241, 243, 0.36) 40%,
+      rgba(241, 241, 243, 0.16) 60%,
+      rgba(241, 241, 243, 0.04) 80%,
+      rgba(241, 241, 243, 0)    100%
+    );
+  }
+}
+
+.logo-carousel__track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: var(--logo-carousel-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  // The track holds the original set + however many runtime-added
+  // clones it took to exceed 2× container width (see logo-carousel.ts).
+  // Animation translates by the original-set width (`--set-width`, set
+  // inline on the track by the script) — at that translation the
+  // visible state is identical to the start, so the loop is seamless
+  // regardless of how many copies are concatenated after the first.
+  width: max-content;
+  // Duration is set inline on the track by the script: setWidth / pps.
+  // This keeps scroll speed constant in px/sec regardless of how many
+  // logos are in the roster — adding logos extends the loop time
+  // instead of speeding the motion up.
+  animation: logo-carousel-scroll var(--animation-duration, 60s) linear infinite;
+  // Skip animating until the script has measured and set --set-width;
+  // otherwise the keyframe runs with `0px` translation distance, which
+  // pins the track to its start. The script flips `data-ready` on the
+  // carousel once everything's measured.
+  animation-play-state: paused;
+}
+
+.logo-carousel[data-ready] .logo-carousel__track {
+  animation-play-state: running;
+}
+
+// JS-controlled pause states — both for performance, not interaction:
+//   data-offscreen     — IntersectionObserver sets this when the
+//                        carousel is fully off-screen. No point
+//                        spending compositor cycles on a transform the
+//                        user can't see.
+//   data-hidden-tab    — set by the visibilitychange handler when the
+//                        tab is backgrounded.
+.logo-carousel[data-offscreen] .logo-carousel__track,
+.logo-carousel[data-hidden-tab] .logo-carousel__track {
+  animation-play-state: paused;
+}
+
+.logo-carousel__item {
+  flex: 0 0 auto;
+  height: 100%; // fills the padded track height; logos size to fill
+  display: flex;
+  align-items: center;
+}
+
+// Height-locked images; width follows the logo's intrinsic aspect — a
+// square monogram stays narrow, a wide wordmark gets the room it needs.
+.logo-carousel__item img {
+  display: block;
+  height: 100%;
+  width: auto;
+  // Suppress browser drag-ghost on click-drag of a logo image.
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+// Animation translates by the measured single-set width — set inline
+// on the track as `--set-width` by the init script. A negative
+// translation of one set-width lands the visible window exactly one
+// set ahead, which (because the track holds N copies of the same set)
+// is visually identical to the start. The CSS `infinite` repeat then
+// snaps and resumes from 0 with no visible jump.
+@keyframes logo-carousel-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(var(--set-width, 0px) * -1)); }
+}
+
+// Reduced motion: kill the animation entirely. The duplicated logos
+// still render; the wrapper's overflow:hidden + edge-fade overlays
+// leave the visual band looking the same, just static.
+@media (prefers-reduced-motion: reduce) {
+  .logo-carousel__track {
+    animation: none;
+  }
+}

@@ -1,5 +1,6 @@
 ---
 import OrgCard from './cards/OrgCard.astro';
+import ProgressiveBlur from './ProgressiveBlur.astro';
 
 interface TeamMember {
   name: string;
@@ -41,7 +42,10 @@ const stackMembers = others.slice(0, 2);
 const stackRemaining = Math.max(0, others.length - stackMembers.length);
 const showStack = others.length > 0;
 
-// Group all members by company; Interbrand always first, then alphabetical
+// Group all members by company; Interbrand always first, then alphabetical.
+// `company` is treated as a foreign key into `orgs[]` — each unique company
+// string is resolved to its matching org so the group heading can render
+// the full org card (logo + name + caption) instead of just a bare label.
 const grouped = team.reduce<Record<string, TeamMember[]>>((acc, member) => {
   const key = member.company ?? 'Other';
   (acc[key] ??= []).push(member);
@@ -53,6 +57,29 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
   if (b === 'Interbrand') return 1;
   return a.localeCompare(b);
 });
+
+// `orgs[]` is the canonical source for the heading's logo + caption. When a
+// project declares it, each `team[].company` is treated as a foreign key
+// into `orgs[]`: every value must resolve, and a typo or missing entry
+// fails the build loudly rather than rendering a bare-string heading that
+// looks subtly wrong.
+//
+// When `orgs[]` is absent (older projects not yet migrated to the
+// richer authoring shape), the heading falls back to the bare-string
+// behaviour and validation is skipped.
+const orgByName = new Map<string, OrgEntry>(
+  (orgs ?? []).map((o) => [o.name, o]),
+);
+const hasOrgs = orgByName.size > 0;
+if (hasOrgs) {
+  for (const company of sortedCompanies) {
+    if (!orgByName.has(company)) {
+      throw new Error(
+        `ProjectTeamPanel: team member's company "${company}" has no matching entry in orgs[]. Add an org with name: "${company}", or fix the team member's company field.`,
+      );
+    }
+  }
+}
 ---
 
 <section id="my-role" class="project-team-toolbar">
@@ -131,23 +158,56 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
 >
   <div class="project-team-panel__card" data-project-team-card>
     <div class="project-team-panel__chrome">
-      <h2 id="project-team-panel-title" class="project-team-panel__title">Who worked on this</h2>
-      <button
-        type="button"
-        class="project-team-panel__close"
-        aria-label="Close panel"
-        data-project-team-close
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M6 6L18 18" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+      <ProgressiveBlur class="project-team-panel__chrome-blur" height="100%" />
+      <div class="project-team-panel__chrome-bar">
+        <h2 id="project-team-panel-title" class="project-team-panel__title">Who worked on this</h2>
+        <button
+          type="button"
+          class="project-team-panel__close"
+          aria-label="Close"
+          data-project-team-close
+        >
+          Close
+        </button>
+      </div>
     </div>
     <div class="project-team-panel__scroll">
-      {sortedCompanies.map((company) => (
+      {sortedCompanies.map((company) => {
+        const org = orgByName.get(company);
+        const HeadingInner = org?.url ? 'a' : 'div';
+        const headingLinkProps = org?.url
+          ? { href: org.url, target: '_blank', rel: 'noopener noreferrer' }
+          : {};
+        return (
         <section class="project-team-group" aria-label={company}>
-          <h3 class="project-team-group__heading">{company}</h3>
+          <h3 class="project-team-group__heading">
+            {org ? (
+              <HeadingInner
+                class="project-team-group__heading-link"
+                {...headingLinkProps}
+              >
+                <div class="attribution">
+                  {org.logo && (
+                    <div class="attribution__avatar">
+                      <img src={org.logo} alt="" width="56" height="56" loading="lazy" decoding="async" />
+                    </div>
+                  )}
+                  <div class="attribution__cite">
+                    <p class="attribution__name">{org.name}</p>
+                    <p class="attribution__role">{org.caption}</p>
+                  </div>
+                </div>
+              </HeadingInner>
+            ) : (
+              // Bare-string fallback for projects that haven't been migrated
+              // to the richer `orgs[]` authoring shape. Same wrapper class so
+              // the heading inherits its row's padding/radius, just without
+              // the avatar + caption structure of the org-card variant.
+              <div class="project-team-group__heading-link project-team-group__heading-link--bare">
+                {company}
+              </div>
+            )}
+          </h3>
           <ul class="project-team-list">
             {grouped[company].map((member) => (
               <li class="project-team-list__item">
@@ -215,7 +275,8 @@ const sortedCompanies = Object.keys(grouped).sort((a, b) => {
             ))}
           </ul>
         </section>
-      ))}
+        );
+      })}
     </div>
   </div>
 </div>

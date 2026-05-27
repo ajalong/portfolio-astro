@@ -31,7 +31,7 @@ body.home .page_container {
   body.home .page_container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     column-gap: var(--grid-gap);
   }
 
@@ -41,13 +41,23 @@ body.home .page_container {
     grid-row: 1;
   }
 
-  // Project list spans the same content area, row 2.
-  body.home .page_container > main {
+  // Logo carousel sits between the header and the project list,
+  // constrained to the same content columns (2–5) as everything else.
+  // The mask fade on the wrapper softens its left/right edges so the
+  // wall reads as bleeding off the content area rather than hitting a
+  // hard boundary.
+  body.home .page_container > .logo-carousel {
     grid-column: 2 / 6;
     grid-row: 2;
   }
 
-  // Sticky nav lives in col 6, spanning both rows so it lines up with the
+  // Project list spans the main content area (cols 2–5), row 3.
+  body.home .page_container > main {
+    grid-column: 2 / 6;
+    grid-row: 3;
+  }
+
+  // Sticky nav lives in col 6, spanning all rows so it lines up with the
   // header at the top of the page.
   body.home .page_container > .nav-lg {
     grid-column: 6;
@@ -57,18 +67,38 @@ body.home .page_container {
   }
 }
 
-// ─────────── Header ───────────
+// ─────────── Flow rhythm ───────────
+//
+// Same single-rule flow system as project pages (_project-layout.scss):
+// every direct child of .page_container gets a `margin-top` driven by
+// its own `--flow-space` custom property, defaulting to
+// `--text-spacing-standard`. Each per-element rule below declares what
+// its section-rhythm contribution should be — adding a new top-level
+// element on the homepage is one line, not a re-thread of multiple
+// margin selectors.
+//
+// Exclusions:
+//   .nav-lg  — the sidebar is positioned via grid and doesn't
+//              participate in the body's vertical stack.
+//   dialog   — overlays positioned absolutely / via `inset`.
+//   script   — Astro injects per-component <script> tags inline in
+//              dev (hoisted in prod). They render at zero height but
+//              participate in source-order adjacency — without this
+//              exclusion, a section's `+ *` rule lands on the script
+//              rather than the next visible sibling.
+body.home .page_container > * + *:not(.nav-lg):not(dialog):not(script) {
+  margin-top: var(--flow-space, var(--text-spacing-standard));
+}
 
-body.home header {
-  // Match the section-spacing rhythm used between project sections.
-  padding-bottom: var(--section-spacing);
-
-  // Below large the page is stacked and the header sits directly above the
-  // project list — drop the bottom padding entirely so the gap is just the
-  // flex-column `gap` between page_container children.
-  @media screen and (max-width: ($breakpoint-large - 1px)) {
-    padding-bottom: 0;
-  }
+// LogoCarousel is its own section in the page flow — section-spacing
+// both above (the carousel's own margin-top) and after (main's
+// margin-top). `main` is set directly rather than through `+ *`
+// because dev-mode <script> tags can sit between the carousel and
+// main as siblings; targeting main by selector avoids depending on
+// adjacency.
+body.home .page_container > .logo-carousel,
+body.home .page_container > main {
+  --flow-space: var(--section-spacing);
 }
 
 body.home .profile-info h1 {

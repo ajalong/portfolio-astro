@@ -379,14 +379,29 @@ $flow: ':is(#{$a}, #{$a} section)';
     --flow-space: var(--section-spacing);
   }
 
-  // Card- and media-clusters read as sections within the body flow — same
-  // breathing room above and after as a <section> element gets. The `:is()`
-  // selector keeps both cluster types on the single rule (cheaper than two
-  // duplicated rules) without coupling them through a shared base class.
-  :is(.card-group, .media-group),
-  :is(.card-group, .media-group) + *,
-  .media-block + :is(.card-group, .media-group) {
+  // Media-clusters read as their own sections within the body flow —
+  // section-spacing above and after, same rhythm as a <section> element.
+  .media-group,
+  .media-group + *,
+  .media-block + .media-group {
     --flow-space: var(--section-spacing);
+  }
+
+  // Card-groups sit tighter than media-clusters — they're inline content
+  // within a section, not section-level breaks. 48px above and below
+  // regardless of viewport; the value is intentionally fixed rather than
+  // tracking --section-spacing so the cluster's relationship to its
+  // surrounding text doesn't change between desktop and mobile.
+  //
+  // The chained `.card-group + .source-note + *` selector keeps the
+  // "card-group + its attribution" reading as one unit: when a source
+  // note sits below a card-group (12px gap from --source-spacing), the
+  // 48px breathing room belongs after the SOURCE-NOTE, not the cluster.
+  .card-group,
+  .card-group + *,
+  .card-group + .source-note + *,
+  .media-block + .card-group {
+    --flow-space: var(--unit-48);
   }
 
   .kicker + :is(h1, h2, h3, h4, h5, h6) {
@@ -396,6 +411,13 @@ $flow: ':is(#{$a}, #{$a} section)';
   // Attribution sits tight below its blockquote — they read as a unit.
   blockquote + .quote-attr {
     --flow-space: var(--unit-12);
+  }
+
+  // Source-note attribution sits tight below the content it cites, using the
+  // dedicated `--source-spacing` token rather than the default section/block
+  // rhythm that `.card-group + *` / `.media-group + *` would otherwise apply.
+  :is(.card-group, .media-group, .media-block, figure) + .source-note {
+    --flow-space: var(--source-spacing);
   }
 }
 

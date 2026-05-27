@@ -1,0 +1,27 @@
+---
+/**
+ * Quiet attribution line for content drawn from an external source.
+ * Sits a step below body text and tucks tight under the cited block
+ * (CardGroup, MediaGroup, figure) via the adjacency rule in
+ * _project-layout.scss.
+ *
+ * Authoring (MDX):
+ *   <SourceNote href="https://example.com/page" text="Page title" />
+ *
+ * Self-closing with text on a `text` prop (rather than children) so
+ * Prettier's MDX formatter is free to wrap the opening tag's attributes
+ * onto separate lines without leaking whitespace into the rendered
+ * <a> — attribute values are quoted strings, not in-tree text nodes,
+ * so they pass through unaffected by source formatting.
+ *
+ * Renders as `<p class="source-note">Source: <a …>…</a></p>` so the
+ * existing `.card-group + .source-note` adjacency selector matches at
+ * the DOM level.
+ */
+interface Props {
+  href: string;
+  text: string;
+}
+const { href, text } = Astro.props as Props;
+---
+<p class="source-note">Source: <a href={href} target="_blank" rel="noopener">{text}</a></p>

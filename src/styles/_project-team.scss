@@ -215,15 +215,23 @@ html.project-team-panel-open {
   overflow: hidden;
 }
 
-// Full-screen overlay — also acts as the dim/blur backdrop.
+// Full-screen overlay — also acts as the scrim/blur backdrop. The tint
+// echoes the progressive-blur cap's white-tinted vocabulary (top stronger,
+// fading down) so the overlay reads as living inside the same frosted-glass
+// environment as the page. Top padding clears the cap so the card never
+// sits beneath it.
 .project-team-panel {
   position: fixed;
   inset: 0;
   z-index: 250;
   display: grid;
   place-items: center;
-  padding: 24px 40px;
-  background: rgb(0 0 0 / 0.2);
+  padding: calc(var(--nav-sd-clearance) + var(--unit-16)) 40px;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(255 255 255 / 0.25) 100%
+  );
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   opacity: 0;
@@ -250,13 +258,17 @@ html.project-team-panel-open {
   position: relative;
   width: 100%;
   max-width: 560px;
-  max-height: calc(100svh - 48px);
+  // Fill the panel's available height (panel padding already insets us from
+  // the viewport and cap above). Stops the card running off the viewport
+  // bottom when content is taller than the grid cell.
+  max-height: 100%;
   display: flex;
   flex-direction: column;
-  background: rgb(249 249 251 / 0.96);
+  background: var(--bg-panel);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
-  border: 1px solid rgb(0 0 0 / 0.07);
+  border: 1px solid var(--border-panel-color);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
   overflow: hidden;
   // Slide-up on mobile
@@ -266,6 +278,9 @@ html.project-team-panel-open {
   @media screen and (max-width: 600px) {
     max-width: 100%;
     max-height: 88svh;
+    // Bottom-sheet on mobile: only round the top corners since the card
+    // anchors flush to the viewport bottom edge.
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 }
 
@@ -275,55 +290,104 @@ html.project-team-panel-open {
   }
 }
 
+// Chrome — overlays the top of the card with a progressive-blur cap that
+// echoes the page-level cap. The bar (title + close) sits in the chrome's
+// opaque top band; the team list scrolls behind the chrome and fades into
+// the blur as it passes under. Height is sized to give the blur a falloff
+// zone below the bar, not just the bar's own line-box.
+//
+// Wrapper width matches the list rows beneath (`.project-team-panel__scroll`
+// has 20px horizontal padding, so list-item boxes span from 20px to
+// width-20px). The bar's own 12px horizontal padding then echoes each
+// list row's internal 12px padding, so the bar text + close align with
+// the row content (avatars, names) at 32px from the card edge. 16px top
+// padding echoes nav-sd's 16px top offset from the viewport.
 .project-team-panel__chrome {
+  position: absolute;
+  top: 0;
+  left: var(--unit-20);
+  right: var(--unit-20);
+  height: var(--unit-96);
+  padding-top: var(--unit-16);
+  // Above the scroll content (.__scroll z 0 / static), below any future
+  // dialog-level overlays (none today). Pointer events are off on the
+  // wrapper so the fade region doesn't intercept clicks that should
+  // target list rows underneath; the bar itself re-enables them.
+  z-index: 1;
+  pointer-events: none;
+}
+
+// Mounted ProgressiveBlur instance — overrides the component's default
+// fixed-to-viewport positioning so the cap pins to the chrome instead.
+// Compound selector beats the component's base `.progressive-blur` rule
+// on specificity regardless of partial load order.
+.progressive-blur.project-team-panel__chrome-blur {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+// The actual visible bar — flex row matching NavSd's vocabulary: 12px
+// vertical padding, body text size, left-aligned label, right-aligned
+// close. Horizontal padding (12px) mirrors each list row's internal
+// padding (see `.project-team-list__link`), so the bar's title + close
+// line up with the avatars and names in the rows below. Sits above the
+// blur stack within the chrome.
+.project-team-panel__chrome-bar {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 14px 32px 12px 32px;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgb(0 0 0 / 0.07);
+  gap: var(--unit-12);
+  padding: var(--unit-12);
 }
 
-.project-team-panel__title {
-  margin: 24px 0 20px;
-  font-size: var(--type-size-lg);
+// Compound selector beats the global `.page_container h2 { margin: 32px 0 16px }`
+// rule in _base.scss (0,1,1) — without this bump the title gets ~50px of
+// margin that breaks the bar's 12px-padded layout.
+h2.project-team-panel__title {
+  margin: 0;
+  font-size: var(--type-size);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
   color: var(--text-primary);
 }
 
+// Close button — text only, top-right of the chrome bar. Mirrors the
+// lightbox close vocabulary, swapped to light-bg colours: muted gray by
+// default, full text-primary on hover/focus.
 .project-team-panel__close {
-  --rim-fill: var(--buttonBackground);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
   margin: 0;
   padding: 0;
-  border-radius: 50%;
-  color: var(--text-primary);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: var(--type-size);
+  line-height: var(--line-height-tight);
   cursor: pointer;
-  overflow: visible;
-  box-sizing: border-box;
-  @include pill-button-interaction;
 
-  svg {
-    position: relative;
-    z-index: 1;
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
+  display: inline-block;
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--text-primary);
+    }
   }
 
   &:focus-visible {
+    color: var(--text-primary);
     outline: 2px solid var(--text-primary);
     outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
@@ -331,27 +395,69 @@ html.project-team-panel-open {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 4px 20px 20px;
+  // Top padding clears the chrome's full height so list rows start below
+  // the bar (and the blur falloff zone underneath it). As the list scrolls
+  // up, rows pass behind the progressive-blur and fade out into it.
+  padding: var(--unit-96) 20px 20px;
   -webkit-overflow-scrolling: touch;
 }
 
 .project-team-group {
-  margin-bottom: 8px;
+  margin-bottom: var(--unit-48);
 
   &:last-child {
     margin-bottom: 0;
   }
 }
 
+// Group heading — a compact attribution row that mirrors the matching
+// org card (logo + name + caption). The org logo uses square corners
+// (matching `.org-card .attribution__avatar`) but inherits the shared
+// 56px avatar size from `.attribution`, so the heading's logo column
+// lines up with each team member's headshot column below it.
 .project-team-group__heading {
   margin: 0;
-  padding: 16px 12px 10px;
+  font-weight: var(--weight-regular);
+
+  .attribution__avatar {
+    border-radius: 0;
+  }
+}
+
+// Heading link — when the org has a `url`, the heading renders as an
+// <a> so the whole row is clickable (matches OrgCard's behaviour in the
+// main content). When there's no url it renders as a <div> and inherits
+// the same padding/radius but skips the hover treatment. Padding and
+// radius match `.project-team-list__link` so heading and rows share the
+// same hit-target rhythm.
+.project-team-group__heading-link {
+  display: block;
+  padding: 14px 12px;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 150ms ease;
+}
+
+// Bare-string fallback for projects that don't yet declare `orgs[]`.
+// Reads as a quiet section label rather than a clickable card row —
+// uppercase tracking + secondary colour echo the original pre-org-card
+// heading vocabulary so older project pages still get a sensible header.
+.project-team-group__heading-link--bare {
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--text-secondary);
+}
+
+// Hover scoped to the <a> variant — the <div> fallback (no url) doesn't
+// need a hover state.
+@media (hover: hover) and (pointer: fine) {
+  a.project-team-group__heading-link:hover {
+    background-color: var(--bg-hover);
+  }
 }
 
 .project-team-list {
@@ -362,9 +468,11 @@ html.project-team-panel-open {
   flex-direction: column;
 }
 
-// Linked items (have LinkedIn)
+// Linked items (have LinkedIn). The row has no fill of its own, so the
+// hover is a direct `background-color` swap rather than the ::after
+// overlay used by `surface-hover` (which exists to layer onto cards that
+// already carry a translucent fill).
 .project-team-list__link {
-  @include surface-hover;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -373,6 +481,13 @@ html.project-team-panel-open {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color 150ms ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--bg-hover);
+    }
+  }
 }
 
 // Items without LinkedIn

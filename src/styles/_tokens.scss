@@ -337,7 +337,7 @@ $bg-card-hover-gradient:
    *                       overlays; add this to padding-top to push content
    *                       below the nav bottom edge.
    */
-  --nav-sd-top-offset:  var(--unit-16);
+  --nav-sd-top-offset:  var(--unit-8);
   --nav-sd-height:      calc(var(--unit-12) * 2 + var(--type-size) * var(--line-height-tight));
   --nav-sd-clearance:   calc(var(--nav-sd-top-offset) + var(--nav-sd-height));
 
@@ -396,9 +396,11 @@ $bg-card-hover-gradient:
     --page-gutter-y:      var(--unit-40);
     --page-gutter-x:      var(--unit-16);
     /* Stacked viewports include the NavSd clearance in the cap — the
-     * .page_container's padding-top stacks gutter + nav-clearance to push
-     * the title below the floating nav, and the cap matches. */
-    --cap-height: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
+     * .page_container's padding-top stacks the nav clearance + a fixed
+     * 32px gap to push the title below the floating nav, and the cap
+     * matches so the title sits exactly at the cap's bottom edge at
+     * scroll=0 (unblurred until the user scrolls). */
+    --cap-height: calc(var(--nav-sd-clearance) + var(--unit-32));
   }
 }
 

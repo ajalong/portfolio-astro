@@ -23,7 +23,7 @@
 // bar and menu out.
 .nav-sd {
   position: fixed;
-  top: var(--unit-16);
+  top: var(--nav-sd-top-offset);
   left: var(--page-gutter-x);
   right: var(--page-gutter-x);
   // Sits one step above the progressive blur cap (z 260) so the bar text

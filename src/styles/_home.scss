@@ -86,7 +86,7 @@ body.home .page_container {
 //              participate in source-order adjacency — without this
 //              exclusion, a section's `+ *` rule lands on the script
 //              rather than the next visible sibling.
-body.home .page_container > * + *:not(.nav-lg):not(dialog):not(script) {
+body.home .page_container > * + *:not(.nav-lg):not(.nav-sd):not(dialog):not(script) {
   margin-top: var(--flow-space, var(--text-spacing-standard));
 }
 
@@ -101,32 +101,51 @@ body.home .page_container > main {
   --flow-space: var(--section-spacing);
 }
 
+// Home-header type treatment is decoupled from semantics:
+//   - <h1>"Alan Long" and <p>"Product Design" read as kickers stacked
+//     above the .about copy: body-sized, with text-primary for the h1
+//     (the name carries identity) and text-secondary for the role.
+//     The h1 keeps its semantic weight as the page's top-level heading
+//     without claiming visual prominence — the .about hero copy gets
+//     that role.
+//   - The three <p> children of `.about` carry `.text-display` so they
+//     read as the page's hero copy. Class lives on the elements (see
+//     index.astro), not selected by element type here.
+body.home .profile-info {
+  // "Alan Long  Product Design" — single row of two labels with a 16px
+  // horizontal gap. Overrides the base .profile-info `display: grid`
+  // so the role sits beside the name rather than below it. Wrap is
+  // on so the pair collapses cleanly on very narrow viewports.
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--unit-16);
+}
+
 body.home .profile-info h1 {
-  margin: 0;
-  font-size: var(--type-size-lg);
+  // Treat the name as a kicker — same shape as body text. Primary
+  // colour anchors identity; the role below is secondary.
+  font-size: var(--type-size);
   font-weight: var(--weight-regular);
   line-height: var(--line-height-tight);
   color: var(--text-primary);
+  margin: 0;
 }
 
 body.home .profile-info p {
-  margin: 0;
-  font-size: var(--type-size-lg);
-  font-weight: var(--weight-regular);
-  line-height: var(--line-height-tight);
   color: var(--text-secondary);
+  margin: 0;
 }
 
 body.home .about {
-  margin-top: var(--unit-32);
+  // Tightened from --unit-32 so the kicker pair above reads as a
+  // unit with the hero copy rather than sitting in its own zone.
+  margin-top: var(--unit-16);
 
   p {
     margin: 0;
     max-width: 600px;
-    font-size: var(--type-size);
-    font-weight: var(--weight-regular);
-    line-height: var(--line-height);
-    color: var(--text-primary);
   }
 
   p + p {
@@ -166,11 +185,10 @@ body.home .about {
     display: flex;
     flex-direction: column;
     gap: var(--unit-40);
-    // Match the project-page rule: clearance for the floating .project-
-    // nav-sd bar at the top of the viewport. Stacks the nav clearance on
-    // top of --page-gutter-y so the visual spacing between nav bottom
-    // and the page header stays at --page-gutter-y.
-    padding-top: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
+    // Clearance for the floating nav-sd bar + a fixed 32px gap between
+    // the nav text and the page h1. Independent of --page-gutter-y so
+    // the gap-to-nav stays tight as the page gutter scales separately.
+    padding-top: calc(var(--nav-sd-clearance) + var(--unit-32));
   }
 
   // HomeSectionIndex (.nav-lg) was previously kept visible at

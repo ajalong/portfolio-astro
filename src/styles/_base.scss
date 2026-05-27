@@ -54,13 +54,23 @@ section {
 }
 
 /*
- * Heading scale — clear separation between levels.
- *   h1: project / page title (size set by .profile-info override → --type-size-lg).
+ * Type and semantic structure are intentionally decoupled — heading visual
+ * treatment lives in utility classes (`.text-display` for now, room to grow),
+ * not on `h1`/`h2`/etc. Apply the class where you want the heading look;
+ * the element alone carries no implicit size/weight. The `h1` element is
+ * reset specifically (see below) so a bare h1 reads as body text by default.
+ *
+ * The `h2`/`h3`/`h4` element rules below are a remaining piece of coupling
+ * kept because case-study markdown renders headings via element types
+ * (`## Heading` → `<h2>`). Migrating those would mean either swapping the
+ * markdown plugin to emit classes or adding `class={...}` to every heading
+ * in every .mdx — both larger refactors. Pragmatic compromise: keep the
+ * element rules for the case-study content area, but prefer `.text-display`
+ * (or future siblings) anywhere classes are practical.
+ *
  *   h2: section title (e.g. "## Show, don't tell") — --type-size-lg, regular weight.
  *   h3: sub-section title within a section — --type-size-md, medium weight.
  *   h4: rare; body size with medium weight.
- * The size + weight pairing means each level reads as distinct without
- * needing a wide range of sizes to land the hierarchy.
  */
 h2 {
   font-size: var(--type-size-lg);
@@ -116,7 +126,18 @@ body.project-page .page_container article > :is(h1, h2, h3, h4, h5, h6) {
   margin: 0;
 }
 
-h1,
+// h1 reset — the element conveys "this is the page's top-level heading"
+// semantically but adopts no visual treatment by default. Pages that want
+// the display look apply `.text-display`; pages that want it body-shaped
+// (e.g. the home header's "Alan Long") leave the bare element alone.
+h1 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+// Tightening applies to the heading levels still carrying element-coupled
+// visual styles (see comment above the `h2` rule). h1 is excluded so it
+// inherits body line-height/tracking by default.
 h2,
 h3,
 h4,
@@ -124,6 +145,18 @@ h5,
 h6 {
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
+}
+
+// Display utility — the "page-heading" visual treatment, decoupled from
+// any specific element. Apply to <h1>, <p>, or anything else that should
+// read as a primary heading regardless of its HTML tag.
+.text-display {
+  font-size: var(--type-size-lg);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+  max-width: 600px;
 }
 
 p {
@@ -264,6 +297,10 @@ header {
   }
 }
 
+// .profile-info — layout-only. Visual type treatment is decoupled: pages
+// that want their h1 / title to read as a heading apply `.text-display`
+// explicitly (see ProjectLayout); pages that want body-shaped text leave
+// the bare element alone (see home's "Alan Long").
 .profile-info {
   flex: 0 0 auto;
   display: grid;
@@ -272,26 +309,5 @@ header {
     display: flex;
     flex-direction: row;
     align-items: center;
-  }
-
-  h1 {
-    font-size: var(--type-size-lg);
-    font-weight: var(--weight-regular);
-    line-height: var(--line-height-tight);
-    margin: 0;
-  }
-
-  p {
-    margin: 0;
-    max-width: 600px;
-    font-size: var(--type-size-lg);
-    font-weight: var(--weight-regular);
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tight);
-    color: var(--text-secondary);
-  }
-
-  p.project-meta {
-    margin-top: 0;
   }
 }

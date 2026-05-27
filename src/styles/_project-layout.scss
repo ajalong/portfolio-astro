@@ -11,12 +11,13 @@
 }
 
 // Standard viewports (mobile + medium) on project pages: the floating
-// NavSd sits at top: $nav-sd-top-offset with $nav-sd-height. Stack
-// the nav clearance under the existing $page-gutter-y so the visual spacing
-// between the nav bottom and the page title stays at $page-gutter-y.
+// NavSd sits at top: --nav-sd-top-offset with --nav-sd-height. Stack
+// a fixed 32px gap on top of the nav clearance so the visual spacing
+// between the nav text and the page title stays tight regardless of
+// --page-gutter-y.
 @media screen and (max-width: ($breakpoint-large - 1px)) {
   body.project-page .page_container {
-    padding-top: calc(var(--page-gutter-y) + var(--nav-sd-clearance));
+    padding-top: calc(var(--nav-sd-clearance) + var(--unit-32));
   }
 }
 

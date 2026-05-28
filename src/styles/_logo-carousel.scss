@@ -1,29 +1,25 @@
 // Auto-scrolling logo marquee. Pure CSS animation; the script in
 // logo-carousel.ts only handles measurement, clone management, and
 // off-screen / hidden-tab pause for performance.
-@use "tokens" as *;
-@use "sass:math";
-@use "sass:list";
-
-// Pre-compute 21 quadratic-curve mask stops for the carousel edge
-// fades. Same densification pattern as the cap tint (see
-// _progressive-blur.scss) — CSS interpolates linearly between stops,
-// so a 6-point quadratic sample produces visible kinks. 21 stops at
-// 5% intervals reduce each piecewise segment to a sliver the eye
-// can't resolve from a true smooth curve.
 //
-// Alpha goes 1 → 0 across the gradient direction (outer edge → inner).
-// Same `1 - t²` curve as the cap tint, just inverted to match the
-// outward-fading orientation.
-$_edge-mask-stops: ();
-@for $i from 0 through 20 {
-  $t: math.div($i, 20);
-  $alpha: 1 - $t * $t;
-  $_edge-mask-stops: list.append(
-    $_edge-mask-stops,
-    rgba(0, 0, 0, $alpha) #{percentage($t)},
-    comma
-  );
+// Edge fades are rendered by ProgressiveBlur (the site's shared
+// progressive-blur component) in its `direction="left"` and
+// `direction="right"` variants. The layer math, mask stops, tint
+// gradient and noise dither all live in that component — see
+// _progressive-blur.scss.
+@use "tokens" as *;
+
+// Single-label heading sitting 16px above the carousel card.
+.logo-carousel-banner {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-carousel__heading {
+  margin: 0 0 var(--unit-16) 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+  color: var(--text-primary);
 }
 
 .logo-carousel {
@@ -38,6 +34,7 @@ $_edge-mask-stops: ();
   //                              the script computes animation-duration
   //                              from this and the measured set width
   //                              so a longer roster doesn't speed up.
+  //   --logo-carousel-edge-fade — width of each edge's fade region.
   --logo-carousel-height: 88px;
   --logo-carousel-padding: 20px;
   --logo-carousel-gap: var(--unit-48);
@@ -56,57 +53,15 @@ $_edge-mask-stops: ();
   // Belt: tell the engine this subtree manages its own paint, so
   // updates inside the carousel don't invalidate ancestors.
   contain: layout paint;
-
-  // Edge-fade containers — progressive-blur treatment matching the
-  // page's top cap, but oriented horizontally. The actual blur layers
-  // (4 per edge with the 1-2-4-8 ramp) and a tint overlay sit inside
-  // each `.logo-carousel__edge`. See LogoCarousel.astro for the layer
-  // table and inline positioning logic.
 }
 
+// Edge-fade wrapper class — applied to ProgressiveBlur instances at
+// the carousel's left and right. The component supplies positioning
+// (position: absolute, edge-anchored, full carousel height) via its
+// `--left` / `--right` direction modifiers; this class only pins the
+// stacking order so the edges sit above the scrolling logo track.
 .logo-carousel__edge {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: var(--logo-carousel-edge-fade);
   z-index: 2;
-  pointer-events: none;
-
-  &--left  { left: 0;  }
-  &--right { right: 0; }
-
-  // Each blur layer occupies a sub-region of the 80px edge with its
-  // own `backdrop-filter` radius. `top/bottom` fill the full carousel
-  // content height; `left/right`, `backdrop-filter`, and `mask-image`
-  // come in inline per-layer from the component.
-  .logo-carousel__edge-layer {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    pointer-events: none;
-  }
-
-  // White-tint overlay above the blur stack. Solid card-surface
-  // colour at the outer edge fading through a quadratic alpha curve
-  // to transparent at the inner edge — `$_edge-mask-stops` is the
-  // 21-stop dense list defined at the top of this file (see the
-  // _progressive-blur cap for the same densification rationale).
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: rgb(241, 241, 243);
-  }
-  &--left::after {
-    mask-image: linear-gradient(to right, $_edge-mask-stops);
-    -webkit-mask-image: linear-gradient(to right, $_edge-mask-stops);
-  }
-  &--right::after {
-    mask-image: linear-gradient(to left, $_edge-mask-stops);
-    -webkit-mask-image: linear-gradient(to left, $_edge-mask-stops);
-  }
 }
 
 .logo-carousel__track {

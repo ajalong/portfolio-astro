@@ -46,7 +46,7 @@ body.home .page_container {
   // The mask fade on the wrapper softens its left/right edges so the
   // wall reads as bleeding off the content area rather than hitting a
   // hard boundary.
-  body.home .page_container > .logo-carousel {
+  body.home .page_container > .logo-carousel-banner {
     grid-column: 2 / 6;
     grid-row: 2;
   }
@@ -96,7 +96,7 @@ body.home .page_container > * + *:not(.nav-lg):not(.nav-sd):not(dialog):not(scri
 // because dev-mode <script> tags can sit between the carousel and
 // main as siblings; targeting main by selector avoids depending on
 // adjacency.
-body.home .page_container > .logo-carousel,
+body.home .page_container > .logo-carousel-banner,
 body.home .page_container > main {
   --flow-space: var(--section-spacing);
 }

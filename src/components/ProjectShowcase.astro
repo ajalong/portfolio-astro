@@ -1,0 +1,144 @@
+---
+/**
+ * Per-project showcase block — 4×3 bento with title/CTA, two media slots,
+ * and three impact-metric slots. Rendered for projects whose frontmatter
+ * has both `impactMetrics` and `showcaseMedia`. The whole block is one
+ * anchor to the project page.
+ *
+ * Layout — see comment block below for the bento arrangement and the
+ * source-order trick that lets `grid-auto-flow: row` place F before E.
+ */
+import CardGroup from './cards/CardGroup.astro';
+import Card from './cards/Card.astro';
+import MetricCard from './cards/MetricCard.astro';
+import { buildShowcaseImageUrl } from '../lib/cloudinary.mjs';
+
+interface Props {
+  project: any;
+}
+
+const { project } = Astro.props as Props;
+const slug = project.data.slug ?? project.id;
+const href = `/project/${slug}`;
+const metrics = project.data.impactMetrics?.slice(0, 3) ?? [];
+const media = project.data.showcaseMedia;
+const topRightUrl = media?.topRight
+  ? buildShowcaseImageUrl(media.topRight.src, project.data)
+  : null;
+const bottomRightUrl = media?.bottomRight
+  ? buildShowcaseImageUrl(media.bottomRight.src, project.data)
+  : null;
+
+// Pin the hover gradient to this project's brand colours inline. The
+// page-level bg-observer also writes :root brand vars as sections enter
+// the viewport, but above-the-fold the first showcase needs its own
+// scoped colours before any band has activated.
+const brandStyle = project.data.brand
+  ? `--brand-primary: ${project.data.brand.primary}; --brand-secondary: ${project.data.brand.secondary};`
+  : undefined;
+---
+<section
+  class="project-showcase"
+  aria-label={`${project.data.client} case study`}
+  style={brandStyle}
+>
+  {/*
+    Showcase layout — 4 cols × 3 rows.
+
+      Row 1: [ A 2×1                ][ B 2×1                ]
+      Row 2: [ C 1×2 ][ D 1×1 ][ F 2×2                       ]
+      Row 3: [ ↑ C ↑ ][ E 1×1 ][ ↑ F ↑                       ]
+
+    Source order is A, B, C, D, F, E — not A–F. With the default
+    `grid-auto-flow: row`, this order lets the auto-placer fit F into
+    rows 2–3 / cols 3–4 before it tries E, leaving E to land in the
+    only remaining gap at (row 3, col 2).
+  */}
+  <a
+    class="project-showcase__link"
+    href={href}
+    aria-label={`${project.data.client} case study — ${project.data.title}`}
+  >
+    {/* Heading row above the card group: client name + content-type
+        label, mirroring the homepage `profile-info` pattern (name +
+        role kicker side by side). */}
+    <div class="project-showcase__heading">
+      <p class="project-showcase__client">{project.data.client}</p>
+      <p class="project-showcase__type">Project</p>
+    </div>
+    <CardGroup id={`project-${slug}-showcase`} columns={4} rows={3} class="card-group--showcase">
+      {/* A — featured, row 1 / cols 1–2 */}
+      <Card span={2} col={1} row={1} class="project-showcase__card--feature">
+        <div class="project-showcase__copy">
+          <h2 class="project-showcase__title">{project.data.title}</h2>
+          {(project.data.industry || project.data.theme) && (
+            <p class="project-showcase__kickers">
+              {project.data.industry && <span>{project.data.industry}</span>}
+              {project.data.theme && <span>{project.data.theme}</span>}
+            </p>
+          )}
+        </div>
+        {/* Span, not anchor — the outer `.project-showcase__link` is the
+            click target; this is a visual affordance only. */}
+        <span class="btn-primary">See the project</span>
+      </Card>
+      {/* B — row 1 / cols 3–4 (showcase image) */}
+      <Card span={2} col={3} row={1} class="project-showcase__card--media">
+        {topRightUrl && (
+          <img
+            class="project-showcase__media"
+            src={topRightUrl}
+            alt={media!.topRight!.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+      </Card>
+      {/* C — rows 2–3 / col 1 (1st impact metric). Descriptions are
+          passed through and hidden per-card by showcase-overflow.ts when
+          they overflow the bento row track. */}
+      {metrics[0] && (
+        <MetricCard
+          value={metrics[0].value}
+          label={metrics[0].label}
+          description={metrics[0].description}
+          rowSpan={2}
+          col={1}
+          row={2}
+        />
+      )}
+      {/* D — row 2 / col 2 (2nd impact metric) */}
+      {metrics[1] && (
+        <MetricCard
+          value={metrics[1].value}
+          label={metrics[1].label}
+          description={metrics[1].description}
+          col={2}
+          row={2}
+        />
+      )}
+      {/* F — rows 2–3 / cols 3–4 (showcase image; placed before E so auto-flow leaves the (3,2) gap for E). Hidden at ≤$breakpoint-medium — the mobile stack only carries A, B, and the three metrics. */}
+      <Card span={2} rowSpan={2} col={3} row={2} class="project-showcase__card--media project-showcase__card--mobile-hidden">
+        {bottomRightUrl && (
+          <img
+            class="project-showcase__media"
+            src={bottomRightUrl}
+            alt={media!.bottomRight!.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+      </Card>
+      {/* E — row 3 / col 2 (3rd impact metric) */}
+      {metrics[2] && (
+        <MetricCard
+          value={metrics[2].value}
+          label={metrics[2].label}
+          description={metrics[2].description}
+          col={2}
+          row={3}
+        />
+      )}
+    </CardGroup>
+  </a>
+</section>

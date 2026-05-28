@@ -33,6 +33,7 @@
  *     interprets as drag-scroll (only while paused on hover).
  */
 import type { HomeLogo } from '../data/homeLogos';
+import ProgressiveBlur from './ProgressiveBlur.astro';
 
 interface Props {
   logos: HomeLogo[];
@@ -45,96 +46,6 @@ const {
   ariaLabel = 'Selected clients and partners',
 } = Astro.props as Props;
 
-// Progressive blur stack for each edge — mirrors the page's top cap
-// but oriented horizontally. Blur intensity rises from inner edge
-// (fade region's inner extent) to outer edge (carousel's literal left
-// or right edge), so logos approach the edge through progressively
-// heavier blur, then dissolve into the card surface.
-//
-// `region` is in axis-relative %, where 0% = inner edge (transparent
-// end) and 100% = outer edge (opaque end). The 1-2-4-8 radius ramp
-// matches the cap; total compute scales with each layer's bounding
-// box × kernel² (see _progressive-blur perf notes).
-type EdgeLayer = {
-  blur: number;
-  region: { inner: number; outer: number };
-  stops: Array<{ pos: number; alpha: number }>;
-};
-const edgeLayers: EdgeLayer[] = [
-  {
-    blur: 1,
-    region: { inner: 0, outer: 75 },
-    stops: [
-      { pos: 0,  alpha: 0 },
-      { pos: 25, alpha: 1 },
-      { pos: 50, alpha: 1 },
-      { pos: 75, alpha: 0 },
-    ],
-  },
-  {
-    blur: 2,
-    region: { inner: 25, outer: 100 },
-    stops: [
-      { pos: 25,  alpha: 0 },
-      { pos: 50,  alpha: 1 },
-      { pos: 75,  alpha: 1 },
-      { pos: 100, alpha: 0 },
-    ],
-  },
-  {
-    blur: 4,
-    region: { inner: 50, outer: 100 },
-    stops: [
-      { pos: 50,  alpha: 0 },
-      { pos: 75,  alpha: 1 },
-      { pos: 100, alpha: 1 },
-    ],
-  },
-  {
-    blur: 8,
-    region: { inner: 75, outer: 100 },
-    stops: [
-      { pos: 75,  alpha: 0 },
-      { pos: 100, alpha: 1 },
-    ],
-  },
-];
-
-function edgeMaskGradient(layer: EdgeLayer, side: 'left' | 'right'): string {
-  // Mask alpha is computed in axis-relative %; rescale to layer-
-  // relative % so the stops land at the right positions inside the
-  // layer's bounding box.
-  const span = layer.region.outer - layer.region.inner;
-  const segments = layer.stops.map((s) => {
-    const layerPct = ((s.pos - layer.region.inner) / span) * 100;
-    return `rgba(0,0,0,${s.alpha}) ${layerPct.toFixed(2)}%`;
-  }).join(', ');
-  // Direction puts the "outer end" of the gradient at the wrapper's
-  // outer edge — `to left` on the left edge, `to right` on the right.
-  const direction = side === 'left' ? 'to left' : 'to right';
-  return `linear-gradient(${direction}, ${segments})`;
-}
-
-function edgeLayerStyle(layer: EdgeLayer, side: 'left' | 'right'): string {
-  // Position the layer to its axis-relative region inside the 80px
-  // edge wrapper. For the LEFT edge wrapper, wrapper x=0 is the
-  // outer edge (page-left), so a layer covering axis 0–75% (inner
-  // 75%) sits at wrapper x=25–100%. For the RIGHT edge wrapper,
-  // wrapper x=0 is the inner edge (page-center side), so the same
-  // axis 0–75% layer sits at wrapper x=0–75%.
-  const insetA = side === 'left' ? 100 - layer.region.outer : layer.region.inner;
-  const insetB = side === 'left' ? layer.region.inner : 100 - layer.region.outer;
-  const mask = edgeMaskGradient(layer, side);
-  return [
-    `left: ${insetA}%`,
-    `right: ${insetB}%`,
-    `backdrop-filter: blur(${layer.blur}px)`,
-    `-webkit-backdrop-filter: blur(${layer.blur}px)`,
-    `mask-image: ${mask}`,
-    `-webkit-mask-image: ${mask}`,
-  ].join('; ');
-}
-
 // SSR emits one canonical set; the init script clones as many copies
 // as it needs at runtime once it has the container's measured width.
 // Cloned items are marked aria-hidden by the script so screen readers
@@ -142,7 +53,9 @@ function edgeLayerStyle(layer: EdgeLayer, side: 'left' | 'right'): string {
 ---
 
 {logos.length > 0 && (
-  <div class="logo-carousel" data-logo-carousel role="region" aria-label={ariaLabel}>
+  <div class="logo-carousel-banner">
+    <p class="logo-carousel__heading">Notable clients</p>
+    <div class="logo-carousel" data-logo-carousel role="region" aria-label={ariaLabel}>
     <ul class="logo-carousel__track" data-logo-carousel-track>
       {logos.map((logo) => (
         <li class="logo-carousel__item">
@@ -156,17 +69,23 @@ function edgeLayerStyle(layer: EdgeLayer, side: 'left' | 'right'): string {
         </li>
       ))}
     </ul>
-    {/* Progressive-blur edges. Each side has 4 stacked layers with
-        increasing blur radii (1-2-4-8) anchored to the outer side; the
-        ::after on the wrapper carries the white-tint gradient over
-        the blur stack, mirroring the page's top cap. */}
-    {(['left', 'right'] as const).map((side) => (
-      <div class={`logo-carousel__edge logo-carousel__edge--${side}`} aria-hidden="true">
-        {edgeLayers.map((layer) => (
-          <div class="logo-carousel__edge-layer" style={edgeLayerStyle(layer, side)} />
-        ))}
-      </div>
-    ))}
+    {/* Progressive-blur edges — reuses the site's ProgressiveBlur
+        component in its horizontal directions. Tint colour is the
+        carousel's composited card surface (--bg-card at 40% over the
+        page bg) so the edges merge cleanly into the card body. */}
+    <ProgressiveBlur
+      direction="left"
+      extent="var(--logo-carousel-edge-fade)"
+      tintColor="rgb(241, 241, 243)"
+      class="logo-carousel__edge"
+    />
+    <ProgressiveBlur
+      direction="right"
+      extent="var(--logo-carousel-edge-fade)"
+      tintColor="rgb(241, 241, 243)"
+      class="logo-carousel__edge"
+    />
+  </div>
   </div>
 )}
 

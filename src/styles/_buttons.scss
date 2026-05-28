@@ -84,17 +84,20 @@
     outline-offset: 2px;
   }
 
-  // Open/expanded state — adopts the overlay surface vocabulary
-  // (--bg-panel + hairline outline + shared --blur). Used by the
-  // NavSd toggle while its dropdown menu is open (aria-expanded="true");
-  // any other btn-secondary that toggles an expandable widget gets it
-  // for free. Box-shadow stands in for `border` so the button's outer
-  // dimensions don't change between rest and open states.
+  // Open/expanded state — adopts the overlay surface vocabulary:
+  // --bg-panel fill + --border-panel-color hairline outline +
+  // --shadow-panel drop shadow. The drop shadow matches the menu
+  // (or whatever overlay this button is controlling), so the trigger
+  // and its dropdown read as a single elevated surface — without it,
+  // the menu's halo creates simultaneous-contrast that makes the menu
+  // look lighter than the button even though both fills are identical.
+  // The shadows are stacked: inset hairline + outer panel shadow in
+  // one comma-separated declaration.
   &[aria-expanded='true'] {
     background-color: var(--bg-panel);
-    box-shadow: inset 0 0 0 1px var(--border-panel-color);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
+    box-shadow:
+      inset 0 0 0 1px var(--border-panel-color),
+      var(--shadow-panel);
   }
 }
 
@@ -102,4 +105,17 @@
   :is(a, button).btn-secondary:hover {
     background-color: var(--bg-hover);
   }
+}
+
+// Pressed state — adopts the same panel surface vocabulary as the
+// open/expanded state: --bg-panel fill + --border-panel-color outline
+// + --shadow-panel elevation. Scoped to interactive elements so the
+// static span variant stays inert. Declared after the hover rule so
+// it wins on equal specificity when both apply (mouse down while
+// hovered).
+:is(a, button).btn-secondary:active {
+  background-color: var(--bg-panel);
+  box-shadow:
+    inset 0 0 0 1px var(--border-panel-color),
+    var(--shadow-panel);
 }

@@ -1,8 +1,8 @@
 ---
-title: Onboarding UX refinement
+title: A token-driven light mode and UI audit for Tradu's trading app.
 client: Tradu
 slug: tradu
-summary: A token-driven light mode and UX refinements for a fintech onboarding flow.
+summary: A token-driven light mode and UI audit for Tradu's trading app.
 metaDescription: A token-driven light mode for Tradu's onboarding flow, followed by a UX audit that built on the same primitive token foundation.
 mediaBase: alan.design/tradu
 # Tradu's poster (PNG) and loop (MP4) are separate uploads with different
@@ -13,10 +13,37 @@ thumbnailImage: https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:be
 thumbnailVideo: https://res.cloudinary.com/ajalong/video/upload/f_auto,q_auto,c_limit,w_1600,e_fade:1200/e_fade:-1200/v1777807484/alan.design/tradu/tradu-thumbnailVideo_ren8b8.mp4
 order: 2
 year: 2025
-sector: Fintech
+industry: Fintech
+theme: UX Audit
 brand:
   primary: "#DC6FB8"
   secondary: "#A172DA"
+showcaseMedia:
+  topRight:
+    src: tradu-progress_bar_ohs6p0.png
+    alt: "Progress-bar position variants compared, ending with the primary-action grouping at the bottom."
+  bottomRight:
+    src: tradu-field_states_scoji5.png
+    alt: "Selected states in light mode: black indicator vs Tangerine indicator across radio buttons, multi-select buttons, and text fields."
+orgs:
+  - name: Jefferies Group
+    caption: Client
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779917442/alan.design/organisations/org-jefferies_jremx1
+    url: https://www.jefferies.com/
+  - name: Interbrand
+    caption: My employer
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/alan.design/organisations/org-interbrand_ychtay
+    url: https://interbrand.com/
+impactMetrics:
+  - value: ">8x"
+    label: Client engagement growth
+    description: Exploratory sprint grew into multiple product UX audits.
+  - value: "~10%"
+    label: Onboarding completion rate increase
+    description: Tradu's product team's estimate based on findings of my onboarding audit.
+  - value: "~45s"
+    label: Reduced time to complete onboarding
+    description: Tradu's product team's estimate based on findings of my onboarding audit.
 roleTitle: Lead Product Designer
 roleSummary: |
   Sole product designer on Tradu's onboarding flow. Designed a light mode for the flow, in the process extending the token foundation. After the light mode work, scope expanded into a UX audit of the onboarding flow and the corporate site.
@@ -44,11 +71,28 @@ team:
     linkedin: https://www.linkedin.com/in/lisapink/
 ---
 
+import CardGroup from "../../components/cards/CardGroup.astro";
+import MediaGroup from "../../components/cards/MediaGroup.astro";
+import MetricCard from "../../components/cards/MetricCard.astro";
+import SourceNote from "../../components/SourceNote.astro";
+
 _Context_
 
 ## The entry point for every new Tradu customer
 
 Tradu is a UK trading and investing platform owned by Jefferies Financial Group. Their product is a mobile-first web app, and onboarding is the entry point for every new customer.
+
+<CardGroup columns={3} rows={2} flow="vertical">
+  <MetricCard value="8,000+" label="US-listed stocks" />
+  <MetricCard value="7" label="Financial asset classes" />
+  <MetricCard value="6" label="Regulated jurisdictions operating in" />
+  <MetricCard value="24+" label="Languages supported" />
+  <MetricCard value="$243bn" label="Group retail trading volume" />
+  <MetricCard
+    value="#1"
+    label="UK Trading platform, Global Business & Finance Magazine"
+  />
+</CardGroup>
 
 When I joined the project, Alex Toomey (Lead Product Designer, Interbrand) and Lisa Pink (Project Manager, Interbrand) had been working with Tradu on the broader design system and corporate site. My focus was the onboarding flow itself, with Lisa providing project management.
 
@@ -72,11 +116,14 @@ Tradu's confidence in the work led them to commission a broader UX audit of the 
 - **Redesigned the top app bar** to make it more compact, increasing screen space for page content. Visual hierarchy and clarity was improved through simplification of elements within it.
 - **Relocated the progress bar** alongside the continue button at the bottom of the screen. The change grouped the progress signal with the action that advanced it, creating a small reward loop on each step.
 
-![Primitive token scale: black-to-white base + brand accents, with dark- and light-mode tokens derived as inversions.](https://res.cloudinary.com/ajalong/image/upload/f_auto,q_auto:best,c_limit,w_1800,e_sharpen:60/alan.design/tradu/tradu-tokens_iailkn.png "The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.")
+<MediaGroup>
+![Primitive token scale: black-to-white base + brand accents, with dark- and light-mode tokens derived as inversions.](tradu-tokens_iailkn.png "The primitive token scale, showing dark-mode and light-mode tokens derived as inversions from the same base.")
 
 ![Progress-bar position variants compared, ending with the primary-action grouping at the bottom.](tradu-progress_bar_ohs6p0.png "Progress bar variants explored, with compact top-of-screen treatments to placements grouped with the primary action button at the bottom.")
 
 ![Selected states in light mode: black indicator vs Tangerine indicator across radio buttons, multi-select buttons, and text fields.](tradu-field_states_scoji5.png "Selected states in light mode shown twice over, first using black as the indicator and then using Tangerine. Tangerine produces clearer visual separation in the lighter environment.")
+
+</MediaGroup>
 
 ### The corporate site
 
@@ -89,6 +136,12 @@ _Impact_
 ## Improvements actioned
 
 The light mode and UX audit findings were implemented across the onboarding flow and corporate site. What began as a one-week brief for light mode expanded across formal statements of work into the full UX audit and the corporate site engagement. The team's confidence in the work drove the expansion, with each phase building on the previous one.
+
+<CardGroup columns={3}>
+  {frontmatter.impactMetrics?.map((m) => (
+    <MetricCard value={m.value} label={m.label} description={m.description} />
+  ))}
+</CardGroup>
 
 _Lessons learned_
 

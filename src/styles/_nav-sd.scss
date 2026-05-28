@@ -1,9 +1,14 @@
 // Standard-viewport section nav — fixed transparent top bar + dropdown.
 //
-// Visible on mobile + medium (< $breakpoint-large). At ≥ large, NavLg
-// (the sticky sidebar) takes over and this nav is hidden. Both navs share
-// the section data + active-state tracking via `project-active-section.ts`,
-// but each owns its own DOM and visual treatment.
+// Section nav (centre URL label + right-hand toggle + dropdown menu)
+// shows on mobile + medium (< $breakpoint-large). At ≥ large, NavLg
+// (the sticky sidebar) takes over those concerns and those parts hide.
+//
+// The Back link is the exception: it persists at every viewport so the
+// "return to /" affordance is in the same top-left position regardless
+// of breakpoint. At large the bar still renders, but only the back cell
+// has content. Both navs share the section data + active-state tracking
+// via `project-active-section.ts`.
 //
 // Visual contract:
 //   - Bar: no background. Fixed 16px from viewport top, spans content
@@ -33,9 +38,38 @@
   pointer-events: none; // children re-enable; lets clicks through the gap
                        // between bar and menu when the menu is open
 
-  // Hidden at ≥large where NavLg takes over.
+  // At ≥large NavLg takes over the section-nav concerns. The wrapper
+  // stays mounted so the back link can persist — only the centre URL,
+  // toggle, and menu hide (see below). The static back-variant (home,
+  // where there's no destination) also hides at large; it's the
+  // wordmark fallback for the small/medium bar and doesn't read as a
+  // useful affordance at large where there's space for the brand mark
+  // elsewhere on the page.
+  //
+  // The wrapper's left edge is also shifted to the page grid's col 2
+  // start so the back button's content (the arrow) lines up with the
+  // main content column. At small/medium the bar spans the full
+  // content width and the back arrow sits at --page-gutter-x; at
+  // large the body content is inset into cols 2-5 of a 6-col grid, so
+  // anchoring the wrapper to --page-gutter-x there would leave the
+  // back arrow floating outside the content rail. See the
+  // `_project-layout.scss` grid scaffold for the 6-col definition.
   @media screen and (min-width: $breakpoint-large) {
-    display: none;
+    // col-2-left = page-gutter-x + col-width + grid-gap
+    //            = page-gutter-x + (content-w - 5*gap)/6 + grid-gap
+    // where content-w = 100vw - 2*page-gutter-x.
+    left: calc(
+      var(--page-gutter-x)
+      + (100vw - 2 * var(--page-gutter-x) - 5 * var(--grid-gap)) / 6
+      + var(--grid-gap)
+    );
+
+    .nav-sd__back--static,
+    .nav-sd__project,
+    .nav-sd__toggle,
+    .nav-sd__menu {
+      display: none;
+    }
   }
 }
 
@@ -252,11 +286,11 @@
 // ── Menu ─────────────────────────────────────────────────────────────────
 // Positioned below the bar, hanging from the right edge so the dropdown
 // visually attaches to the toggle button. Reads as a discrete light panel
-// — same vocabulary as the project-team overlay card (--bg-panel, hairline
-// border, layered drop shadow, shared --blur backdrop-filter) so the site's
-// overlay surfaces all share one look. The menu sits below the ProgressiveBlur
-// cap; once it extends past the cap's falloff, the backdrop-filter takes over
-// and keeps content scrolling underneath softly blurred.
+// — same vocabulary as the project-team overlay card and the open-state
+// of the toggle button (--bg-panel, --border-panel-color outline, layered
+// drop shadow) so the site's overlay surfaces all share one look. The
+// surface is solid, so no backdrop-filter — the bg is opaque enough to
+// stand on its own without needing to blur what's underneath.
 //
 // Open/close motion: fade + a 4px downward drop, sharing the lightbox's
 // --dur-fast + --ease-out timing so the site's overlay motion vocabulary
@@ -269,14 +303,19 @@
   pointer-events: auto;
   margin-top: var(--unit-4);
   margin-left: auto;        // right-align under the bar
+  // Pull the right edge out to match the toggle button's outer right
+  // edge. The toggle extends 20px past the wrapper via its own negative
+  // right margin (so the chevron sits at --page-gutter-x); without this
+  // match, the menu would right-align with the chevron (wrapper edge)
+  // rather than with the button's box. Mirroring the offset keeps the
+  // dropdown's right side flush with the button that opened it.
+  margin-right: calc(var(--unit-20) * -1);
   width: max-content;
   max-width: 100%;
   padding: var(--unit-16) var(--unit-20) var(--unit-16) var(--unit-16);
   background: var(--bg-panel);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--border-panel-color);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-panel);
   color: var(--text-primary);
   opacity: 1;

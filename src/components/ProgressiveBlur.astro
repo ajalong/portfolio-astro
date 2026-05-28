@@ -1,83 +1,103 @@
 ---
 /**
- * Progressive blur cap — frosted-glass effect at the top of the viewport
- * for content scrolling underneath. Stacks N backdrop-filter layers with
- * doubling blur radii, each masked to an overlapping horizontal slice
- * via linear-gradient. Net effect: a perceptually smooth Gaussian
- * falloff from heavy blur at the top edge to ~zero at the bottom edge.
+ * Progressive blur cap — the site's standard "content softens into a
+ * solid edge" effect. Used at the top of pages, inside the project-team
+ * overlay's chrome, and at the left/right edges of the homepage logo
+ * carousel. One implementation, four directions.
+ *
+ * Layered backdrop-filter stack masked by linear gradients gives a
+ * perceptually smooth Gaussian falloff from heavy blur at the outer
+ * edge to ~zero at the inner edge. A 21-stop quadratic tint gradient
+ * sits on top (with SVG noise dither) to merge the cap into the
+ * surface it sits on.
  *
  * Why N layers, not one with a single mask:
  * A single backdrop-filter + mask gives a hard halo at the mask edge
  * (blur intensity is binary inside the mask, only opacity varies).
- * Doubling N times and overlapping the slices approximates a continuous
- * Gaussian curve and eliminates the halo.
+ * Stacking 4 layers with overlapping masks and a 1-2-4-8 radius ramp
+ * approximates a continuous Gaussian curve and eliminates the halo.
  *
- * Performance:
- *   - 8 backdrop-filter layers is GPU-heavy. The smallest radii
- *     (≤0.5px) are nearly free; 5px/10px dominate cost. `contain:
- *     layout paint` on the wrapper scopes repaints.
- *   - `prefers-reduced-transparency: reduce` collapses the stack to a
- *     single linear-gradient fade with no blur — cheap and accessible.
+ * Sizing optimisation: each layer is positioned to span only the
+ * cap-region where its mask is non-zero, not the full cap. backdrop-
+ * filter blurs the layer's full bounding box regardless of mask alpha,
+ * so trimming the layer cuts blur work proportionally. Net blur area
+ * per frame: 225% of cap area (75+75+50+25), down from 400% with a
+ * full-extent stack — ~44% reduction.
  *
- * Mask percentages are relative to the component's height, not the
- * viewport — so the height prop is what shifts where the falloff lands.
+ * Blur ramp 1-2-4-8 (geometric, 2× per step). Earlier tried 1-3-6-12
+ * for a more dramatic top blur but the heaviest layer's per-pixel cost
+ * dominated (kernel area scales quadratically). 1-2-4-8 keeps a
+ * visible step between levels while halving the heaviest layer's cost.
+ *
+ * Accessibility: prefers-reduced-transparency: reduce collapses the
+ * stack to a single linear-gradient fade with no blur (see
+ * _progressive-blur.scss). Same visual intent, cheap and accessible.
  */
+type Direction = 'top' | 'bottom' | 'left' | 'right';
+
 interface Props {
-  height?: string;
-  // Optional extra class on the wrapper — lets a caller override the
-  // default fixed-to-viewport positioning, e.g. mount the cap inside a
-  // card chrome with `position: absolute`.
+  /**
+   * The edge content fades TOWARDS — the solid end. Default 'top'
+   * (page cap: fades upward into the page background). 'left' and
+   * 'right' are the horizontal variants used by the logo carousel.
+   */
+  direction?: Direction;
+  /**
+   * Distance from the solid edge to the transparent end. For 'top'/
+   * 'bottom' this is a height; for 'left'/'right' a width. Defaults
+   * to `--cap-height` (the page-cap value defined in _tokens.scss) so
+   * the default invocation matches the page cap.
+   */
+  extent?: string;
+  /**
+   * Colour the cap merges into at its solid edge. Each context has a
+   * different surface — page bg for the page cap, panel surface for
+   * the team overlay chrome, card surface for the carousel edges. The
+   * 21-stop quadratic tint is generated from this colour via the
+   * `from <colour>` relative-colour syntax in _progressive-blur.scss.
+   */
+  tintColor?: string;
+  /**
+   * Extra class on the wrapper — lets a caller override the default
+   * fixed-to-viewport positioning (e.g. mount the cap inside a card
+   * chrome with `position: absolute`).
+   */
   class?: string;
 }
-// Default height tracks `--cap-height` (defined in _tokens.scss) so the
-// cap ends at the page title's top at scroll=0 — content scrolling past
-// blurs progressively; the title stays clear on initial load. Callers
-// can still pass an explicit height to override (e.g. mounting the cap
-// inside a card chrome with a fixed dimension).
-const { height = 'var(--cap-height)', class: className } = Astro.props as Props;
 
-// Layer table.
-//
-// Sizing optimisation (idea A in the perf analysis): each layer is
-// positioned to span only the cap-region where its mask is non-zero,
-// instead of `inset: 0`. `backdrop-filter` blurs the layer's full
-// bounding box regardless of mask alpha — the mask just hides results,
-// it doesn't reduce compute. Sizing layers to their visible regions
-// therefore cuts blur work proportionally with no visual change.
-//
-// Net blur area per frame: 225% of cap area (75+75+50+25), down from
-// 400% with the previous 4-layer full-extent stack — ~44% reduction.
-//
-// Earlier we also trimmed layers at 80% of cap (idea B) and dropped
-// the heaviest layer, on the bet that the ::after tint would hide the
-// blur cutoff. Visually it didn't — the blur-stop seam was readable.
-// Rolled back: layers now extend to where their masks were naturally
-// zero, no artificial trim.
-//
-// Blur radii follow a 1-2-4-8 geometric ramp (2× per step). Earlier
-// we tried 1-3-6-12 for a more dramatic top blur, but L4 dominated
-// the cost (kernel area scales quadratically — 12² = 144 vs 8² = 64,
-// 56% more work per pixel). The 1-2-4-8 ramp keeps a geometric
-// progression with each step visibly different from the last, while
-// halving the heaviest layer's per-pixel cost. Net per-frame blur
-// compute roughly 55% of the 1-3-6-12 variant.
-//
-// Each layer's `region` is its CAP-relative band ({bottom, top} in %
-// from the cap's bottom edge). `stops` are also in cap coordinates so
-// they read naturally against the visual; the mask generator rescales
-// them to layer-relative percentages when emitting the gradient.
+const {
+  direction = 'top',
+  extent = 'var(--cap-height)',
+  tintColor = 'var(--backgroundColor)',
+  class: className,
+} = Astro.props as Props;
 
+// Layer table is direction-agnostic — `region` and `stops` are
+// expressed in cap-relative %, where 0% = the transparent (inner)
+// end and 100% = the solid (outer) end. The position+mask emitters
+// below project these onto whichever physical axis the direction
+// implies.
+//
+// The lowest layer's `region.start` is offset slightly above 0
+// (cap-pct 5) so its bounding box doesn't sit right at the cap's
+// transparent edge. The mask still tapers to alpha 0 at the layer's
+// bottom, but that bottom is now 5% inside the cap rather than at
+// the boundary where page content meets the cap — where backdrop-
+// filter can produce a sub-pixel compositing seam. The tint
+// gradient is buffered to match (see `_progressive-blur.scss`),
+// keeping the bottom 5% of the cap a flat alpha-0 zone with neither
+// blur nor tint, so the cap fades into page content imperceptibly.
 type Layer = {
   blur: number;
-  region: { bottom: number; top: number };
+  region: { start: number; end: number }; // start = inner, end = outer
   stops: Array<{ pos: number; alpha: number }>;
 };
 const layers: Layer[] = [
   {
     blur: 1,
-    region: { bottom: 0, top: 75 },
+    region: { start: 5, end: 75 },
     stops: [
-      { pos: 0,  alpha: 0 },
+      { pos: 5,  alpha: 0 },
       { pos: 25, alpha: 1 },
       { pos: 50, alpha: 1 },
       { pos: 75, alpha: 0 },
@@ -85,7 +105,7 @@ const layers: Layer[] = [
   },
   {
     blur: 2,
-    region: { bottom: 25, top: 100 },
+    region: { start: 25, end: 100 },
     stops: [
       { pos: 25,  alpha: 0 },
       { pos: 50,  alpha: 1 },
@@ -95,7 +115,7 @@ const layers: Layer[] = [
   },
   {
     blur: 4,
-    region: { bottom: 50, top: 100 },
+    region: { start: 50, end: 100 },
     stops: [
       { pos: 50,  alpha: 0 },
       { pos: 75,  alpha: 1 },
@@ -104,7 +124,7 @@ const layers: Layer[] = [
   },
   {
     blur: 8,
-    region: { bottom: 75, top: 100 },
+    region: { start: 75, end: 100 },
     stops: [
       { pos: 75,  alpha: 0 },
       { pos: 100, alpha: 1 },
@@ -112,29 +132,64 @@ const layers: Layer[] = [
   },
 ];
 
+// CSS gradient-direction string per fade direction. "to top" means
+// the gradient runs bottom→top, so opaque ends up at the top edge.
+const gradientDirection: Record<Direction, string> = {
+  top: 'to top',
+  bottom: 'to bottom',
+  left: 'to left',
+  right: 'to right',
+};
+
 function maskGradient(layer: Layer): string {
-  const span = layer.region.top - layer.region.bottom;
+  const span = layer.region.end - layer.region.start;
   const segments = layer.stops.map((s) => {
-    const layerPct = ((s.pos - layer.region.bottom) / span) * 100;
+    const layerPct = ((s.pos - layer.region.start) / span) * 100;
     return `rgba(0,0,0,${s.alpha}) ${layerPct.toFixed(2)}%`;
   }).join(', ');
-  return `linear-gradient(to top, ${segments})`;
+  return `linear-gradient(${gradientDirection[direction]}, ${segments})`;
 }
+
+// Project a layer's `start`/`end` region onto the appropriate axis,
+// trimming the layer's bounding box to its visible span. The axis
+// that the cap fades along carries the trim; the cross-axis fills.
+function layerPosition(layer: Layer): string {
+  const startInset = `${layer.region.start}%`;
+  const endInset = `${100 - layer.region.end}%`;
+  switch (direction) {
+    case 'top':
+      return `bottom: ${startInset}; top: ${endInset}; left: 0; right: 0;`;
+    case 'bottom':
+      return `top: ${startInset}; bottom: ${endInset}; left: 0; right: 0;`;
+    case 'left':
+      return `right: ${startInset}; left: ${endInset}; top: 0; bottom: 0;`;
+    case 'right':
+      return `left: ${startInset}; right: ${endInset}; top: 0; bottom: 0;`;
+  }
+}
+
+// Wrapper sets the two custom properties the SCSS consumes:
+//   --pb-extent    – the dimension along the fade axis
+//   --pb-grad-dir  – the tint-gradient direction
+//   --pb-tint      – the surface colour at the solid edge
+const wrapperStyle = [
+  `--pb-extent: ${extent}`,
+  `--pb-grad-dir: ${gradientDirection[direction]}`,
+  `--pb-tint: ${tintColor}`,
+].join('; ');
 ---
 
-<div class:list={['progressive-blur', className]} style={`--pb-height: ${height};`} aria-hidden="true">
+<div
+  class:list={['progressive-blur', `progressive-blur--${direction}`, className]}
+  style={wrapperStyle}
+  aria-hidden="true"
+>
   {layers.map((l, i) => {
     const mask = maskGradient(l);
-    // Position the layer to its cap-relative region. `bottom` and
-    // `top` are inset values: `bottom: 0%` anchors to the cap bottom;
-    // `top: 25%` leaves the top 25% of the cap empty. backdrop-filter
-    // only samples and blurs within the layer's bounding box.
-    const bottomInset = l.region.bottom;
-    const topInset = 100 - l.region.top;
     return (
       <div
         class="progressive-blur__layer"
-        style={`z-index: ${i + 1}; left: 0; right: 0; bottom: ${bottomInset}%; top: ${topInset}%; backdrop-filter: blur(${l.blur}px); -webkit-backdrop-filter: blur(${l.blur}px); mask-image: ${mask}; -webkit-mask-image: ${mask};`}
+        style={`z-index: ${i + 1}; ${layerPosition(l)} backdrop-filter: blur(${l.blur}px); -webkit-backdrop-filter: blur(${l.blur}px); mask-image: ${mask}; -webkit-mask-image: ${mask};`}
       />
     );
   })}

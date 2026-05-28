@@ -1,5 +1,6 @@
 // Design tokens — Sass variables and CSS custom properties.
 // All other partials that need these @use this file.
+@use "sass:math";
 
 // Per-project brand colours.
 // Set on the page via inline style on `.bg` (project pages) or via the
@@ -92,22 +93,36 @@ $breakpoint-large: 1080px;
 //     ≈ 29 + 4 + 22 + 40 = ~95px content floor (no description).
 //   Width to maintain 16:9: 95 × 16/9 ≈ 169px → rounded up to 180px for
 //   breathing room before the aspect-ratio yields.
+$card-min-landscape-width: 180px;
+
+// Dense variant — same card with a 1–2 line description below the
+// label. Derived from a single tunable: the desired breathing room
+// between the metric+label block and the description. Bump
+// `$card-description-gap` to require more whitespace inside the
+// card; the system raises the dense minimum width to match, which
+// in turn pushes the description-drop threshold to a wider viewport.
 //
-// Description adds an extra ~2 lines at the typical column widths;
-// 270px is the empirical sweet spot tested at 666–900px viewports —
-// each card holds value + label + a 1–2 line description while still
-// reading landscape. Bump this if a future content variant needs more.
-$card-min-landscape-width:       180px;
-$card-min-landscape-width-dense: 270px;
+// Internal heights are constants — bump them if type sizes change.
+$card-description-gap:         24px;   // ← tune this
+$_card-content-base-height:    95px;   // value + value/label gap + label + padding
+$_card-description-text-height: 44px;  // ~2 lines × ~22px line-height at landscape widths
+$_card-dense-content-height:   $_card-content-base-height + $card-description-gap + $_card-description-text-height;
+// Width needed to hold the dense content stack at 16:9 landscape.
+// `math.ceil` rounds to a whole px so derived breakpoints stay clean.
+$card-min-landscape-width-dense: math.ceil(math.div($_card-dense-content-height * 16, 9));
 
 // Each stack point: viewport width below which a 3-col cluster can no
 // longer give each card its minimum landscape width, accounting for
 // the inter-card gap (--unit-4) and the medium-viewport page gutter
 // (--unit-40). Derived, not arbitrary.
-//   baseline (no description): 3 × 180 + 8 + 80 = 628px
-//   dense (with description):  3 × 270 + 8 + 80 = 898px
 $card-group-stack-point:       (3 * $card-min-landscape-width       + 2 * 4px + 2 * 40px);
 $card-group-stack-point-dense: (3 * $card-min-landscape-width-dense + 2 * 4px + 2 * 40px);
+
+// Description-drop point: viewport width below which the 2-col compact
+// layout drops below the dense card minimum — the card can no longer
+// hold metric + label + the required gap + description at landscape,
+// so the description hides. Cascades from `$card-description-gap`.
+$card-description-drop-point:  (2 * $card-min-landscape-width-dense + 1 * 4px + 2 * 40px);
 
 // Card fill — neutral grey at 40% opacity so the page background bleeds
 // through. Used by the "My role" card and the body card variants (MetricCard,
@@ -210,13 +225,16 @@ $bg-card-hover-gradient:
    */
   --bg-light: rgba(230, 230, 230, 0.8);
   /*
-   * Panel surface — nearly-opaque off-white based on the page background,
-   * not the grey used by --bg-card / --bg-light. Used by the project team
-   * overlay card: reads as a discrete light panel while still letting 4%
-   * of the brand-gradient page bg bleed through (so the panel picks up a
-   * touch of the page's warmth instead of reading as a clinical white box).
+   * Panel surface — solid off-white matching the page background. Used by
+   * the project team overlay card, the section-nav dropdown menu, and the
+   * btn-secondary open/pressed states. Solid (rather than the earlier
+   * 96%-translucent variant) so the surface reads identically regardless
+   * of what sits behind it — important for the nav toggle vs. its dropdown,
+   * which live above and below the progressive-blur cap respectively and
+   * would otherwise show different bleed-through tints despite sharing
+   * the same token.
    */
-  --bg-panel: rgba(249, 249, 251, 0.96);
+  --bg-panel: #f9f9fb;
   /*
    * Hover tint — faint black darken applied on top of whatever fill the
    * element already has. Consumed by the `surface-hover` mixin (`::after`

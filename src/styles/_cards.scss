@@ -92,20 +92,22 @@ $card-padding: var(--unit-20);
 
 // ── Compact layout ────────────────────────────────────────────────────────
 //
-// Two discrete layouts, two snap thresholds. No in-between reflow, no
-// invented intermediate layouts.
+// Three discrete states. No in-between reflow, no invented layouts.
 //
 //   > $card-group-stack-point-dense (~898px):
 //       authored N-col layout (3-col by default).
-//   $card-group-stack-point (~628px) .. $card-group-stack-point-dense:
+//   $card-group-stack-point-dense .. $card-description-drop-point (~624px):
 //       2-col with descriptions visible — description-bearing clusters
-//       drop here when 3-col cards can no longer hold landscape with
+//       drop here because 3-col cards can no longer hold landscape with
 //       descriptions, but 2-col cards are still wide enough to fit them.
+//   $card-description-drop-point .. $card-group-stack-point (~628px):
+//       2-col still, descriptions now hidden — 2-col cards drop below
+//       the dense landscape minimum. (Narrow band; in current tuning
+//       these two thresholds nearly coincide.)
 //   < $card-group-stack-point (~628px):
-//       2-col compact for every cluster. Descriptions hidden — 2-col
-//       cards have narrowed past the width where they can hold
-//       descriptions in landscape. Odd-first metric span turns an
-//       odd-count cluster into a clean "lead row + paired rows" layout.
+//       2-col compact for every cluster, descriptions hidden. Odd-first
+//       metric span turns odd-count clusters into a clean "lead row +
+//       paired rows" layout.
 @mixin card-group-compact {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   // Row-flow so column-fill (flow=vertical) clusters don't push cards
@@ -135,21 +137,36 @@ $card-padding: var(--unit-20);
 // Dense snap: description-bearing clusters jump to compact 2-col sooner
 // because 3-col cards can no longer hold landscape with descriptions
 // visible. Descriptions stay visible — 2-col cards are still wide enough.
+//
+// `.card-group--showcase` opts the homepage project-showcase out — its
+// own three-mode layout (desktop bento / compact / ultra-narrow) is
+// driven by `showcase-overflow.ts` based on measured content overflow,
+// not viewport thresholds, so the generic compact rule would collide
+// with the bento and force a 2-col grid at medium widths.
 @media screen and (max-width: $card-group-stack-point-dense) {
-  .card-group:has(.metric-card__description) {
+  .card-group:has(.metric-card__description):not(.card-group--showcase) {
     @include card-group-compact;
   }
 }
 
-// Baseline snap: every card-group jumps to compact 2-col. Descriptions
-// hidden here — at this viewport 2-col cards have narrowed past the
-// width where they can hold descriptions in landscape proportion.
-@media screen and (max-width: $card-group-stack-point) {
-  .card-group {
-    @include card-group-compact;
-  }
-  .metric-card__description {
+// Description drop: 2-col cards have dropped below the dense landscape
+// minimum — the card can no longer hold metric + label + whitespace +
+// description at landscape. Hide before the layout compacts so the
+// transition reads as "description disappears" rather than "card
+// reflows AND description disappears".
+@media screen and (max-width: $card-description-drop-point) {
+  .card-group:not(.card-group--showcase) .metric-card__description {
     display: none;
+  }
+}
+
+// Baseline snap: every card-group jumps to compact 2-col. Hits a touch
+// below the description-drop point in current tuning, but stays
+// independent — the two thresholds answer different questions
+// (3-col baseline-min vs 2-col dense-min).
+@media screen and (max-width: $card-group-stack-point) {
+  .card-group:not(.card-group--showcase) {
+    @include card-group-compact;
   }
 }
 
@@ -289,7 +306,11 @@ $card-padding: var(--unit-20);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--unit-8);
+  // Min visible gap between head and description; the same value is the
+  // input to `$card-min-landscape-width-dense` (in _tokens.scss), so
+  // cards are sized to provide at least this much room. `space-between`
+  // distributes any extra height above this minimum.
+  gap: $card-description-gap;
   // 16:9 acts as the minimum aspect ratio — the card always reads at least
   // this wide-format, and grows vertically if content needs more room.
   // `aspect-ratio` is a "preferred" sizing hint that yields to intrinsic

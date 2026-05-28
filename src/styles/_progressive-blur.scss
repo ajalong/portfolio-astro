@@ -1,13 +1,23 @@
-// Progressive blur cap — frosted-glass band at the top of the viewport.
-// Pairs with ProgressiveBlur.astro; the layered backdrop-filter stack
-// and per-layer mask gradients live inline on each layer (height-driven
-// values, easier to keep with the component). This file owns the
-// wrapper geometry, z-index, and the reduced-transparency fallback.
+// Progressive blur — the site's standard "content softens into a solid
+// edge" effect. Used at the top of pages, inside the project-team panel
+// chrome, and at the left/right edges of the homepage logo carousel.
+// One component (ProgressiveBlur.astro), four directions.
+//
+// The component emits the layered backdrop-filter stack and its mask
+// gradients inline (height/width-driven values live with the component).
+// This file owns the wrapper geometry per direction, the shared tint
+// gradient, the noise dither, and the reduced-transparency fallback.
+//
+// Wrapper consumes three custom properties set on the element by the
+// component:
+//   --pb-extent    – distance from solid edge to transparent end
+//   --pb-grad-dir  – tint-gradient direction (e.g. 'to top')
+//   --pb-tint      – surface colour the cap merges into
 @use "tokens" as *;
 @use "sass:math";
 @use "sass:list";
 
-// Pre-compute 21 quadratic-curve alpha stops for the cap tint gradient.
+// Pre-compute 21 quadratic-curve alpha stops for the tint gradient.
 // CSS linear-gradient interpolates linearly between stops, so sampling
 // a quadratic at only 6 points (the previous setup) produced visible
 // kinks at each sample point — the "banding" the eye picks up. Densifying
@@ -15,82 +25,130 @@
 // the eye can't resolve from a true smooth curve. The cost is negligible
 // — Sass emits the stops at compile time; the browser parses one
 // longer gradient string instead of computing the curve at runtime.
-$_cap-tint-stops: ();
+//
+// The bottom $_buffer% is a flat alpha-0 zone — pairs with the lowest
+// blur layer's matching `region.start: 5` offset in ProgressiveBlur.astro.
+// Without this buffer, the cap's transparent edge sits exactly where
+// page content meets the blur stack's box, and backdrop-filter can
+// leave a sub-pixel seam there. Buffering the bottom hides that seam
+// inside a guaranteed-transparent strip.
+//
+// Above the buffer, alpha rises quadratically from 0 → 1 across the
+// remaining (100 - buffer)%. `--pb-tint` is the surface colour passed by
+// the component; `rgb from` extracts its r/g/b channels so the alpha
+// curve applies independently of the source colour.
+$_tint-buffer: 5;
+$_tint-stops: ();
 @for $i from 0 through 20 {
   $t: math.div($i, 20);
-  $alpha: $t * $t;
-  $_cap-tint-stops: list.append(
-    $_cap-tint-stops,
-    rgb(from var(--backgroundColor) r g b / #{$alpha}) #{percentage($t)},
+  $alpha: 0;
+  @if $t * 100 >= $_tint-buffer {
+    $remapped: math.div($t * 100 - $_tint-buffer, 100 - $_tint-buffer);
+    $alpha: $remapped * $remapped;
+  }
+  $_tint-stops: list.append(
+    $_tint-stops,
+    rgb(from var(--pb-tint) r g b / #{$alpha}) #{percentage($t)},
     comma
   );
 }
 
 .progressive-blur {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--pb-height, 120px);
-  // Above page content (~z 1) and above the project team panel (z 250) so
-  // the frosted top edge persists through the overlay state, visually
-  // anchoring the overlay to the same depth model as the underlying page.
-  // NavSd sits one step higher (z 265) so its text reads on the glass.
-  z-index: 260;
   pointer-events: none;
   // Scopes paint to this subtree so backdrop-filter recomputes don't
   // invalidate ancestors on scroll.
   contain: layout paint;
 
-  // Background-colour tint on top of the blur stack. The nav has no
-  // background of its own, so this gradient provides the contrast its
-  // text reads against. z-index 9 puts it above every blur layer
-  // (z 1..N) — it tints the *result* of the blur rather than getting
-  // blurred itself.
+  // Tint gradient — quadratic ease-in from alpha 0 at the transparent
+  // end to 1 at the solid edge, in `--pb-tint`. Direction comes from
+  // `--pb-grad-dir`. Sits above every blur layer (z 1..N).
   //
-  // Uses `--backgroundColor` (#F9F9FB, the page off-white) rather than
-  // pure white so the cap blends seamlessly into the page background
-  // above it — and so a cap mounted inside an overlay (e.g. the project
-  // team panel chrome) sits on the same surface family as `--bg-panel`.
+  // Stops follow a quadratic ease-in curve (alpha = t²): slow start
+  // at the transparent end, accelerating to fully opaque at the
+  // solid edge — content fades in gently and hits 1 at full speed
+  // so any text resting on the cap reads on a solid ground rather
+  // than a translucent haze.
   //
-  // Stops follow a quadratic ease-in curve (alpha = t²) from alpha 0
-  // (bottom) → 1 (top), sampled at 0/20/40/60/80/100%. Slow start at
-  // the bottom (content fades in gently as it scrolls into the cap),
-  // accelerating to fully opaque at the top edge with no ease-out —
-  // the top hits 1 at full speed so the nav text sits on a solid
-  // ground rather than a translucent haze.
+  // Earlier versions stacked an SVG noise layer on top of the tint
+  // for anti-precision dithering. That was removed because
+  // `feTurbulence` outputs grayscale centred on mid-gray (128/255),
+  // which at 4% opacity averaged to a faint ~2% darkening of the
+  // entire cap relative to the page background — exactly the
+  // mismatch we were trying to avoid. The densified 21-stop curve
+  // alone is smooth enough that banding doesn't show up in practice.
   &::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 9;
     pointer-events: none;
-    // Two stacked backgrounds:
-    //   1. (top) SVG noise — anti-precision dithering. 4% opacity
-    //      fractal grain over the cap area; invisible as graininess,
-    //      breaks up 8-bit RGB quantization at high alpha.
-    //   2. (bottom) The white-tint gradient — quadratic ease-in from
-    //      alpha 0 at the bottom to 1 at the top. The stops are
-    //      pre-computed at 5% intervals (see `$_cap-tint-stops` above)
-    //      so the piecewise-linear CSS interpolation closely tracks
-    //      the smooth quadratic — no visible kinks at sample points.
-    background:
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.04'/></svg>"),
-      linear-gradient(to top, $_cap-tint-stops);
+    background: linear-gradient(var(--pb-grad-dir), $_tint-stops);
   }
 }
 
 .progressive-blur__layer {
   position: absolute;
-  // top/right/bottom/left are set inline per-layer by the component —
+  // top/right/bottom/left set inline per-layer by the component —
   // each layer occupies only its cap-relative band so backdrop-filter
-  // only blurs within that band's bounding box (see ProgressiveBlur.astro).
+  // only blurs within that band's bounding box. See ProgressiveBlur.astro.
   pointer-events: none;
+}
+
+// ── Direction variants ───────────────────────────────────────────────
+// Each modifier owns the wrapper's positioning + the cross-axis fill,
+// projecting `--pb-extent` onto the fade axis.
+//
+// Default for 'top' is `position: fixed` so the bare `<ProgressiveBlur />`
+// invocation gives the page-cap behaviour with no extra class needed.
+// Other directions default to `position: absolute` — they're always
+// mounted inside another element (carousel edge, team-panel chrome,
+// future bottom caps). Page-cap variants can still be overridden via
+// the `class` prop (see e.g. .project-team-panel__chrome-blur).
+//
+// z-index is set on the top variant so the cap renders above page
+// content and above the team-panel overlay; other directions live
+// inside their host's stacking context and don't need to leak out.
+
+.progressive-blur--top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--pb-extent);
+  // Above page content (~z 1) and above the project team panel (z 250)
+  // so the frosted top edge persists through the overlay state, visually
+  // anchoring the overlay to the same depth model as the underlying page.
+  // NavSd sits one step higher (z 265) so its text reads on the glass.
+  z-index: 260;
+}
+
+.progressive-blur--bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--pb-extent);
+}
+
+.progressive-blur--left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--pb-extent);
+}
+
+.progressive-blur--right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--pb-extent);
 }
 
 // Reduced-transparency fallback: collapse the blur stack to a single
 // cheap linear-gradient fade. Same visual intent (content softens into
-// the top edge) without backdrop-filter cost or visual transparency.
+// the solid edge) without backdrop-filter cost or visual transparency.
 // Safari respects prefers-reduced-transparency on iOS/macOS when the
 // user enables "Reduce Transparency" in accessibility settings.
 @media (prefers-reduced-transparency: reduce) {
@@ -100,9 +158,9 @@ $_cap-tint-stops: ();
   }
   .progressive-blur {
     background: linear-gradient(
-      to top,
-      rgba(249, 249, 251, 0) 0%,
-      rgba(249, 249, 251, 1) 100%
+      var(--pb-grad-dir),
+      rgb(from var(--pb-tint) r g b / 0) 0%,
+      rgb(from var(--pb-tint) r g b / 1) 100%
     );
   }
 }

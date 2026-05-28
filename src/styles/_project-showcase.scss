@@ -162,9 +162,16 @@
   // intrinsic content height keeps the bento geometry intact.
   min-height: 0;
   // Hide any overflowing content rather than letting it push the row
-  // taller. If we hit this in practice, that's the signal to either
-  // shorten metric copy or revisit the bento proportions.
+  // taller. showcase-overflow.ts toggles
+  // `.metric-card--hide-description` per card when the description
+  // doesn't fit; if value+label still overflow after that, the script
+  // escalates the whole showcase to compact/ultra-narrow.
   overflow: hidden;
+}
+
+// Per-card description toggle, driven by showcase-overflow.ts.
+.project-showcase .metric-card--hide-description .metric-card__description {
+  display: none;
 }
 
 // Image-bearing cards (B, F): drop the card-group's default 20px
@@ -214,6 +221,33 @@
   display: flex;
   flex-direction: column;
   gap: var(--unit-16);
+}
+
+// Heading row above the card group — mirrors `.profile-info`'s
+// name + role pattern: project client (e.g. "GSK") sits next to a
+// fixed "Project" content-type label. Sits 16px above the bento
+// card group below.
+.project-showcase__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--unit-16);
+  margin-bottom: var(--unit-16);
+}
+
+.project-showcase__client,
+.project-showcase__type {
+  margin: 0;
+  font-size: var(--type-size);
+  font-weight: var(--weight-regular);
+}
+
+.project-showcase__client {
+  color: var(--text-primary);
+}
+
+.project-showcase__type {
+  color: var(--text-secondary);
 }
 
 // Selector specificity (0,2,0) — has to beat the global
@@ -270,20 +304,17 @@
     display: none;
   }
 
-  // Each metric card sizes to a 16:9 floor in non-desktop layouts so
-  // they read as cards rather than thin bands; aspect-ratio yields to
-  // content if labels need more height.
-  //
-  // `min-height: auto` + `overflow: visible` release the desktop bento's
-  // content clamps (set on `.project-showcase .metric-card` above) — in
-  // the bento those clamps stop a card from blowing up the locked grid
-  // geometry, but here the grid rows are content-sized (`auto` tracks),
-  // so the clamps would clip labels that wrap to a second line without
-  // serving any layout purpose.
+  // Same clamps as the desktop bento metric cards: aspect-ratio: auto
+  // (grid drives the slot height — e.g. compact's C card spans 2 rows
+  // and stays taller than its sibling D/E cells), min-height: 0 so the
+  // card can shrink below its intrinsic content height, and overflow:
+  // hidden so content past the slot is clipped — the signal
+  // `fitDescriptions` uses to hide a card's description per-card when
+  // it doesn't fit.
   #{$trigger} .metric-card {
-    aspect-ratio: 16 / 9;
-    min-height: auto;
-    overflow: visible;
+    aspect-ratio: auto;
+    min-height: 0;
+    overflow: hidden;
   }
 }
 
@@ -332,14 +363,25 @@
     grid-row: 3;
   }
 
-  // Override `_cards.scss`'s generic "first metric of an odd-count
-  // cluster spans the full row" rule (sets `grid-column: 1 / -1` and
-  // `aspect-ratio: auto` on C). Re-state C's explicit placement here
-  // with higher specificity than the generic rule.
+  // Pin C's explicit placement at higher specificity than `_cards.scss`'s
+  // generic "first metric of an odd-count cluster spans the full row"
+  // rule (now scoped out of the showcase via `.card-group--showcase`,
+  // but kept as a belt against any future generic rule change). C spans
+  // both bento rows so D + E (stacked in col 4) sit alongside it.
   #{$trigger} .card-group > .metric-card:nth-child(1 of .metric-card):nth-last-child(odd of .metric-card) {
     grid-column: 3;
     grid-row: 1 / span 2;
-    aspect-ratio: 16 / 9;
+  }
+
+  // D, E (small 1×1 metric cells in col 4) — give them an explicit
+  // aspect ratio so each cell has a fixed slot height. Without this the
+  // auto grid track sizes to content and descriptions don't trigger
+  // overflow, so `fitDescriptions` never hides them at this width.
+  // 4/3 leaves room for value + 2-line label, descriptions overflow and
+  // get hidden by the script.
+  #{$trigger} .card-group > .metric-card:nth-child(2 of .metric-card),
+  #{$trigger} .card-group > .metric-card:nth-child(3 of .metric-card) {
+    aspect-ratio: 4 / 3;
   }
 }
 

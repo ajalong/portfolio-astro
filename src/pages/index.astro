@@ -4,14 +4,12 @@ import { PROJECT_THUMBNAIL_ALTS } from '../data/projectThumbnailAlts';
 import { getLastUpdatedLabel } from '../data/lastUpdated';
 import { getCollection } from 'astro:content';
 import ProjectCard from '../components/ProjectCard.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
 import HomeSectionIndex from '../components/HomeSectionIndex.astro';
 import NavSd from '../components/NavSd.astro';
-import CardGroup from '../components/cards/CardGroup.astro';
-import Card from '../components/cards/Card.astro';
-import MetricCard from '../components/cards/MetricCard.astro';
 import LogoCarousel from '../components/LogoCarousel.astro';
 import { homeLogos } from '../data/homeLogos';
-import { resolveThumbnails, buildShowcaseImageUrl } from '../lib/cloudinary.mjs';
+import { resolveThumbnails } from '../lib/cloudinary.mjs';
 
 const allProjects = await getCollection('projects');
 const projects = allProjects
@@ -25,6 +23,12 @@ const projectThumbs = new Map(
   projects.map((p) => [(p.data.slug ?? p.id), resolveThumbnails(p.data)]),
 );
 
+// A project gets the full showcase block when it carries both the
+// frontmatter impact metrics and the showcase media. Otherwise it
+// renders as the standard ProjectCard.
+const hasShowcase = (p: typeof projects[number]): boolean =>
+  Boolean(p.data.impactMetrics?.length && p.data.showcaseMedia);
+
 // Each project card needs a stable DOM id so the sticky nav's jump-links
 // can target it. Prefix to avoid clashes with any other ids on the page.
 const navProjects = projects.map((p) => ({
@@ -33,37 +37,6 @@ const navProjects = projects.map((p) => ({
 }));
 
 const subtitle = getLastUpdatedLabel();
-
-// Featured project shown in the showcase's top-left card. Hardcoded to
-// GSK for now; can move to a frontmatter `featured: true` flag later.
-const featuredProject = allProjects.find((p) => (p.data.slug ?? p.id) === 'gsk');
-const featuredHref = featuredProject ? `/project/${featuredProject.data.slug ?? featuredProject.id}` : '#';
-// First three entries of the featured project's frontmatter `impactMetrics`
-// flow into the showcase's three metric slots (C / D / E). Same data also
-// drives the project page's Impact section — single source of truth.
-const showcaseMetrics = featuredProject?.data.impactMetrics?.slice(0, 3) ?? [];
-
-// Showcase image slots (top-right / bottom-right) — resolved from the
-// featured project's `showcaseMedia` frontmatter via the Cloudinary
-// helper. Either may be absent; the slot renders empty when so.
-const showcaseMedia = featuredProject?.data.showcaseMedia;
-const showcaseTopRightUrl = showcaseMedia?.topRight
-  ? buildShowcaseImageUrl(showcaseMedia.topRight.src, featuredProject!.data)
-  : null;
-const showcaseBottomRightUrl = showcaseMedia?.bottomRight
-  ? buildShowcaseImageUrl(showcaseMedia.bottomRight.src, featuredProject!.data)
-  : null;
-
-// Pin the showcase's hover gradient to the featured project's brand
-// colours. Without this, the section inherits whichever colours the
-// bg-observer happens to have written to :root — and at page load
-// before any project list section is in the active band, that's the
-// pale @property defaults (#fdecd1 / #f0c781), which makes the hover
-// state visually identical to rest. Setting the vars inline scopes
-// vibrant GSK orange/yellow to this subtree regardless of scroll.
-const showcaseBrandStyle = featuredProject?.data.brand
-  ? `--brand-primary: ${featuredProject.data.brand.primary}; --brand-secondary: ${featuredProject.data.brand.secondary};`
-  : undefined;
 ---
 <BaseLayout
   title="Alan Long"
@@ -91,111 +64,6 @@ const showcaseBrandStyle = featuredProject?.data.brand
     <NavSd sections={navProjects} showBackLink={false} backLabel="alanlong.design" centerLabel="" centerLabelShort="" ariaLabel="Home sections" />
     <LogoCarousel logos={homeLogos} />
     <main>
-      {/* Featured-project showcase — a new item layout in development. Lives
-          above the existing `.project-list` so the new and old can be
-          worked on side-by-side. Hidden at ≤$breakpoint-medium for now;
-          mobile treatment is a follow-up. Cards are placeholders pending
-          the content slots. */}
-      <section class="project-showcase" aria-label="Featured project" style={showcaseBrandStyle}>
-        {/*
-          Showcase layout — 4 cols × 3 rows.
-
-            Row 1: [ A 2×1                ][ B 2×1                ]
-            Row 2: [ C 1×2 ][ D 1×1 ][ F 2×2                       ]
-            Row 3: [ ↑ C ↑ ][ E 1×1 ][ ↑ F ↑                       ]
-
-          Source order is A, B, C, D, F, E — not A–F. With the default
-          `grid-auto-flow: row`, this order lets the auto-placer fit F
-          into rows 2–3 / cols 3–4 *before* it tries E, leaving E to
-          land in the only remaining gap at (row 3, col 2). Swapping E
-          and F in source breaks the layout (E would land at row 2 col
-          3 and push F outside the grid).
-        */}
-        <a
-          class="project-showcase__link"
-          href={featuredHref}
-          aria-label={featuredProject ? `${featuredProject.data.client} case study — ${featuredProject.data.title}` : 'View featured project'}
-        >
-        <CardGroup id="project-gsk-card-group" columns={4} rows={3}>
-          {/* A — featured, row 1 / cols 1–2 */}
-          <Card span={2} col={1} row={1} class="project-showcase__card--feature">
-            {featuredProject && (
-              <>
-                <div class="project-showcase__copy">
-                  <h2 class="project-showcase__title">{featuredProject.data.title}</h2>
-                  {(featuredProject.data.industry || featuredProject.data.theme) && (
-                    <p class="project-showcase__kickers">
-                      {featuredProject.data.industry && <span>{featuredProject.data.industry}</span>}
-                      {featuredProject.data.theme && <span>{featuredProject.data.theme}</span>}
-                    </p>
-                  )}
-                </div>
-                {/* Span, not anchor — the outer `.project-showcase__link` is the
-                    click target; this is a visual affordance only. */}
-                <span class="btn-primary">See the project</span>
-              </>
-            )}
-          </Card>
-          {/* B — row 1 / cols 3–4 (showcase image) */}
-          <Card span={2} col={3} row={1} class="project-showcase__card--media">
-            {showcaseTopRightUrl && (
-              <img
-                class="project-showcase__media"
-                src={showcaseTopRightUrl}
-                alt={showcaseMedia!.topRight!.alt}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-          </Card>
-          {/* C — rows 2–3 / col 1 (featured project's 1st impact metric).
-              Descriptions are intentionally omitted across all three
-              showcase metrics — value + label carry the impact, and the
-              bento row heights are tight enough that even C's tall slot
-              reads better without a description. Same data still drives
-              the project page's Impact section in full. */}
-          {showcaseMetrics[0] && (
-            <MetricCard
-              value={showcaseMetrics[0].value}
-              label={showcaseMetrics[0].label}
-              rowSpan={2}
-              col={1}
-              row={2}
-            />
-          )}
-          {/* D — row 2 / col 2 (2nd impact metric) */}
-          {showcaseMetrics[1] && (
-            <MetricCard
-              value={showcaseMetrics[1].value}
-              label={showcaseMetrics[1].label}
-              col={2}
-              row={2}
-            />
-          )}
-          {/* F — rows 2–3 / cols 3–4 (showcase image; placed before E so auto-flow leaves the (3,2) gap for E). Hidden at ≤$breakpoint-medium — the mobile stack only carries A, B, and the three metrics. */}
-          <Card span={2} rowSpan={2} col={3} row={2} class="project-showcase__card--media project-showcase__card--mobile-hidden">
-            {showcaseBottomRightUrl && (
-              <img
-                class="project-showcase__media"
-                src={showcaseBottomRightUrl}
-                alt={showcaseMedia!.bottomRight!.alt}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-          </Card>
-          {/* E — row 3 / col 2 (3rd impact metric) */}
-          {showcaseMetrics[2] && (
-            <MetricCard
-              value={showcaseMetrics[2].value}
-              label={showcaseMetrics[2].label}
-              col={2}
-              row={3}
-            />
-          )}
-        </CardGroup>
-        </a>
-      </section>
       <ul class="project-list" id="work">
         {
           projects.map((project, i) => (
@@ -205,18 +73,22 @@ const showcaseBrandStyle = featuredProject?.data.brand
               data-brand-primary={project.data.brand?.primary}
               data-brand-secondary={project.data.brand?.secondary}
             >
-              <ProjectCard
-                href={`/project/${(project.data.slug ?? project.id)}`}
-                thumbnailSrc={projectThumbs.get((project.data.slug ?? project.id))?.poster}
-                thumbnailAlt={
-                  PROJECT_THUMBNAIL_ALTS[(project.data.slug ?? project.id)] ?? `${project.data.title} thumbnail`
-                }
-                thumbnailVideo={projectThumbs.get((project.data.slug ?? project.id))?.video ?? undefined}
-                projectTitle={project.data.title}
-                client={project.data.client}
-                summary={project.data.summary}
-                belowFold={i > 0}
-              />
+              {hasShowcase(project) ? (
+                <ProjectShowcase project={project} />
+              ) : (
+                <ProjectCard
+                  href={`/project/${(project.data.slug ?? project.id)}`}
+                  thumbnailSrc={projectThumbs.get((project.data.slug ?? project.id))?.poster}
+                  thumbnailAlt={
+                    PROJECT_THUMBNAIL_ALTS[(project.data.slug ?? project.id)] ?? `${project.data.title} thumbnail`
+                  }
+                  thumbnailVideo={projectThumbs.get((project.data.slug ?? project.id))?.video ?? undefined}
+                  projectTitle={project.data.title}
+                  client={project.data.client}
+                  summary={project.data.summary}
+                  belowFold={i > 0}
+                />
+              )}
             </li>
           ))
         }

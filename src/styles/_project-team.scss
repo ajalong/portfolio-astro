@@ -265,8 +265,6 @@ html.project-team-panel-open {
   display: flex;
   flex-direction: column;
   background: var(--bg-panel);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--border-panel-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
@@ -300,15 +298,18 @@ html.project-team-panel-open {
 // has 20px horizontal padding, so list-item boxes span from 20px to
 // width-20px). The bar's own 12px horizontal padding then echoes each
 // list row's internal 12px padding, so the bar text + close align with
-// the row content (avatars, names) at 32px from the card edge. 16px top
-// padding echoes nav-sd's 16px top offset from the viewport.
+// the row content (avatars, names) at 32px from the card edge.
+//
+// The wrapper has no top padding — the bar sits flush with the card's
+// top edge with just the bar's own 12px padding above the text. Matches
+// the nav-sd rhythm where the wrapper sits at top: 16 and the bar's
+// 12px padding is the only space above the text.
 .project-team-panel__chrome {
   position: absolute;
   top: 0;
   left: var(--unit-20);
   right: var(--unit-20);
-  height: var(--unit-96);
-  padding-top: var(--unit-16);
+  height: var(--unit-80);
   // Above the scroll content (.__scroll z 0 / static), below any future
   // dialog-level overlays (none today). Pointer events are off on the
   // wrapper so the fade region doesn't intercept clicks that should
@@ -357,38 +358,20 @@ h2.project-team-panel__title {
   color: var(--text-primary);
 }
 
-// Close button — text only, top-right of the chrome bar. Mirrors the
-// lightbox close vocabulary, swapped to light-bg colours: muted gray by
-// default, full text-primary on hover/focus.
+// Close button — a `.btn-secondary` instance (chrome bar's right side).
+// All visual treatment (padding, colour, hover, pressed state, focus)
+// lives in `_buttons.scss`. This rule only declares chrome-bar layout
+// concerns the button class doesn't own.
+//
+// The negative right margin counter-offsets the button's 20px right
+// padding so the text's right edge lands at the same x as the list
+// content's right edge (card-right minus the scroll's 20px + each
+// row's 12px = 32px in). Same pattern as `.nav-sd__toggle`: the
+// button's hover/pressed surface overhangs the chrome slightly so
+// the visible content aligns with the column it sits in.
 .project-team-panel__close {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-size: var(--type-size);
-  line-height: var(--line-height-tight);
-  cursor: pointer;
-
-  display: inline-block;
   flex-shrink: 0;
-  white-space: nowrap;
-
-  color: var(--text-secondary);
-  transition: color 0.15s ease;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--text-primary);
-    }
-  }
-
-  &:focus-visible {
-    color: var(--text-primary);
-    outline: 2px solid var(--text-primary);
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
+  margin-right: calc(var(--unit-20) * -1);
 }
 
 .project-team-panel__scroll {
@@ -398,7 +381,7 @@ h2.project-team-panel__title {
   // Top padding clears the chrome's full height so list rows start below
   // the bar (and the blur falloff zone underneath it). As the list scrolls
   // up, rows pass behind the progressive-blur and fade out into it.
-  padding: var(--unit-96) 20px 20px;
+  padding: var(--unit-80) 20px 20px;
   -webkit-overflow-scrolling: touch;
 }
 

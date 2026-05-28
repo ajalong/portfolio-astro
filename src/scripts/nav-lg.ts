@@ -55,9 +55,14 @@ export function initNavLg(): void {
     for (const [id, link] of linkById) {
       if (id === activeId) {
         link.setAttribute('data-active', '');
+        // Expose the active section to assistive tech, not just visually.
+        // `true` (rather than `page`) because these are in-page section
+        // anchors, not links between separate pages.
+        link.setAttribute('aria-current', 'true');
         activeLink = link;
       } else {
         link.removeAttribute('data-active');
+        link.removeAttribute('aria-current');
       }
     }
     return activeLink;

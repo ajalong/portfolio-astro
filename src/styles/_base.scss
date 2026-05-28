@@ -8,6 +8,22 @@
   box-sizing: border-box;
 }
 
+// Visually-hidden but available to assistive tech. Used for supplementary
+// text that shouldn't show visually — e.g. the " (opens in new tab)" suffix
+// appended to external links, and section headings whose visual treatment
+// is supplied elsewhere. Standard sr-only pattern.
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 // Skip-to-main-content link — visually hidden until focused. First
 // focusable element on every page, so keyboard users can jump past the
 // fixed top-nav straight to <main>. On focus it appears as a pinned

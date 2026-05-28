@@ -54,6 +54,36 @@ interface Props {
 
 const { title, client, description, image, url, nextProject, team, orgs, year, sector, industry, theme, sectionIndex, roleTitle, roleSummary, brandPrimary, brandSecondary } = Astro.props as Props;
 const headerKickers = [industry, theme].filter(Boolean) as string[];
+
+// Structured data for the case study — a CreativeWork describing the project
+// plus a BreadcrumbList (Home → this project). Driven from the same props the
+// page already renders so it stays in sync with frontmatter. Rendered in
+// <head> by BaseLayout via the `jsonLd` prop.
+const ldSite = Astro.site ? new URL(Astro.site) : new URL(Astro.url.origin);
+const ldPageUrl = url ?? new URL(Astro.url.pathname, ldSite).toString();
+const ldHomeUrl = new URL('/', ldSite).toString();
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    headline: title,
+    description,
+    url: ldPageUrl,
+    author: { '@type': 'Person', name: 'Alan Long', url: ldHomeUrl },
+    ...(image ? { image } : {}),
+    ...(year ? { dateCreated: String(year) } : {}),
+    ...(client ? { about: { '@type': 'Organization', name: client } } : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: ldHomeUrl },
+      { '@type': 'ListItem', position: 2, name: title, item: ldPageUrl },
+    ],
+  },
+];
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
 
@@ -92,7 +122,7 @@ if (nextProject && !nextHasShowcase) {
   };
 }
 ---
-<BaseLayout {title} description={description} {image} url={url} bodyClass="project-page" {brandPrimary} {brandSecondary}>
+<BaseLayout {title} description={description} {image} url={url} pageType="article" bodyClass="project-page" {brandPrimary} {brandSecondary} jsonLd={jsonLd}>
   {!showSectionIndex && <ProjectNavbar internalEntryOnly />}
   <div class="page_container">
     <header>

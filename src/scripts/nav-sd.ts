@@ -51,6 +51,11 @@ export function initNavSd(): void {
   const setOpen = (open: boolean): void => {
     toggle.setAttribute('aria-expanded', String(open));
     menu.toggleAttribute('hidden', !open);
+    // Move focus into the menu on open so keyboard users land on the first
+    // section link rather than having to tab from the toggle. Escape +
+    // outside-click already return focus to the toggle, so only steal focus
+    // on the open transition (never on close).
+    if (open) links[0]?.focus();
   };
   const isOpen = (): boolean => toggle.getAttribute('aria-expanded') === 'true';
 
@@ -91,9 +96,14 @@ export function initNavSd(): void {
     for (const [id, link] of linkById) {
       if (id === activeId) {
         link.setAttribute('data-active', '');
+        // Expose the active section to assistive tech, not just visually.
+        // `true` (rather than `page`) because these are in-page section
+        // anchors, not links between separate pages.
+        link.setAttribute('aria-current', 'true');
         activeLink = link;
       } else {
         link.removeAttribute('data-active');
+        link.removeAttribute('aria-current');
       }
     }
     return activeLink;

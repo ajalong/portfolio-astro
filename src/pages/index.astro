@@ -42,11 +42,28 @@ const pageSections = [
 ];
 
 const subtitle = getLastUpdatedLabel();
+
+// Person structured data — helps search engines associate the site with Alan
+// and his social profiles (the same links rendered in HomeSectionIndex).
+const homeUrl = new URL('/', Astro.site ?? Astro.url.origin).toString();
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Alan Long',
+  jobTitle: 'Senior Product Designer',
+  url: homeUrl,
+  sameAs: [
+    'https://linkedin.com/in/alanalberglong',
+    'https://dribbble.com/alalo',
+    'https://github.com/ajalong',
+  ],
+};
 ---
 <BaseLayout
   title="Alan Long"
   description="Senior Product Designer with a front-end background. Former member of Interbrand's design team and led design and development at Cheerful Twentyfirst."
   bodyClass="home"
+  jsonLd={personJsonLd}
 >
   <div class="page_container">
     <header>
@@ -57,6 +74,7 @@ const subtitle = getLastUpdatedLabel();
         <p>Senior Product Designer</p>
       </div>
       <div class="about" id="about">
+        <h2 class="sr-only">About</h2>
         <p class="text-display">Five years at agencies in London, with clients across pharma, automotive, engineering and media.</p>
         <p class="text-display">Brand skills from my time at <a href="https://interbrand.com/" target="_blank" rel="noopener noreferrer">Interbrand</a>, and a front-end background that keeps me close to implementation. Both feed a systems-led approach to design that runs from high-level architectural choices through to visual craft.</p>
         <p class="text-display">This site was designed and built with the help of AI. The projects showcased here predate the most recent advancements in AI, however, if done today, AI would be used heavily throughout.</p>
@@ -70,6 +88,7 @@ const subtitle = getLastUpdatedLabel();
     <NavSd sections={pageSections} showBackLink={false} backLabel="alanlong.design" centerLabel="" centerLabelShort="" ariaLabel="Home sections" />
     <LogoCarousel logos={homeLogos} />
     <main id="main-content">
+      <h2 class="sr-only">Projects</h2>
       <ul class="project-list" id="projects">
         {
           projects.map((project, i) => (

@@ -162,6 +162,10 @@ $bg-card-hover-gradient:
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
+  // Show fallback text immediately, swap to Graphik on load. Avoids the
+  // ~3s invisible-text window of the default `block` policy. The Regular
+  // woff2 is preloaded in BaseLayout, so the swap window is tiny anyway.
+  font-display: swap;
 }
 
 @font-face {
@@ -172,6 +176,7 @@ $bg-card-hover-gradient:
   font-weight: 500;
   font-style: normal;
   font-stretch: normal;
+  font-display: swap;
 }
 
 :root {
@@ -196,7 +201,11 @@ $bg-card-hover-gradient:
   /* ─────────── Semantic text ─────────── */
   --text-primary: var(--grey1);
   --text-secondary: var(--grey2);
-  --text-tertiary: #9a9a9a;
+  // Darkened from #9a9a9a (≈2.5:1 on the near-white page bg — failed WCAG
+  // AA) to #767676 (≈4.6:1), so the de-emphasised nav-link text clears the
+  // 4.5:1 normal-text threshold. Still a clear step below --text-secondary,
+  // so the inactive→hover/active contrast cue is preserved.
+  --text-tertiary: #767676;
   --text-accent: #BB5B25;
   --text-inverse: var(--white1);
   --text-inverse-muted: var(--white2);

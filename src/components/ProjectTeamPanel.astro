@@ -197,6 +197,7 @@ if (hasOrgs) {
                     <p class="attribution__role">{org.caption}</p>
                   </div>
                 </div>
+                {org?.url && <span class="sr-only"> (opens in new tab)</span>}
               </HeadingInner>
             ) : (
               // Bare-string fallback for projects that haven't been migrated
@@ -217,7 +218,7 @@ if (hasOrgs) {
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`${member.name} on LinkedIn`}
+                    aria-label={`${member.name} on LinkedIn (opens in new tab)`}
                   >
                     <div class="attribution">
                       {member.headshot && (

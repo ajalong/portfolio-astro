@@ -8,6 +8,58 @@
   box-sizing: border-box;
 }
 
+// Skip-to-main-content link — visually hidden until focused. First
+// focusable element on every page, so keyboard users can jump past the
+// fixed top-nav straight to <main>. On focus it appears as a pinned
+// chip in the top-left corner using the same panel surface vocabulary
+// as the open-state NavSd toggle.
+//
+// At rest, every visual property is stripped (no padding, no shadow,
+// no background) — earlier we tried hiding a fully-styled element with
+// just `clip-path: inset(50%)` but the box-shadow paints outside the
+// clip and the padding inflates the 1×1 box, so a small panel chip
+// remained visible. Sr-only at rest, fully-styled on focus.
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  // Strip the visual chrome explicitly so :focus-visible can re-add it
+  // without leaking through here.
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    top: var(--unit-16);
+    left: var(--unit-16);
+    z-index: 1000;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: var(--unit-8) var(--unit-12);
+    overflow: visible;
+    clip-path: none;
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
+    font-size: var(--type-size);
+    line-height: var(--line-height-tight);
+    border-radius: var(--radius-sm);
+    box-shadow:
+      inset 0 0 0 1px var(--border-panel-color),
+      var(--shadow-panel);
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+}
+
 body {
   position: relative;
   z-index: 1;

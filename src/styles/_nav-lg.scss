@@ -38,6 +38,13 @@
   align-items: flex-start;
   row-gap: var(--unit-4);
 
+  // Heading group (permalink + subtitle) stacks tight — the two lines'
+  // own line-heights do the spacing, same rhythm as
+  // `.my-role-card__meta`'s name/role pair. No extra row-gap.
+  &:first-child {
+    row-gap: 0;
+  }
+
   // Middle group (jump links) carries a vertical rail on the nav's left edge,
   // plus a moving black indicator that slides to match the active link.
   // Inspired by .case-study-index on samwill.is.
@@ -94,36 +101,22 @@
   color: var(--text-primary);
 }
 
-// Plain-text counterpart to __back used on the home page where the second
-// line is the section name ("Portfolio") rather than a back link.
+// Subtitle line under the permalink — the "Updated <Month> <Year>"
+// build-time timestamp on both home and project pages. Project pages
+// used to carry a "See all work" back link here; now that the
+// persistent top-left Back affordance lives on every viewport (NavSd),
+// the subtitle is the only line below the permalink everywhere.
+//
+// Stacks against `.nav-lg__permalink` with the same name/role rhythm
+// as `.my-role-card__meta`: no padding, just the two elements' own
+// line-heights doing the spacing (permalink uses --line-height-tight
+// like the card's name, this uses --line-height like the card's role).
 .nav-lg__site-section {
   display: block;
-  padding: var(--unit-4) 0;
   font-size: var(--type-size);
   font-weight: var(--weight-regular);
-  line-height: 1;
+  line-height: var(--line-height);
   color: var(--text-secondary);
-}
-
-.nav-lg__back {
-  @include link-underline-zip;
-  padding: var(--unit-4) 0;
-  // Tight line-height so the zip underline hugs the text the same way it
-  // does on inline links inside <p>. Without this, flex blockifies the
-  // <a> and the underline drifts to the bottom of a tall line-box.
-  line-height: 1;
-  // background-origin: content-box keeps the underline anchored to the text
-  // rather than the bottom of the padding box.
-  background-origin: content-box;
-  background-position: 0 calc(100% + 0.12em);
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-position: 100% calc(100% + 0.12em);
-    }
-  }
-  &:focus-visible {
-    background-position: 100% calc(100% + 0.12em);
-  }
 }
 
 .nav-lg__link {

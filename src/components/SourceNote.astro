@@ -1,27 +1,68 @@
 ---
 /**
- * Quiet attribution line for content drawn from an external source.
- * Sits a step below body text and tucks tight under the cited block
- * (CardGroup, MediaGroup, figure) via the adjacency rule in
+ * Quiet attribution line for content drawn from one or more external
+ * sources. Sits a step below body text and tucks tight under the cited
+ * block (CardGroup, MediaGroup, figure) via the adjacency rule in
  * _project-layout.scss.
  *
  * Authoring (MDX):
- *   <SourceNote href="https://example.com/page" text="Page title" />
  *
- * Self-closing with text on a `text` prop (rather than children) so
- * Prettier's MDX formatter is free to wrap the opening tag's attributes
- * onto separate lines without leaking whitespace into the rendered
- * <a> — attribute values are quoted strings, not in-tree text nodes,
- * so they pass through unaffected by source formatting.
+ *   Single source:
+ *     <SourceNote href="https://example.com/page" text="Page title" />
  *
- * Renders as `<p class="source-note">Source: <a …>…</a></p>` so the
+ *   Multiple sources:
+ *     <SourceNote sources={[
+ *       { href: "https://a.com", text: "A" },
+ *       { href: "https://b.com", text: "B" },
+ *     ]} />
+ *
+ * The label pluralises automatically: "Source: …" with one entry,
+ * "Sources: …, …" with two or more (and-comma-separated for three+).
+ *
+ * Self-closing with content on props rather than children so Prettier's
+ * MDX formatter is free to wrap the opening tag's attributes without
+ * leaking whitespace into the rendered <a> — attribute values pass
+ * through unaffected by source formatting.
+ *
+ * Renders as `<p class="source-note">Source(s): <a …>…</a>…</p>` so the
  * existing `.card-group + .source-note` adjacency selector matches at
  * the DOM level.
  */
-interface Props {
+interface SourceEntry {
   href: string;
   text: string;
 }
-const { href, text } = Astro.props as Props;
+
+interface Props {
+  /** Single-source convenience props. Ignored when `sources` is given. */
+  href?: string;
+  text?: string;
+  /** Array form for multi-source attribution. */
+  sources?: SourceEntry[];
+}
+
+const { href, text, sources } = Astro.props as Props;
+
+// Normalise to a single array. If the array form is provided, use it;
+// otherwise fall back to the single href/text pair.
+const entries: SourceEntry[] = sources
+  ?? (href && text ? [{ href, text }] : []);
+
+if (entries.length === 0) {
+  throw new Error(
+    'SourceNote: provide either `href` + `text` or a non-empty `sources` array.',
+  );
+}
+
+const label = entries.length === 1 ? 'Source' : 'Sources';
+
+// Each entry's separator is computed alongside the entry so the
+// template can render in a flat single-line expression below — JSX
+// would otherwise insert whitespace between sibling elements on
+// separate lines, producing visible double-spaces in the output.
+const rendered = entries.map((entry, i) => ({
+  separator: i === 0 ? '' : i === entries.length - 1 ? ' and ' : ', ',
+  ...entry,
+}));
 ---
-<p class="source-note">Source: <a href={href} target="_blank" rel="noopener">{text}</a></p>
+<p class="source-note">{label}: {rendered.map((e) => (<>{e.separator}<a href={e.href} target="_blank" rel="noopener">{e.text}</a></>))}</p>

@@ -1,5 +1,5 @@
 ---
-title: Media Decision Engine
+title: A complete overhaul of Mercedes-Benz’s media analytics platform.
 client: Mercedes-Benz
 slug: mercedes
 summary: Redesigning Mercedes-Benz’s ad analytics platform to fix navigation, onboarding and data visualisation issues.
@@ -9,10 +9,41 @@ mediaVersion: v1777140383
 thumbnail: mercedes-benz-140-years-welcome-home-unwind-airmatic_zviput
 order: 3
 year: 2025
-sector: UX Overhaul
+industry: Automotive
+theme: UX Overhaul
 brand:
   primary: "#176DB7"
   secondary: "#000000"
+showcaseMedia:
+  topRight:
+    src: mercedes-channel_optimisation_oefuk2.png
+    alt: "Channel optimisation chart: spend versus impact across paid-media channels, with budget allocation in the right rail."
+  bottomRight:
+    src: mercedes-market_trends_brwslg.png
+    alt: "Market Trends tool showing multi-year vehicle registration lines for Mercedes vs Audi vs Other."
+orgs:
+  - name: Mercedes-Benz
+    caption: Client
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779968769/alan.design/organisations/org-mercedes_iefnqj
+    url: https://www.mercedes-benz.com/
+  - name: Interbrand
+    caption: My employer
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/alan.design/organisations/org-interbrand_ychtay
+    url: https://interbrand.com/
+  - name: OMD
+    caption: Sister agency
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779969374/alan.design/organisations/org-omd_egistr
+    url: https://www.omd.com/
+impactMetrics:
+  - value: Model any scenario
+    label: Before committing budget
+    description: Spend and outcome update live across all seven channels.
+  - value: "~80%"
+    label: Less parameter entry per scenario
+    description: ~60 parameter entries per scenario, down to 12, by setting the global parameters once.
+  - value: Global parameters
+    label: Consistency across the platform
+    description: Every tool reads from the single scenario model, so a decision rests on one consistent set of figures.
 roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:
@@ -60,11 +91,44 @@ team:
     linkedin: https://www.linkedin.com/in/jrohutch/
 ---
 
+import CardGroup from "../../components/cards/CardGroup.astro";
+import MediaGroup from "../../components/cards/MediaGroup.astro";
+import MetricCard from "../../components/cards/MetricCard.astro";
+import SourceNote from "../../components/SourceNote.astro";
+
 _Context_
 
 ## Overhauling Mercedes-Benz's ad analytics platform
 
 The Media Decision Engine is Mercedes-Benz's paid media analytics platform, used to track, measure, and optimise advertising performance across all paid media channels. The platform had been built by [OMD](https://www.omd.com/) (one of Interbrand's sister agencies) and grown in capability over the years without dedicated product design input; Interbrand was brought in to overhaul it.
+
+<CardGroup columns={3} rows={2} flow="vertical">
+  <MetricCard value="2.16m" label="Vehicles sold worldwide, 2025" />
+  <MetricCard value="€132.2bn" label="Mercedes-Benz Group revenue, 2025" />
+  <MetricCard value="1886" label="Invented the automobile" />
+  <MetricCard value="Top 10" label="Among the world's most valuable brands" />
+  <MetricCard value="7" label="Media channels optimised" />
+  <MetricCard
+    value="15"
+    label="Media analytics tools, regrouped into three stages"
+  />
+</CardGroup>
+<SourceNote
+  sources={[
+    {
+      href: "https://group.mercedes-benz.com/investors/reports-news/annual-reports/2025/",
+      text: "Mercedes-Benz Group FY2025 results",
+    },
+    {
+      href: "https://group.mercedes-benz.com/company/news/sales-2025.html",
+      text: "2025 sales figures",
+    },
+    {
+      href: "https://interbrand.com/best-global-brands/global/",
+      text: "Interbrand Best Global Brands 2025",
+    },
+  ]}
+/>
 
 _Problem_
 
@@ -113,9 +177,12 @@ Users had been re-entering the same data into tool after tool. The redesign sepa
 
 The result was a platform where content throughout the site reacted to global scenario changes, rather than a collection of discrete tools.
 
+<MediaGroup>
 ![Modal over chart: Scenario tab, dropdowns (market, model, competitors, segment, fuel, timeframe), saved scenario cards, Reset and Update.](mercedes-settings_nfcco6.png "The Scenario Settings overlay. Adjusting any global parameter updates visualisations across every tool live.")
 
 ![Dark nav, filter chips, line chart of spend vs outcome by channel, right rail with budget split, CO2 figures, export.](mercedes-channel_optimisation_naza6q.png "Channel Optimisation: spend versus impact across paid media channels, with budget allocation in the right rail.")
+
+</MediaGroup>
 
 _Onboarding_
 
@@ -127,15 +194,24 @@ The first two sprints had done a lot of the onboarding work. A clearer informati
 - **Tooltips and nudges, used sparingly.** Tied to specific moments where users were most likely to need a prompt, with copy kept short.
 - **Copy pitched to the audience.** Onboarding copy assumed a working knowledge of media analytics and avoided the explanatory hand-holding that often makes onboarding feel patronising to expert users.
 
+<MediaGroup>
 ![First-use orientation overlay highlighting the IA's three stages.](mercedes-overlay_fmo5gj.png "The first-use orientation, kept short because the IA had already done most of the work.")
 
 ![Login screen with platform purpose statement above the form.](mercedes-login_dqkdm1.png "The login screen sets expectations for who the platform is for, before the user has logged in.")
+
+</MediaGroup>
 
 _Impact_
 
 ## A powerful platform that explains itself
 
 Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
+
+<CardGroup columns={3}>
+  {frontmatter.impactMetrics?.map((m) => (
+    <MetricCard value={m.value} label={m.label} description={m.description} />
+  ))}
+</CardGroup>
 
 _Lessons learned_
 

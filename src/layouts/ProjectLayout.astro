@@ -85,7 +85,7 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
         <NavSd sections={sectionIndex} centerLabelShort={client} />
       </>
     )}
-    <main>
+    <main id="main-content">
       {showTeamPanel && <ProjectTeamPanel team={team} {orgs} {roleTitle} {roleSummary} />}
       <slot />
     </main>

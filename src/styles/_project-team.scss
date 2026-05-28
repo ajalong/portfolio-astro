@@ -200,13 +200,14 @@
     min-width: 0;
   }
 
-  // Hidden when JS detects that any card's text wraps onto multiple lines —
-  // the trigger is content + container width, not a clean viewport
-  // breakpoint, so the toggle lives in project-orgs-overflow.ts. When any
-  // single card overflows, the whole row hides (all-or-nothing) so the
-  // strip never reads as half-broken. The full team list still surfaces
-  // each member's org affiliation via the role-card overlay.
-  &[data-overflowing] {
+  // Individual cards get hidden from the end when JS detects the row's
+  // remaining content would wrap to multiple lines. The trigger is
+  // content + container width, not a clean viewport breakpoint, so the
+  // toggle lives in `project-orgs-overflow.ts`. The script drops cards
+  // one at a time from the end down to a 2-card minimum; at that floor
+  // it stops, and the remaining cards' text is allowed to wrap onto
+  // multiple lines rather than dropping any further.
+  > .org-card[data-overflow-hidden] {
     display: none;
   }
 }

@@ -1,6 +1,6 @@
 ---
 /**
- * Home page sticky nav — jump-to-project + contact + social links.
+ * Home page sticky nav — jump-to-section + contact + social links.
  *
  * Mirrors NavLg's structure and reuses the same CSS classes
  * (`.nav-lg*`) and JS (`initNavLg`). The only
@@ -8,7 +8,8 @@
  *
  *  - Group 1's second line is plain text (e.g. "Updated April 2026") rather
  *    than a "See all work" back link.
- *  - Group 2's jump links target project cards instead of article sections.
+ *  - Group 2's jump links target page-level sections (About, Projects, …)
+ *    instead of article sections.
  *  - Group 4 adds LinkedIn / Dribbble.
  *
  * Active-state tracking and the indicator rail are driven by the shared
@@ -16,18 +17,18 @@
  * pointing at an element with a matching `id`.
  */
 
-interface ProjectEntry {
+interface SectionEntry {
   id: string;
   label: string;
 }
 
 interface Props {
-  projects: ProjectEntry[];
+  sections: SectionEntry[];
   /** Second line of the heading group — e.g. "Updated April 2026". */
   subtitle: string;
 }
 
-const { projects, subtitle } = Astro.props as Props;
+const { sections, subtitle } = Astro.props as Props;
 ---
 
 <nav
@@ -40,14 +41,14 @@ const { projects, subtitle } = Astro.props as Props;
     <span class="nav-lg__site-section">{subtitle}</span>
   </div>
   <div class="nav-lg__group">
-    {projects.map((p) => (
+    {sections.map((s) => (
       <a
         class="nav-lg__link"
-        href={`#${p.id}`}
-        data-section-id={p.id}
-        data-label={p.label}
+        href={`#${s.id}`}
+        data-section-id={s.id}
+        data-label={s.label}
       >
-        {p.label}
+        {s.label}
       </a>
     ))}
   </div>

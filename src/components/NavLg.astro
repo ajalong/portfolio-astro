@@ -4,7 +4,15 @@
  *
  * Each entry links to an `id` on a section within the article. Active-state
  * tracking is handled in nav-lg.ts via IntersectionObserver.
+ *
+ * Heading group mirrors the home page's HomeSectionIndex: a permalink line
+ * + an "Updated <Month> <Year>" subtitle from the most recent commit (via
+ * `getLastUpdatedLabel()`). No back link here — the persistent "Back" in
+ * the top-left of the page (NavSd, visible at every viewport) handles
+ * the return-to-/ affordance.
  */
+
+import { getLastUpdatedLabel } from '../data/lastUpdated';
 
 interface SectionEntry {
   id: string;
@@ -20,6 +28,7 @@ const { sections } = Astro.props as Props;
 // "/project/gsk" → "alanlong.design/gsk"
 const slug = Astro.url.pathname.replace(/^\/project\//, '');
 const displayUrl = `alanlong.design/${slug}`;
+const subtitle = getLastUpdatedLabel();
 
 // Flatten the nested config into render order. Each entry carries its
 // nesting depth so the template can apply indentation. Depth > 0 sets
@@ -43,7 +52,7 @@ const flatSections = flatten(sections);
   >
     <div class="nav-lg__group">
       <span class="nav-lg__permalink">{displayUrl}</span>
-      <a class="nav-lg__back" href="/">See all work</a>
+      <span class="nav-lg__site-section">{subtitle}</span>
     </div>
     <div class="nav-lg__group">
       {flatSections.map((s) => (

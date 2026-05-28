@@ -29,12 +29,17 @@ const projectThumbs = new Map(
 const hasShowcase = (p: typeof projects[number]): boolean =>
   Boolean(p.data.impactMetrics?.length && p.data.showcaseMedia);
 
-// Each project card needs a stable DOM id so the sticky nav's jump-links
-// can target it. Prefix to avoid clashes with any other ids on the page.
-const navProjects = projects.map((p) => ({
-  id: `project-${(p.data.slug ?? p.id)}`,
-  label: p.data.client,
-}));
+// Top-level page sections the nav jumps between. Each section needs a
+// stable DOM id on the corresponding element below (see `#about`,
+// `#projects`) so the shared IntersectionObserver-driven active-state
+// tracking picks it up. Update in lockstep with the page structure.
+//
+// Today: About + Projects.
+// Future: + Posts (insert between About and Projects when shipped).
+const pageSections = [
+  { id: 'about', label: 'About' },
+  { id: 'projects', label: 'Projects' },
+];
 
 const subtitle = getLastUpdatedLabel();
 ---
@@ -51,20 +56,21 @@ const subtitle = getLastUpdatedLabel();
         </div>
         <p>Product Design</p>
       </div>
-      <div class="about">
+      <div class="about" id="about">
         <p class="text-display">Five years at agencies in London, with clients across pharma, automotive, engineering and media.</p>
         <p class="text-display">Brand skills from my time at <a href="https://interbrand.com/" target="_blank" rel="noopener noreferrer">Interbrand</a>, and a front-end background that keeps me close to implementation. Both feed a systems-led approach to design that runs from high-level architectural choices through to visual craft.</p>
         <p class="text-display">This site was designed and built with the help of AI. The projects showcased here predate the most recent advancements in AI, however, if done today, AI would be used heavily throughout.</p>
       </div>
     </header>
-    <HomeSectionIndex projects={navProjects} subtitle={subtitle} />
-    {/* Home variant of the SdNav — no back link, no centre label; the
-        project list becomes the section dropdown. Shared component with
-        the project pages (same structure + script + styles). */}
-    <NavSd sections={navProjects} showBackLink={false} backLabel="alanlong.design" centerLabel="" centerLabelShort="" ariaLabel="Home sections" />
+    <HomeSectionIndex sections={pageSections} subtitle={subtitle} />
+    {/* Home variant of the SdNav — no back link, no centre label. The
+        dropdown lists the home's page-level sections (About, Projects),
+        not individual projects. Shared component with the project pages
+        (same structure + script + styles). */}
+    <NavSd sections={pageSections} showBackLink={false} backLabel="alanlong.design" centerLabel="" centerLabelShort="" ariaLabel="Home sections" />
     <LogoCarousel logos={homeLogos} />
-    <main>
-      <ul class="project-list" id="work">
+    <main id="main-content">
+      <ul class="project-list" id="projects">
         {
           projects.map((project, i) => (
             <li

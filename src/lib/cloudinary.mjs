@@ -163,6 +163,38 @@ export function buildShowcaseImageUrl(publicId, frontmatter = {}) {
   });
 }
 
+// Build a showcase video URL from a video public-id (e.g. `Lobby.mp4`).
+// Uses the body-video transform pipeline (q_auto:best, ac_none, c_limit/w_1600)
+// because the showcase slot is hero-sized — eco quality reads as fuzzy here.
+export function buildShowcaseVideoUrl(publicId, frontmatter = {}) {
+  const { mediaBase, mediaVersion } = frontmatter;
+  if (!publicId || !mediaBase) return null;
+  return buildCloudinaryUrl({
+    endpoint: 'video/upload',
+    transforms: VIDEO_BODY_TRANSFORMS,
+    version: mediaVersion,
+    publicId: `${mediaBase.replace(/\/$/, '')}/${publicId.replace(/^\//, '')}`,
+  });
+}
+
+// Build the matching poster URL for a showcase video — first-frame
+// extraction at the showcase image transform pipeline so the poster
+// matches the video's eventual rendered size and quality. publicId is
+// the video filename (e.g. `Lobby.mp4`); we swap the extension to .jpg
+// and route through video/upload + so_0 the same way the thumbnail
+// poster pipeline does.
+export function buildShowcaseVideoPosterUrl(publicId, frontmatter = {}) {
+  const { mediaBase, mediaVersion } = frontmatter;
+  if (!publicId || !mediaBase) return null;
+  const basename = publicId.replace(/^\//, '').replace(/\.(mp4|webm|mov)(\?.*)?$/i, '');
+  return buildCloudinaryUrl({
+    endpoint: 'video/upload',
+    transforms: [...IMAGE_SHOWCASE_TRANSFORMS, 'so_0'],
+    version: mediaVersion,
+    publicId: `${mediaBase.replace(/\/$/, '')}/${basename}.jpg`,
+  });
+}
+
 export const __INTERNAL__ = {
   CLOUD_NAME,
   VIDEO_BODY_TRANSFORMS,

@@ -11,7 +11,11 @@
 import CardGroup from './cards/CardGroup.astro';
 import Card from './cards/Card.astro';
 import MetricCard from './cards/MetricCard.astro';
-import { buildShowcaseImageUrl } from '../lib/cloudinary.mjs';
+import {
+  buildShowcaseImageUrl,
+  buildShowcaseVideoUrl,
+  buildShowcaseVideoPosterUrl,
+} from '../lib/cloudinary.mjs';
 
 interface Props {
   project: any;
@@ -22,12 +26,42 @@ const slug = project.data.slug ?? project.id;
 const href = `/project/${slug}`;
 const metrics = project.data.impactMetrics?.slice(0, 3) ?? [];
 const media = project.data.showcaseMedia;
-const topRightUrl = media?.topRight
-  ? buildShowcaseImageUrl(media.topRight.src, project.data)
-  : null;
-const bottomRightUrl = media?.bottomRight
-  ? buildShowcaseImageUrl(media.bottomRight.src, project.data)
-  : null;
+
+// Showcase media accepts both images (.png/.jpg) and videos
+// (.mp4/.webm/.mov). For videos we build the playable URL + a first-frame
+// poster URL so the `<video>` can lazy-paint into a still before the
+// data-autoplay-on-view observer (see `scripts/media-autoplay.ts`) kicks
+// it into playback. Images go through the existing single-URL builder.
+//
+// `objectPositionY` on a slot overrides the default `object-position: top
+// center` crop anchor — useful when a 4:3 video sits in a 16:9 card and
+// the meaningful frame content isn't at the very top.
+const VIDEO_EXT_RE = /\.(mp4|webm|mov)(\?.*)?$/i;
+type ShowcaseSlot = {
+  url: string;
+  isVideo: boolean;
+  poster?: string;
+  style?: string;
+} | null;
+
+const resolveSlot = (
+  slot: { src: string; objectPositionY?: string } | undefined,
+): ShowcaseSlot => {
+  if (!slot) return null;
+  const style = slot.objectPositionY
+    ? `object-position: center ${slot.objectPositionY};`
+    : undefined;
+  if (VIDEO_EXT_RE.test(slot.src)) {
+    const url = buildShowcaseVideoUrl(slot.src, project.data);
+    const poster = buildShowcaseVideoPosterUrl(slot.src, project.data);
+    return url ? { url, isVideo: true, poster: poster ?? undefined, style } : null;
+  }
+  const url = buildShowcaseImageUrl(slot.src, project.data);
+  return url ? { url, isVideo: false, style } : null;
+};
+
+const topRight = resolveSlot(media?.topRight);
+const bottomRight = resolveSlot(media?.bottomRight);
 
 // Pin the hover gradient to this project's brand colours inline. The
 // page-level bg-observer also writes :root brand vars as sections enter
@@ -82,17 +116,31 @@ const brandStyle = project.data.brand
             click target; this is a visual affordance only. */}
         <span class="btn-primary">See the project</span>
       </Card>
-      {/* B — row 1 / cols 3–4 (showcase image) */}
+      {/* B — row 1 / cols 3–4 (showcase media — image or video). */}
       <Card span={2} col={3} row={1} class="project-showcase__card--media">
-        {topRightUrl && (
+        {topRight?.isVideo ? (
+          <video
+            class="project-showcase__media"
+            src={topRight.url}
+            poster={topRight.poster}
+            style={topRight.style}
+            loop
+            muted
+            playsinline
+            preload="metadata"
+            aria-label={media!.topRight!.alt}
+            data-autoplay-on-view
+          ></video>
+        ) : topRight ? (
           <img
             class="project-showcase__media"
-            src={topRightUrl}
+            src={topRight.url}
+            style={topRight.style}
             alt={media!.topRight!.alt}
             loading="lazy"
             decoding="async"
           />
-        )}
+        ) : null}
       </Card>
       {/* C — rows 2–3 / col 1 (1st impact metric). Descriptions are
           passed through and hidden per-card by showcase-overflow.ts when
@@ -117,17 +165,31 @@ const brandStyle = project.data.brand
           row={2}
         />
       )}
-      {/* F — rows 2–3 / cols 3–4 (showcase image; placed before E so auto-flow leaves the (3,2) gap for E). Hidden at ≤$breakpoint-medium — the mobile stack only carries A, B, and the three metrics. */}
+      {/* F — rows 2–3 / cols 3–4 (showcase media — image or video; placed before E so auto-flow leaves the (3,2) gap for E). Hidden at ≤$breakpoint-medium — the mobile stack only carries A, B, and the three metrics. */}
       <Card span={2} rowSpan={2} col={3} row={2} class="project-showcase__card--media project-showcase__card--mobile-hidden">
-        {bottomRightUrl && (
+        {bottomRight?.isVideo ? (
+          <video
+            class="project-showcase__media"
+            src={bottomRight.url}
+            poster={bottomRight.poster}
+            style={bottomRight.style}
+            loop
+            muted
+            playsinline
+            preload="metadata"
+            aria-label={media!.bottomRight!.alt}
+            data-autoplay-on-view
+          ></video>
+        ) : bottomRight ? (
           <img
             class="project-showcase__media"
-            src={bottomRightUrl}
+            src={bottomRight.url}
+            style={bottomRight.style}
             alt={media!.bottomRight!.alt}
             loading="lazy"
             decoding="async"
           />
-        )}
+        ) : null}
       </Card>
       {/* E — row 3 / col 2 (3rd impact metric) */}
       {metrics[2] && (

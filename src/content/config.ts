@@ -31,12 +31,20 @@ const projectImpactMetricSchema = z.object({
   description: z.string().optional(),
 });
 
-/** Single showcase image — `src` is a public-id relative to the project's
- *  `mediaBase` (extension included, e.g. `transparent/foo.png`); the URL
- *  is built via `buildShowcaseImageUrl` in cloudinary.mjs. */
+/** Single showcase image or video — `src` is a public-id relative to the
+ *  project's `mediaBase` (extension included, e.g. `transparent/foo.png`
+ *  for images, `lobby.mp4` for videos); the URL is built via the matching
+ *  `buildShowcase…Url` helper in cloudinary.mjs.
+ *
+ *  `objectPositionY` is an optional vertical anchor for `object-fit: cover`
+ *  cropping (e.g. `"50%"`, `"20%"`, `"top"`). When provided, the showcase
+ *  media element gets an inline `object-position: center <value>;`. Defaults
+ *  to the CSS rule `top center` so the meaningful top of an asset stays
+ *  visible — only set per-slot when an asset wants a different crop. */
 const projectShowcaseImageSchema = z.object({
   src: z.string(),
   alt: z.string(),
+  objectPositionY: z.string().optional(),
 });
 
 const projects = defineCollection({

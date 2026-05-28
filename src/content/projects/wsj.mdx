@@ -1,5 +1,5 @@
 ---
-title: CEO Council
+title: How do you engage top business leaders when you can't host them in person?
 client: Wall Street Journal
 slug: wsj
 summary: How do you engage top business leaders when you can't host them in person?
@@ -9,10 +9,43 @@ mediaVersion: v1777139289
 thumbnail: ceo_council-trim_ewpmam
 order: 8
 year: 2021
-sector: Virtual Event
+industry: Media
+theme: Event Platform design & build
 brand:
   primary: "#876438"
   secondary: "#4D4D4D"
+showcaseMedia:
+  topRight:
+    src: auditorium_message_v2_urqiwl.mp4
+    alt: "Q&A flow on the virtual auditorium page — submitting a question during a live session."
+    objectPositionY: "50%"
+  bottomRight:
+    src: Lobby-short2.mp4
+    alt: "Lobby page UI motion — hero animation with attendee headshots and live count."
+    objectPositionY: "20%"
+orgs:
+  - name: Wall Street Journal
+    caption: Client
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779995338/alan.design/organisations/org-wsj_an8xsp
+    url: https://www.wsj.com/
+  - name: Cheerful Twentyfirst
+    caption: My employer
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779995268/alan.design/organisations/org-cheerful_twentyfirst_tvl4uy
+    url: https://www.cheerfultwentyfirst.com/
+  - name: Gramercy Tech
+    caption: Development partner
+    logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779995257/alan.design/organisations/org-gramercy_tech_wbussf
+    url: https://www.gramercytech.com/
+impactMetrics:
+  - value: 2.4x
+    label: Increase in engagement vs prior event
+    description: Attendees spent more time watching and networking on the platform.
+  - value: 8 weeks
+    label: Designed and shipped
+    description: The interface was designed and front-end built in that window.
+  - value: Adopted
+    label: Across WSJ's Leadership Institute events
+    description: The design and codebase became the template WSJ carried forward across all Leadership Institute events going forwards.
 roleTitle: Lead Product Designer & Front-end Developer
 roleSummary: |
   Designed the WSJ CEO Council virtual event platform and led the front-end development to a tight deadline. Worked alongside Gramercy Tech's developers on implementation and presented directly to WSJ stakeholders throughout. The platform was reused for WSJ's CFO & COO Council and Technology Council.
@@ -75,11 +108,51 @@ team:
     linkedin: https://www.linkedin.com/in/john-speck-7281358/
 ---
 
+import CardGroup from "../../components/cards/CardGroup.astro";
+import MediaGroup from "../../components/cards/MediaGroup.astro";
+import MetricCard from "../../components/cards/MetricCard.astro";
+import TestimonialCard from "../../components/cards/TestimonialCard.astro";
+import SourceNote from "../../components/SourceNote.astro";
+
 _Context_
 
 ## WSJ's now virtual flagship event, delivered to a deadline
 
 The Wall Street Journal's CEO Council is one of WSJ's most prestigious events. It's an exclusive forum where senior business leaders and policy makers gather to discuss the issues of the day, traditionally hosted in Davos and other in-person venues. COVID had made that impossible. Cheerful Twentyfirst, who had run the in-person event prior to COVID, was asked to oversee the virtual edition for summer 2021.
+
+<CardGroup columns={3} rows={2} flow="vertical">
+  <MetricCard value="250+" label="CEOs and global leaders convened" />
+  <MetricCard value="12 hours" label="Live programming across time zones" />
+  <MetricCard value="4.7m" label="Subscribers (2025)" />
+  <MetricCard value="Largest" label="US newspaper by print circulation" />
+  <MetricCard value="1889" label="Founded" />
+  <MetricCard value="40" label="Pulitzer Prizes" />
+</CardGroup>
+{/* TODO: confirm exact source URLs before deploy.
+    - GlobeNewswire press release "WSJ to hold CEO Council Summit Online on May 4th 2021" (30 April 2021)
+    - Cheerful Twentyfirst's CEO Council case study (12-hour figure)
+    - News Corp Q2 FY2026 results press release (5 February 2026) — subscriber + circulation
+    - Pulitzer Prize Board — prize count */}
+<SourceNote
+  sources={[
+    {
+      href: "https://www.globenewswire.com/news-release/2021/04/30/2220172/0/en/The-Wall-Street-Journal-to-hold-CEO-Council-Summit-Online-on-May-4th-2021.html",
+      text: "WSJ CEO Council Summit press release",
+    },
+    {
+      href: "https://www.cheerfultwentyfirst.com/work",
+      text: "Cheerful Twentyfirst CEO Council case study",
+    },
+    {
+      href: "https://newscorp.com/investors/financial-information/",
+      text: "News Corp Q2 FY2026 results",
+    },
+    {
+      href: "https://www.pulitzer.org/winners",
+      text: "Pulitzer Prize Board",
+    },
+  ]}
+/>
 
 _Problem_
 
@@ -102,9 +175,13 @@ _Design_
 - **Networking worth showing up for.** A hero animation in the Lobby featured attendees' headshots and a live count of users online, paired with a direct call to action. The brief was engagement, and networking was given the prominence the brief required.
 - **Co-design with WSJ stakeholders.** Rather than presenting finished work for sign-off, I ran the design process collaboratively with WSJ's team. By the time decisions were made, stakeholders had been part of making them, which meant buy-in with WSJ leadership was less challenging.
 
-![Welcome page wireframe with the question-submission form above the fold.](wsj-landing_wireframe.png "The Welcome page architecture, prioritising the user's most likely need above the fold.")
-
-![Welcome page scrolling through its sections.](welcome_apstqd.mp4 "Animation of the Welcome page (landing page) being scrolled.")
+<MediaGroup>
+  ![Welcome page wireframe with the question-submission form above the
+  fold.](wsj-landing_wireframe.png "The Welcome page architecture, prioritising
+  the user's most likely need above the fold.") ![Welcome page scrolling through
+  its sections.](welcome_apstqd.mp4 "Animation of the Welcome page (landing
+  page) being scrolled.")
+</MediaGroup>
 
 _Implementation_
 
@@ -116,9 +193,14 @@ Eventfinity's platform was technically robust but had no UI scaffolding out of t
 - **CSS variables as design tokens.** Colour, type, and spacing values were stored as CSS variables, so any system-level change propagated cleanly across the platform.
 - **Documented for hand-off.** The code was documented as we wrote it, on the assumption it would outlive the project. It did. The platform was picked up and reused for WSJ's CFO & COO Council and Technology Council.
 
-![Lobby page UI motion — hero animation with attendee headshots and live count.](Lobby-short2.mp4 "Animation of the Lobby page (social area) showcasing on-page UI motion.")
-
-![Q&A flow — submitting a question on the live-stream auditorium page.](auditorium_message_v2_urqiwl.mp4 "Animation showing how a question would be asked during a Q&A session at the event on the virtual auditorium live-stream page.")
+<MediaGroup>
+  ![Lobby page UI motion — hero animation with attendee headshots and live
+  count.](Lobby-short2.mp4 "Animation of the Lobby page (social area) showcasing
+  on-page UI motion.") ![Q&A flow — submitting a question on the live-stream
+  auditorium page.](auditorium_message_v2_urqiwl.mp4 "Animation showing how a
+  question would be asked during a Q&A session at the event on the virtual
+  auditorium live-stream page.")
+</MediaGroup>
 
 _Impact_
 
@@ -126,9 +208,19 @@ _Impact_
 
 The event was well received. Engagement from attendees was strong, and WSJ noted it was a significant step up from their previous year's virtual edition, a project Cheerful Twentyfirst had not been involved in.
 
-> "A huge thank you for the delivery of yesterday — we are getting endless thanks, high-fives and praise from all parties — internal and external."
->
-> — Angus Peckham-Cooper, Vice President, Global Events at the Wall Street Journal
+<CardGroup columns={3} rows={2}>
+  {frontmatter.impactMetrics?.map((m) => (
+    <MetricCard value={m.value} label={m.label} description={m.description} />
+  ))}
+  <TestimonialCard
+    author="Angus Peckham-Cooper"
+    role="Vice President, Global Events, Wall Street Journal"
+    headshot="https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1567457277372"
+  >
+    A huge thank you for the delivery of yesterday — we are getting endless
+    thanks, high-fives and praise from all parties — internal and external.
+  </TestimonialCard>
+</CardGroup>
 
 _Lessons learned_
 

@@ -188,15 +188,17 @@
   overflow: hidden;
 }
 
-// The image itself fills the (now padding-free) card. `object-fit:
-// contain` is a safety belt — the source asset is 16:9 and the card is
-// locked to 16:9, so contain == cover in practice; if a non-16:9 asset
-// is ever swapped in, contain preserves it without cropping.
+// The media itself fills the (now padding-free) card. `cover` + top
+// anchor: assets fill the slot edge-to-edge, with any aspect mismatch
+// (e.g. WSJ's 4:3 videos in 16:9 cards) cropped off the bottom rather
+// than the middle so the meaningful top of the frame stays visible.
+// 16:9 source assets in 16:9 cards render identically to contain.
 .project-showcase__media {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: top center;
 }
 
 // Feature card (top-left) — carries the project title, kickers, and CTA.

@@ -38,9 +38,9 @@ impactMetrics:
   - value: Model any scenario
     label: Before committing budget
     description: Spend and outcome update live across all seven channels.
-  - value: "~80%"
+  - value: "⁓80%"
     label: Less parameter entry per scenario
-    description: ~60 parameter entries per scenario, down to 12, by setting the global parameters once.
+    description: ⁓60 parameter entries per scenario, down to 12, by setting the global parameters once.
   - value: Global parameters
     label: Consistency across the platform
     description: Every tool reads from the single scenario model, so a decision rests on one consistent set of figures.
@@ -94,6 +94,7 @@ team:
 import CardGroup from "../../components/cards/CardGroup.astro";
 import MediaGroup from "../../components/cards/MediaGroup.astro";
 import MetricCard from "../../components/cards/MetricCard.astro";
+import TestimonialCard from "../../components/cards/TestimonialCard.astro";
 import SourceNote from "../../components/SourceNote.astro";
 
 _Context_
@@ -118,10 +119,6 @@ The Media Decision Engine is Mercedes-Benz's paid media analytics platform, used
     {
       href: "https://group.mercedes-benz.com/investors/reports-news/annual-reports/2025/",
       text: "Mercedes-Benz Group FY2025 results",
-    },
-    {
-      href: "https://group.mercedes-benz.com/company/news/sales-2025.html",
-      text: "2025 sales figures",
     },
     {
       href: "https://interbrand.com/best-global-brands/global/",
@@ -207,10 +204,18 @@ _Impact_
 
 Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
 
-<CardGroup columns={3}>
+<CardGroup columns={3} rows={2}>
   {frontmatter.impactMetrics?.map((m) => (
     <MetricCard value={m.value} label={m.label} description={m.description} />
   ))}
+  <TestimonialCard
+    author="James Hutchinson"
+    role="Data Operations Manager, OMD"
+    headshot="https://res.cloudinary.com/ajalong/image/upload/c_fill,h_160,w_160,f_auto,q_auto:best/alan.design/linkedin/1774910332352"
+  >
+    The overhaul got a great reception from test markets, Mercedes are rolling
+    it out across Europe, all very positive.
+  </TestimonialCard>
 </CardGroup>
 
 _Lessons learned_

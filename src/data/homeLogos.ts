@@ -44,6 +44,6 @@ export const homeLogos: HomeLogo[] = [
   { name: 'AtkinsRéalis',            src: '/logos/logo-atkins_realis.svg' },
   { name: 'Epic',                    src: '/logos/logo-epic.svg' },
   { name: 'OMV',                     src: '/logos/logo-omv.svg' },
-  { name: 'Tradu',                   src: '/logos/logo-tradu.svg' },
+  { name: 'Jefferies',               src: '/logos/logo-jeffries.svg' },
   { name: 'Topsoe',                  src: '/logos/logo-topsoe.svg' },
 ];

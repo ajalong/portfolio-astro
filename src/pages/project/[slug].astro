@@ -1,6 +1,5 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import { PROJECT_THUMBNAIL_ALTS } from '../../data/projectThumbnailAlts';
 import { resolveThumbnails } from '../../lib/cloudinary.mjs';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 
@@ -26,19 +25,6 @@ const { project, nextProject } = Astro.props as Props;
 
 const { title, client, metaDescription, year, sector, industry, theme, roleTitle, roleSummary, brand } = project.data;
 const { poster: thumbnailImage } = resolveThumbnails(project.data);
-
-const nextThumbs = resolveThumbnails(nextProject.data);
-const nextProjectCard = {
-  href: `/project/${nextProject.data.slug ?? nextProject.id}`,
-  title: nextProject.data.title,
-  client: nextProject.data.client,
-  summary: nextProject.data.summary,
-  thumbnailSrc: nextThumbs.poster,
-  thumbnailVideo: nextThumbs.video,
-  thumbnailAlt: PROJECT_THUMBNAIL_ALTS[nextProject.data.slug ?? nextProject.id] ?? nextProject.data.title,
-  brandPrimary: nextProject.data.brand?.primary,
-  brandSecondary: nextProject.data.brand?.secondary,
-};
 
 const { Content } = await render(project);
 
@@ -98,7 +84,7 @@ const sectionIndex = parseSectionIndex(project.body, !!project.data.team?.length
   theme={theme}
   team={project.data.team}
   orgs={project.data.orgs}
-  nextProject={nextProjectCard}
+  nextProject={nextProject}
   {sectionIndex}
   {roleTitle}
   {roleSummary}

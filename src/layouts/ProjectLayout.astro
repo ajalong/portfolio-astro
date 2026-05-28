@@ -5,18 +5,9 @@ import ProjectNavbar from '../components/ProjectNavbar.astro';
 import NavLg from '../components/NavLg.astro';
 import NavSd from '../components/NavSd.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-
-interface NextProjectCard {
-  href: string;
-  title: string;
-  client: string;
-  summary: string;
-  thumbnailSrc: string;
-  thumbnailVideo?: string;
-  thumbnailAlt: string;
-  brandPrimary?: string;
-  brandSecondary?: string;
-}
+import ProjectShowcase from '../components/ProjectShowcase.astro';
+import { resolveThumbnails } from '../lib/cloudinary.mjs';
+import { PROJECT_THUMBNAIL_ALTS } from '../data/projectThumbnailAlts';
 
 interface TeamMember {
   name: string;
@@ -43,7 +34,11 @@ interface Props {
   description: string;
   image?: string;
   url?: string;
-  nextProject?: NextProjectCard;
+  // Raw project collection entry — ProjectLayout decides whether to
+  // render it as a full ProjectShowcase block (when the next project has
+  // both impactMetrics and showcaseMedia) or as the small ProjectCard,
+  // mirroring the homepage logic.
+  nextProject?: any;
   team?: TeamMember[];
   orgs?: OrgEntry[];
   year?: number;
@@ -61,6 +56,41 @@ const { title, client, description, image, url, nextProject, team, orgs, year, s
 const headerKickers = [industry, theme].filter(Boolean) as string[];
 const showTeamPanel = team && team.length > 0;
 const showSectionIndex = sectionIndex && sectionIndex.length > 0;
+
+// Mirror the homepage's hasShowcase check so the next-project section
+// uses the full ProjectShowcase block when the project has both
+// impactMetrics and showcaseMedia, and falls back to the small ProjectCard
+// otherwise.
+const nextHasShowcase = !!(
+  nextProject?.data?.impactMetrics?.length && nextProject?.data?.showcaseMedia
+);
+
+// Derive ProjectCard props for the fallback render. Skipped when the
+// showcase variant is going to render — keeps the resolveThumbnails call
+// out of the showcase path.
+let nextProjectCard: {
+  href: string;
+  thumbnailSrc: string | null;
+  thumbnailVideo?: string;
+  thumbnailAlt: string;
+  projectTitle: string;
+  client: string;
+  summary: string;
+} | null = null;
+if (nextProject && !nextHasShowcase) {
+  const slug = nextProject.data.slug ?? nextProject.id;
+  const thumbs = resolveThumbnails(nextProject.data);
+  nextProjectCard = {
+    href: `/project/${slug}`,
+    thumbnailSrc: thumbs.poster,
+    thumbnailVideo: thumbs.video ?? undefined,
+    thumbnailAlt:
+      PROJECT_THUMBNAIL_ALTS[slug] ?? `${nextProject.data.title} thumbnail`,
+    projectTitle: nextProject.data.title,
+    client: nextProject.data.client,
+    summary: nextProject.data.summary,
+  };
+}
 ---
 <BaseLayout {title} description={description} {image} url={url} bodyClass="project-page" {brandPrimary} {brandSecondary}>
   {!showSectionIndex && <ProjectNavbar internalEntryOnly />}
@@ -96,19 +126,23 @@ const showSectionIndex = sectionIndex && sectionIndex.length > 0;
             <p class="kicker">Next</p>
             <div
               data-next-project-brand
-              data-brand-primary={nextProject.brandPrimary}
-              data-brand-secondary={nextProject.brandSecondary}
+              data-brand-primary={nextProject.data?.brand?.primary}
+              data-brand-secondary={nextProject.data?.brand?.secondary}
             >
-              <ProjectCard
-                href={nextProject.href}
-                thumbnailSrc={nextProject.thumbnailSrc}
-                thumbnailVideo={nextProject.thumbnailVideo}
-                thumbnailAlt={nextProject.thumbnailAlt}
-                projectTitle={nextProject.title}
-                client={nextProject.client}
-                summary={nextProject.summary}
-                belowFold
-              />
+              {nextHasShowcase ? (
+                <ProjectShowcase project={nextProject} />
+              ) : nextProjectCard ? (
+                <ProjectCard
+                  href={nextProjectCard.href}
+                  thumbnailSrc={nextProjectCard.thumbnailSrc}
+                  thumbnailVideo={nextProjectCard.thumbnailVideo}
+                  thumbnailAlt={nextProjectCard.thumbnailAlt}
+                  projectTitle={nextProjectCard.projectTitle}
+                  client={nextProjectCard.client}
+                  summary={nextProjectCard.summary}
+                  belowFold
+                />
+              ) : null}
             </div>
           </section>
         )}

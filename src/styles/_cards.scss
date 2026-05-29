@@ -303,14 +303,10 @@ $card-padding: var(--unit-20);
   // Zero the UA `<dl>` margin — the element is now a `<dl>` (see the
   // component for why), and browser defaults add ~16px top/bottom.
   margin: 0;
+  // The `<dl>` holds a single `__group` child (axe forbids mixing a
+  // wrapper div with bare dt/dd siblings); flex here just stretches that
+  // child to fill the card so its own `space-between` reaches both edges.
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  // Min visible gap between head and description; the same value is the
-  // input to `$card-min-landscape-width-dense` (in _tokens.scss), so
-  // cards are sized to provide at least this much room. `space-between`
-  // distributes any extra height above this minimum.
-  gap: $card-description-gap;
   // 16:9 acts as the minimum aspect ratio — the card always reads at least
   // this wide-format, and grows vertically if content needs more room.
   // `aspect-ratio` is a "preferred" sizing hint that yields to intrinsic
@@ -320,6 +316,19 @@ $card-padding: var(--unit-20);
   // vertically, with extra side breathing room so labels don't crowd the
   // card edge when they wrap.
   padding: var(--unit-20) var(--unit-24);
+
+  // The name-value group: head pinned top, description pinned bottom.
+  &__group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // Min visible gap between head and description; the same value is the
+    // input to `$card-min-landscape-width-dense` (in _tokens.scss), so
+    // cards are sized to provide at least this much room. `space-between`
+    // distributes any extra height above this minimum.
+    gap: $card-description-gap;
+  }
 
   // DOM order is dt (label) → dd (value), per `<dl>` semantics. Visual
   // order is value on top, label beneath, recreated via column-reverse.

@@ -88,10 +88,15 @@ const brandStyle = project.data.brand
     rows 2–3 / cols 3–4 before it tries E, leaving E to land in the
     only remaining gap at (row 3, col 2).
   */}
+  {/* No aria-label here: the whole card is one link, so its accessible
+      name is built from the visible content (client, title, "See the
+      project", metrics). An aria-label that omits that visible text trips
+      axe's label-content-name-mismatch (voice-control users can't say
+      what they see). The enclosing <section aria-label> still names the
+      region concisely for landmark navigation. */}
   <a
     class="project-showcase__link"
     href={href}
-    aria-label={`${project.data.client} case study — ${project.data.title}`}
   >
     {/* Heading row above the card group: client name + content-type
         label, mirroring the homepage `profile-info` pattern (name +

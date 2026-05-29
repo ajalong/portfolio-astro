@@ -135,7 +135,11 @@ const brandStyle = project.data.brand
             preload="metadata"
             aria-label={media!.topRight!.alt}
             data-autoplay-on-view
-          ></video>
+          >
+            {/* Silent decorative loop — empty captions track satisfies the
+                video-caption a11y check without misleading caption text. */}
+            <track kind="captions" src="/silent-captions.vtt" />
+          </video>
         ) : topRight ? (
           <img
             class="project-showcase__media"
@@ -184,7 +188,11 @@ const brandStyle = project.data.brand
             preload="metadata"
             aria-label={media!.bottomRight!.alt}
             data-autoplay-on-view
-          ></video>
+          >
+            {/* Silent decorative loop — empty captions track satisfies the
+                video-caption a11y check without misleading caption text. */}
+            <track kind="captions" src="/silent-captions.vtt" />
+          </video>
         ) : bottomRight ? (
           <img
             class="project-showcase__media"

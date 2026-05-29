@@ -43,7 +43,11 @@ const fetchPriority = belowFold ? 'low' : undefined;
         aria-label={thumbnailAlt}
         data-thumbnail-video
         data-autoplay-on-view
-      ></video>
+      >
+        {/* Silent decorative loop — empty captions track satisfies the
+            video-caption a11y check without misleading caption text. */}
+        <track kind="captions" src="/silent-captions.vtt" />
+      </video>
     ) : (
       <img alt={thumbnailAlt} src={thumbnailSrc} fetchpriority={fetchPriority} />
     )}

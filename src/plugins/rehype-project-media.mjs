@@ -247,7 +247,16 @@ function buildFigure(img, { isPair = false, isFirst = false, frontmatter = {} } 
         'data-autoplay-on-view': '',
         'aria-label': altText || undefined,
       },
-      children: [],
+      // Silent decorative loop — empty captions track satisfies the
+      // video-caption a11y check without misleading caption text.
+      children: [
+        {
+          type: 'element',
+          tagName: 'track',
+          properties: { kind: 'captions', src: '/silent-captions.vtt' },
+          children: [],
+        },
+      ],
     };
   } else {
     const isGif = /\.gif$/i.test(src);

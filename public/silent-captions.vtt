@@ -1,0 +1,7 @@
+WEBVTT
+
+NOTE
+This is an intentionally empty caption track. Every video on this site is a
+silent, decorative motion loop with no spoken audio to caption. The track
+exists so the <video> elements satisfy the WCAG/axe "video-caption" check
+without presenting misleading caption text.

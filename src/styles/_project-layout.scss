@@ -262,6 +262,22 @@
   .media-block--pair > figure.media-full:first-child  { grid-column: 1; }
   .media-block--pair > figure.media-full:nth-child(2) { grid-column: 2; }
 
+  // Stacked variant (opt-in via `class="media-group--stacked"` on MediaGroup):
+  // collapse the pair to a single column so the two figures stack one after
+  // another rather than side by side. Mirrors the large-viewport override in
+  // _cards.scss.
+  .media-group--stacked .media-block--pair {
+    grid-template-columns: 1fr;
+  }
+  .media-group--stacked .media-block--pair > figure.media-full:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .media-group--stacked .media-block--pair > figure.media-full:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
   // Hide in-flow captions on mobile. The lightbox caption uses a different
   // class (.media-lightbox__caption) so this doesn't affect it.
   .media-block .media-caption,

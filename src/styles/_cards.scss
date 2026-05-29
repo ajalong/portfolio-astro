@@ -250,6 +250,22 @@ $card-padding: var(--unit-20);
   .media-group .media-block--pair :is(.media-caption, .media-caption-group) {
     display: none;
   }
+
+  // Stacked variant (opt-in via `class="media-group--stacked"` on MediaGroup):
+  // the pair's two figures stack one after another instead of sitting side by
+  // side, each at the single-figure content width (cluster cols 1 to -2).
+  // Used where the media reads better sequentially (e.g. WSJ).
+  body.project-page article .media-group--stacked > .media-block--pair {
+    flex-direction: column;
+  }
+  // `.media-block` sets `align-items: start`, so without an explicit stretch
+  // the column items shrink to the image's intrinsic width. Stretch each to
+  // the full cluster-content width and let `flex: none` keep its natural
+  // height.
+  .media-group--stacked .media-block--pair > figure.media-full {
+    flex: none;
+    align-self: stretch;
+  }
 }
 
 // Below large (mobile + medium): cluster is a flex column, captions hidden

@@ -300,13 +300,16 @@ $card-padding: var(--unit-20);
 // ends of the card so adjacent metric cards visually align value-to-value
 // and description-to-description regardless of label length.
 .metric-card {
-  // Zero the UA `<dl>` margin — the element is now a `<dl>` (see the
+  // Zero the UA `<dl>` margin — the element is a `<dl>` (see the
   // component for why), and browser defaults add ~16px top/bottom.
   margin: 0;
-  // The `<dl>` holds a single `__group` child (axe forbids mixing a
-  // wrapper div with bare dt/dd siblings); flex here just stretches that
-  // child to fill the card so its own `space-between` reaches both edges.
+  // The `<dl>` IS the card: dt/dd are direct children (a flat
+  // `dl > dt + dd + dd` is the only structure that passes axe's
+  // definition-list + dlitem rules). Flex column lets `order` + margins
+  // recreate the visual layout — value top, label beneath, description
+  // pinned bottom — without any wrapper divs.
   display: flex;
+  flex-direction: column;
   // 16:9 acts as the minimum aspect ratio — the card always reads at least
   // this wide-format, and grows vertically if content needs more room.
   // `aspect-ratio` is a "preferred" sizing hint that yields to intrinsic
@@ -317,28 +320,10 @@ $card-padding: var(--unit-20);
   // card edge when they wrap.
   padding: var(--unit-20) var(--unit-24);
 
-  // The name-value group: head pinned top, description pinned bottom.
-  &__group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    // Min visible gap between head and description; the same value is the
-    // input to `$card-min-landscape-width-dense` (in _tokens.scss), so
-    // cards are sized to provide at least this much room. `space-between`
-    // distributes any extra height above this minimum.
-    gap: $card-description-gap;
-  }
-
-  // DOM order is dt (label) → dd (value), per `<dl>` semantics. Visual
-  // order is value on top, label beneath, recreated via column-reverse.
-  &__head {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: var(--unit-4);
-  }
-
+  // Visual order (value on top, label beneath) reverses the semantic DOM
+  // order (dt label → dd value) via `order`.
   &__value {
+    order: 1;
     margin: 0;
     font-size: var(--type-size-lg);
     font-weight: var(--weight-regular);
@@ -346,9 +331,23 @@ $card-padding: var(--unit-20);
     line-height: var(--line-height-tight);
   }
 
+  &__label {
+    order: 2;
+    // Tight gap below the value.
+    margin: var(--unit-4) 0 0;
+  }
+
+  // `margin-top: auto` pins the description to the card bottom; the free
+  // space above it provides the visible gap. Cards are sized via
+  // `$card-min-landscape-width-dense` (in _tokens.scss, derived from
+  // `$card-description-gap`) to guarantee room for that gap at landscape.
+  &__description {
+    order: 3;
+    margin: auto 0 0;
+  }
+
   &__label,
   &__description {
-    margin: 0;
     font-size: var(--type-size);
     color: var(--text-secondary);
     line-height: var(--line-height);

@@ -20,18 +20,18 @@
  * `<dt>` (term being measured) and the value + optional description are
  * `<dd>`s (the metric value and its supporting context). The `<dl>`
  * groups them as one name-value pair, which is the right shape for
- * structured-data parsers and assistive tech. Visual order (value on
- * top, label beneath) is recreated with `flex-direction: column-reverse`
- * inside the `__head` wrapper — DOM order stays semantic (term first,
- * value second) so screen readers read "GSK employees worldwide:
- * 66,800" rather than the reverse.
+ * structured-data parsers and assistive tech. DOM order stays semantic
+ * (term first, value second) so screen readers read "GSK employees
+ * worldwide: 66,800" — the visual order (value on top, label beneath,
+ * description pinned to the bottom) is recreated purely in CSS via
+ * `order` + margins.
  *
- * Structure: the dt/dd live inside a single `__group` wrapper div so the
- * `<dl>` has exactly one direct child. A `<dl>` may not mix a wrapper
- * div with bare dt/dd siblings (axe `definition-list` flags it), which
- * is what a top-level `__description` dd alongside the `__head` div used
- * to do. The flex layout (head pinned top, description pinned bottom via
- * `space-between`) lives on `__group`.
+ * Structure: the dt/dd are DIRECT children of the `<dl>` — no wrapper
+ * divs. axe's `definition-list` rule rejects nested divs
+ * (`dl > div > div`) and mixing a wrapper div with bare dt/dd siblings,
+ * and `dlitem` requires each dt/dd to have a `<dl>` (or single div)
+ * parent. A flat `dl > dt + dd + dd` is the one shape that satisfies
+ * both, so the layout lives on `.metric-card` itself.
  */
 interface Props {
   value: string;
@@ -52,11 +52,7 @@ if (row) styleParts.push(`--card-row: ${row}`);
 const style = styleParts.length ? styleParts.join('; ') : undefined;
 ---
 <dl class:list={['metric-card', className]} style={style}>
-  <div class="metric-card__group">
-    <div class="metric-card__head">
-      <dt class="metric-card__label">{label}</dt>
-      <dd class="metric-card__value">{value}</dd>
-    </div>
-    {description && <dd class="metric-card__description">{description}</dd>}
-  </div>
+  <dt class="metric-card__label">{label}</dt>
+  <dd class="metric-card__value">{value}</dd>
+  {description && <dd class="metric-card__description">{description}</dd>}
 </dl>

@@ -194,12 +194,3 @@ export function buildShowcaseVideoPosterUrl(publicId, frontmatter = {}) {
     publicId: `${mediaBase.replace(/\/$/, '')}/${basename}.jpg`,
   });
 }
-
-export const __INTERNAL__ = {
-  CLOUD_NAME,
-  VIDEO_BODY_TRANSFORMS,
-  VIDEO_THUMB_TRANSFORMS,
-  IMAGE_THUMB_POSTER_TRANSFORMS,
-  isVideoExt,
-  isGifExt,
-};

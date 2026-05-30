@@ -39,7 +39,7 @@ export const homeLogos: HomeLogo[] = [
   { name: 'Samsung',                 src: '/logos/logo-samsung.svg' },
   { name: 'BMW',                     src: '/logos/logo-bmw.svg' },
   { name: 'AstraZeneca',             src: '/logos/logo-astra_zeneca.svg' },
-  { name: 'University of Bristol',   src: '/logos/logo-uni_bristol.svg' },
+  { name: 'Stanford University',     src: '/logos/logo-uni_stanford.svg' },
   { name: 'MINI',                    src: '/logos/logo-mini.svg' },
   { name: 'AtkinsRéalis',            src: '/logos/logo-atkins_realis.svg' },
   { name: 'Epic',                    src: '/logos/logo-epic.svg' },

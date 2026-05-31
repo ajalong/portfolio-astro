@@ -10,6 +10,13 @@
   to = "/project/atkinsrealis"
   status = 301
 
+# Old year-suffixed resume URL → stable URL. Keeps any external share
+# links (LinkedIn posts, email signatures, etc.) working forever.
+[[redirects]]
+  from = "/Alan-Long-Resume-2026.pdf"
+  to = "/alanlong-resume.pdf"
+  status = 301
+
 # Security headers applied site-wide. CSP and Trusted Types intentionally
 # left out — Astro and Clarity require inline scripts and styles, which
 # would need a nonce-based middleware to pass Lighthouse's strict-CSP

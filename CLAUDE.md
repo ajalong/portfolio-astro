@@ -111,41 +111,6 @@ Project thumbnails resolve through `src/lib/cloudinary.mjs` —
 
 ---
 
-# Multi-agent workflow (Cowork hub ⇄ Claude Code)
-
-This repo is worked on from two places: **Cowork** (a central hub for
-planning, research, content/asset creation, reviewing diffs, and committing
-finished work) and **Claude Code** (the local live dev loop — `npm run dev`,
-fast terminal iteration, large in-repo refactors on the user's machine).
-They are separate agents with no direct channel to each other.
-
-## Git is the only source of truth
-Neither agent's working copy is authoritative — the GitHub remote is.
-Cowork's mounted copy can lag behind the host (it has been seen 150+ commits
-stale). Never assume your working tree reflects the other agent's latest work.
-
-## Pull before, push after — every session
-- **Before touching anything**, sync to the remote:
-  `git fetch && git reset --hard origin/main` (or `pull --ff-only`).
-- **When finished**, `git commit` and `git push` so the other agent can
-  `pull` and see the work. Unpushed commits are invisible to the other side.
-- Only one side makes commits in a given work session. The idle side stays
-  current by pulling before it starts.
-
-## Branch default
-- **Cowork commits to `staging`** and pushes it.
-- **The user merges `staging` → `main`** (which auto-deploys via Netlify).
-- Claude Code works on `main` directly.
-- For larger parallel efforts, use dedicated feature branches and merge via
-  review rather than both committing to `main` at once.
-
-## Delegating between agents
-There is no API to invoke the other agent. To hand off work, write a precise
-spec/plan as a file in the repo, push it, and tell the other agent to execute
-it. That shared file is the handoff.
-
----
-
 # Extending this file
 
 When you learn something during a session that would help a future session

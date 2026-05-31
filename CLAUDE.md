@@ -111,6 +111,57 @@ Project thumbnails resolve through `src/lib/cloudinary.mjs` —
 
 ---
 
+# Multi-agent workflow (Cowork hub ⇄ Claude Code)
+
+This repo is worked on from two places: **Cowork** (a central hub for
+planning, research, content/asset creation, reviewing diffs, and committing
+finished work) and **Claude Code** (the local live dev loop — `npm run dev`,
+fast terminal iteration, large in-repo refactors on the user's machine).
+They are separate agents with no direct channel to each other.
+
+## Git is the only source of truth
+Neither agent's working copy is authoritative — the GitHub remote is.
+Cowork's mounted copy can lag behind the host (it has been seen 150+ commits
+stale). Never assume your working tree reflects the other agent's latest work.
+
+## Sync model (asymmetric — proven, not assumed)
+Cowork's sandbox `.git` is a **separate copy**. It can `fetch` from origin
+(read) but has **no push credentials** and no write path to the host.
+Claude Code has full push access. So hand-offs are directional:
+
+- **Cowork → Claude Code:** Cowork commits locally, exports the commit(s) as
+  a `.patch` in its outputs folder, and messages the user with (a) the
+  absolute patch path, (b) a one-line summary of intent, and (c) the
+  branch/SHA it was authored against (so Code knows whether to use plain
+  `git am` or `git am --3way`). Claude Code applies it on `staging`, pushes,
+  then replies with the resulting origin SHA for Cowork to verify on its next
+  fetch.
+- **Claude Code → Cowork:** Code pushes `staging` (and `main` on deploy).
+  Cowork runs `git fetch && git reset --hard origin/staging`. No patch needed.
+
+Each agent syncs at session start before touching anything, commits locally
+without asking, and pushes/hands off its work at session end.
+
+## Branch default — both agents
+- **All routine work lands on `staging`** — Cowork and Claude Code alike.
+- **`main` only advances on the user's explicit "deploy to prod".** No agent
+  merges to `main` or runs cross-branch deploy steps on its own initiative.
+- **Invariant:** `staging` must always contain everything on `main`. Staging
+  can be ahead, never behind. A prod deploy is a fast-forward of `main` to
+  `staging`'s tip.
+- A hand-off ends at "push `staging`." If a deploy seems warranted, frame it
+  as a recommendation to the user — never as a step for the other agent.
+
+## Delegating execution to Claude Code
+When Cowork wants Code to do something that needs real-time local iteration
+(a refactor with the dev server running, anything interactive) rather than
+just review a patch: drop a spec file at `.claude/specs/<slug>.md`, treat it
+as the source of truth, and reference it in the message to the user. Claude
+Code executes against that file and reports back commit SHA(s) + a short
+summary.
+
+---
+
 # Extending this file
 
 When you learn something during a session that would help a future session

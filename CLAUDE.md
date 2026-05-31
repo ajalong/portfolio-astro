@@ -42,6 +42,19 @@ edit.
 The user has corrected this. If they say "padding" on an element where the
 spacing in question is actually margin, ask before acting.
 
+## Context lives in the repo, not the chat
+A conversation is ephemeral; only files persist. So durable project context
+must live in the repo, never solely in a task chat.
+
+- **Load at task start:** before doing real work, sync the repo and read
+  this file and `docs/ARCHITECTURE.md`. Claude Code loads `CLAUDE.md`
+  automatically; a fresh Cowork task does not — open both explicitly.
+- **Capture before you finish:** when a task surfaces something a future
+  session would otherwise have to rediscover — an architecture fact, a
+  convention, a gotcha — write it into the repo (`docs/ARCHITECTURE.md` for
+  the map, `CLAUDE.md` for rules/conventions) as part of the same work, and
+  hand it off so it reaches `origin`. Don't leave it stranded in the chat.
+
 ---
 
 # Project conventions

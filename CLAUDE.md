@@ -160,6 +160,21 @@ as the source of truth, and reference it in the message to the user. Claude
 Code executes against that file and reports back commit SHA(s) + a short
 summary.
 
+## Dispatch (mobile → desktop) routing
+Dispatch (Cowork beta, Pro/Max) lets the user assign a task from the Claude
+mobile app; it runs on the desktop and routes automatically — **dev tasks to
+Claude Code, knowledge/content work to Cowork** — reusing the files,
+connectors, and plugins configured here. It requires the desktop awake with
+Claude Desktop running (remote control, not cloud compute). Implications:
+
+- Dispatched work still obeys this file: `staging`-only, patch/push
+  discipline, the `staging ⊇ main` invariant, deploy only on the user's
+  explicit "deploy to prod".
+- The push-credential asymmetry holds — anything that must reach `origin`
+  routes through the Claude Code path, since the Cowork side can't push.
+- The mobile go-ahead prompt is the human-in-the-loop checkpoint; treat it as
+  the approval gate, especially before any `main`/deploy action.
+
 ---
 
 # Extending this file

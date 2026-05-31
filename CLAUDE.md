@@ -1,3 +1,12 @@
+# Orientation
+
+New to the codebase or back after a gap? Read **`docs/ARCHITECTURE.md`**
+first — it's the standing map of the stack, directory layout, content model,
+media pipeline, and repo-clone inventory. This file (`CLAUDE.md`) covers the
+working conventions and the multi-agent git protocol; keep both current.
+
+---
+
 # Operating rules
 
 These rules exist because each one maps to a specific mistake that wasted

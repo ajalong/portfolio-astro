@@ -35,15 +35,15 @@ orgs:
     logo: https://res.cloudinary.com/ajalong/image/upload/c_fit,w_112,h_112,f_auto,q_auto:best/v1779969374/alan.design/organisations/org-omd_egistr
     url: https://www.omd.com/
 impactMetrics:
-  - value: Rolling out across Europe
-    label: After a strong test-market reception
-    description: Used by the media planners who decide where Mercedes-Benz's ad spend goes.
+  - value: 3× time-on-tool
+    label: "Average session: under 10 → over 30 min"
+    description: Planners had been bouncing off slow loading and confusing navigation; now they stay and work in the tool. (Per OMD's data lead.)
+  - value: 40–50 daily users
+    label: A near-abandoned platform became the team's default
+    description: Adoption grew from a 2–3 person daily core to 40–50 people using the platform every day.
   - value: "⁓80%"
     label: Fewer settings to enter per scenario
-    description: Each setting is entered once globally, rather than in every tool.
-  - value: Model any scenario
-    label: Before committing budget
-    description: Spend and outcome update live across all seven channels.
+    description: Each setting is entered once globally, rather than per tool — and visualisations update live as scenarios change.
 roleSummary: |
   Redesigned Mercedes-Benz's paid-media analytics platform. Restructured the information architecture, consolidated tool-level settings into a global scenario model, and rebuilt onboarding and exports across three sequential sprints.
 team:
@@ -203,6 +203,10 @@ _Impact_
 ## A powerful platform that explains itself
 
 Final designs were delivered to Mercedes-Benz in spring 2025, with implementation underway in the months that followed. The redesigned Media Decision Engine turned a capable but hard-to-use platform into one that worked with its users rather than against them. The platform was clearer in structure and more consistent in behaviour, and required less prior knowledge to navigate.
+
+- **A structure that explains itself.** 15 discrete tools were regrouped into 3 stages that mirror how planners actually reach a decision, so users no longer have to reconstruct the platform's logic.
+- **Consistent behaviour across every tool.** Shared interaction and data-visualisation patterns replaced the per-tool inconsistency that had forced users to re-learn the interface each time they switched.
+- **Self-service for less experienced planners.** Live scenarios and a clearer IA carry most of the onboarding, so newer users can find what they need without hand-holding.
 
 <CardGroup columns={3} rows={2}>
   {frontmatter.impactMetrics?.map((m) => (

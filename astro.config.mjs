@@ -8,10 +8,13 @@ import remarkProjectSections from './src/plugins/remark-project-sections.mjs';
 import remarkBlockquoteCite from './src/plugins/remark-blockquote-cite.mjs';
 import remarkResolveMedia from './src/plugins/remark-resolve-media.mjs';
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://alanlong.design',
   integrations: [mdx(), sitemap()],
+
   // Force CSS into external <link> stylesheets instead of inline <style>.
   // Astro's `auto` heuristic was inlining the full ~95 KB bundle per route,
   // which Microsoft Clarity's session replay (rrweb) would silently drop —
@@ -24,9 +27,11 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'never',
   },
+
   redirects: {
     '/project/atikinsrealis': '/project/atkinsrealis',
   },
+
   markdown: {
     // remarkResolveMedia must run BEFORE Astro's content-assets vite
     // plugin tries to ESM-import bare-filename image refs — by the time
@@ -34,4 +39,6 @@ export default defineConfig({
     remarkPlugins: [remarkResolveMedia, remarkBlockquoteCite, remarkProjectSections],
     rehypePlugins: [rehypeExternalLinks, rehypeProjectMedia],
   },
+
+  adapter: cloudflare()
 });

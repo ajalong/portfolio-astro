@@ -1,0 +1,78 @@
+/* ─────────────────────────────────────────────────────────────
+   Design system foundations — shared across all new-design pages.
+   Imported by BaseLayout alongside the existing global.scss.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Fonts ── */
+
+@font-face {
+  font-family: 'GT Sectra';
+  src: url('/GT-Sectra-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'GT Sectra';
+  src: url('/GT-Sectra-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'GT Sectra';
+  src: url('/GT-Sectra-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'GT Sectra';
+  src: url('/GT-Sectra-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Pentameter';
+  src: url('/Pentameter-VF.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+/* ── Tokens ── */
+
+:root {
+  /* Colour — static day-mode defaults. Time-driven override is dispatch 48. */
+  --ground:        oklch(0.97 0.007 65);
+  --surface:       oklch(0.94 0.005 65);
+  --ink:           oklch(0.18 0.020 245);
+  --ink-secondary: oklch(0.35 0.012 245);
+  --accent:        oklch(0.55 0.090 65);
+  --border:        oklch(0.89 0.004 65);
+
+  /* Grid */
+  --grid-columns: 40;
+  --grid-max:     960px;
+  --cell:         calc(min(var(--grid-max), 100vw) / var(--grid-columns));
+
+  /* Spacing — all derived from --cell */
+  --space-025: calc(var(--cell) / 4);   /* ~6px  */
+  --space-050: calc(var(--cell) / 2);   /* ~12px */
+  --space-100: var(--cell);             /* ~24px */
+  --space-200: calc(var(--cell) * 2);   /* ~48px */
+  --space-300: calc(var(--cell) * 3);   /* ~72px */
+  --space-400: calc(var(--cell) * 4);   /* ~96px */
+
+  /* Typography stacks */
+  --font-display: 'GT Sectra', Georgia, 'Times New Roman', serif;
+  --font-ui:      'Pentameter', 'Courier New', Courier, monospace;
+
+  /* Motion */
+  --ease: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+}

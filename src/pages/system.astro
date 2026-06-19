@@ -1,0 +1,63 @@
+---
+import SystemLayout from '../layouts/SystemLayout.astro';
+---
+
+<SystemLayout
+  title="Design System"
+  description="The live design system behind alanlong.design — typography, colour, layout, and components, all in one place."
+>
+  <!-- Intro — collapsed by default -->
+  <section id="intro" data-section="intro">
+    <details class="system-intro">
+      <summary class="system-intro__summary">
+        I design products for people. The approach is functionalist.
+      </summary>
+      <div class="system-intro__body">
+        <p>
+          This page is the live system behind this site. The typography, colour,
+          layout, and components here are the same ones that build every page.
+          This isn't documentation about the system. It is the system.
+        </p>
+        <p>
+          Two ideas drive it. Something made well isn't afraid to show how it's
+          built. The grid, the layout, the tokens are all discoverable: that's
+          visible construction. And a portfolio is a conversation between two
+          people. The colour follows your time of day because we're sharing the
+          same clock: the site responds to who's viewing it.
+        </p>
+      </div>
+    </details>
+  </section>
+
+  <!-- Foundations -->
+
+  <section id="typography" data-section="typography">
+    <h2 class="system-section-heading">Typography</h2>
+  </section>
+
+  <section id="layout" data-section="layout">
+    <h2 class="system-section-heading">Layout</h2>
+  </section>
+
+  <section id="colour" data-section="colour">
+    <h2 class="system-section-heading">Colour</h2>
+  </section>
+
+  <section id="motion" data-section="motion">
+    <h2 class="system-section-heading">Motion</h2>
+  </section>
+
+  <!-- Entry tiers -->
+
+  <section id="components" data-section="components">
+    <h2 class="system-tier-heading">Components</h2>
+  </section>
+
+  <section id="patterns" data-section="patterns">
+    <h2 class="system-tier-heading">Patterns</h2>
+  </section>
+
+  <section id="views" data-section="views">
+    <h2 class="system-tier-heading">Views</h2>
+  </section>
+</SystemLayout>

@@ -1,0 +1,89 @@
+---
+// Sidebar navigation — sticky, visible on wide breakpoints only (≥ 792px shell).
+// CSS hides this at narrow breakpoints and shows SystemTopNavBar instead.
+---
+
+<nav class="system-sidebar-nav" aria-label="Design system navigation">
+  <a href="/" class="system-nav__back">
+    <!-- Phosphor arrow-left-light, 14×14 -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 256 256"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <line
+        x1="216" y1="128" x2="40" y2="128"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+      <polyline
+        points="112 56 40 128 112 200"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="16"
+      />
+    </svg>
+    alanlong.design
+  </a>
+
+  <!-- Search field — deferred until 15+ entries. Space reserved. -->
+  <div class="system-nav__search-space" aria-hidden="true"></div>
+
+  <hr class="system-nav__divider" />
+
+  <!-- Foundations group -->
+  <ul class="system-nav__list" role="list">
+    <li>
+      <a href="#intro" class="system-nav__item" data-nav-item="intro">Intro</a>
+    </li>
+    <li>
+      <a href="#typography" class="system-nav__item" data-nav-item="typography">Typography</a>
+    </li>
+    <li>
+      <a href="#layout" class="system-nav__item" data-nav-item="layout">Layout</a>
+    </li>
+    <li>
+      <a href="#colour" class="system-nav__item" data-nav-item="colour">Colour</a>
+    </li>
+    <li>
+      <a href="#motion" class="system-nav__item" data-nav-item="motion">Motion</a>
+    </li>
+  </ul>
+
+  <hr class="system-nav__divider" />
+
+  <!-- Entry tiers group -->
+  <ul class="system-nav__list" role="list">
+    <li>
+      <a href="#components" class="system-nav__item" data-nav-item="components">Components</a>
+      <ul class="system-subnav" data-subnav="components" hidden role="list">
+        <li>
+          <a href="#button" class="system-nav__item" data-nav-item="button">Button</a>
+        </li>
+        <li>
+          <a href="#colour-clock" class="system-nav__item" data-nav-item="colour-clock">Colour Clock</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#patterns" class="system-nav__item" data-nav-item="patterns">Patterns</a>
+      <ul class="system-subnav" data-subnav="patterns" hidden role="list">
+        <!-- placeholder — populated in later dispatches -->
+      </ul>
+    </li>
+    <li>
+      <a href="#views" class="system-nav__item" data-nav-item="views">Views</a>
+      <ul class="system-subnav" data-subnav="views" hidden role="list">
+        <!-- placeholder — populated in later dispatches -->
+      </ul>
+    </li>
+  </ul>
+</nav>

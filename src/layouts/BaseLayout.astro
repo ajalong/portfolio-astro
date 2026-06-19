@@ -1,5 +1,6 @@
 ---
 import '../styles/global.scss';
+import '../styles/design-tokens.css';
 import { ClientRouter } from 'astro:transitions';
 import Background from '../components/Background.astro';
 import ProgressiveBlur from '../components/ProgressiveBlur.astro';
@@ -54,6 +55,24 @@ const shareImage = image ?? DEFAULT_OG_IMAGE;
     <link
       rel="preload"
       href="/Graphik-Regular-Cy-Gr-Web.89bcdd78.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {/* Preload new design system critical-path fonts.
+        GT Sectra Regular = body text. Pentameter VF = nav / UI.
+        Both are needed on first paint for /system and future redesigned pages. */}
+    <link
+      rel="preload"
+      href="/GT-Sectra-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Pentameter-VF.woff2"
       as="font"
       type="font/woff2"
       crossorigin

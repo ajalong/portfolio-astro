@@ -1,0 +1,331 @@
+/* ─────────────────────────────────────────────────────────────
+   /system page — layout, navigation, and typography.
+   All tokens are inherited from design-tokens.css via BaseLayout.
+   Scoped to body.system-page to avoid conflicts with existing pages.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Global reset for the system page ── */
+
+body.system-page {
+  background: var(--ground);
+  color: var(--ink);
+  scroll-behavior: smooth;
+}
+
+/* Suppress main-site chrome — Background gradient and ProgressiveBlur
+   are rendered by BaseLayout but don't belong on the system page. */
+body.system-page .bg,
+body.system-page .progressive-blur {
+  display: none;
+}
+
+/* Sharp corners everywhere — explicit reset so browser defaults
+   (e.g. on <details> in some engines) can't sneak in. */
+body.system-page * {
+  border-radius: 0;
+}
+
+/* ── Shell — two-panel container ── */
+
+.system-shell {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  container-type: inline-size;
+  container-name: system-shell;
+}
+
+/* ── Sidebar nav — wide breakpoint ── */
+
+.system-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: calc(8 * var(--cell));
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--space-200) var(--space-100);
+  border-right: 1px solid var(--border);
+  gap: var(--space-025);
+}
+
+/* ── Top nav bar — narrow breakpoint (hidden by default) ── */
+
+.system-top-nav {
+  display: none;
+}
+
+/* ── Narrow breakpoint — container query on the shell ──
+   Sidebar disappears and top bar appears when the shell is
+   ≤ 791px wide. At 792px the sidebar (192px) + content (600px) = 792px. */
+
+@container system-shell (max-width: 791px) {
+  .system-shell {
+    display: block;
+  }
+
+  .system-sidebar-nav {
+    display: none;
+  }
+
+  .system-top-nav {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--ground);
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ── Content area ── */
+
+.system-content {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-400);
+  container-type: inline-size;
+  container-name: content-column;
+}
+
+/* ── Nav items — shared between sidebar and top nav ── */
+
+.system-nav__item {
+  display: block;
+  padding: var(--space-025) var(--space-050);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variation-settings: 'wght' 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+
+  &.is-active {
+    color: var(--ink);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    color: var(--ink);
+  }
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+@media (hover: hover) {
+  .system-nav__item:hover {
+    background: var(--surface);
+    color: var(--ink);
+  }
+}
+
+/* ── Back link ── */
+
+.system-nav__back {
+  display: flex;
+  align-items: center;
+  gap: var(--space-025);
+  margin-bottom: var(--space-100);
+  padding: var(--space-025) 0;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variation-settings: 'wght' 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+  flex-shrink: 0;
+
+  & svg {
+    flex-shrink: 0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    color: var(--ink);
+  }
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+/* ── Divider ── */
+
+.system-nav__divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-050) 0;
+}
+
+/* ── Search space — reserved, not yet built ── */
+
+.system-nav__search-space {
+  height: var(--space-200);
+}
+
+/* ── Nav list ── */
+
+.system-nav__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Sub-nav (sidebar — expand on scroll) ── */
+
+.system-subnav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  &[hidden] {
+    display: none;
+  }
+
+  & .system-nav__item {
+    padding-left: var(--space-100);
+  }
+}
+
+/* ── Top nav primary row ── */
+
+.system-top-nav__primary {
+  display: flex;
+  align-items: center;
+  padding: var(--space-050) var(--space-100);
+  gap: var(--space-025);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.system-top-nav__items {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.system-top-nav__separator {
+  padding: 0 var(--space-025);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--ink-secondary);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.system-top-nav__search-space {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: var(--space-200);
+}
+
+/* ── Top nav sub-row (entry tiers only) ── */
+
+.system-top-nav__sub-row {
+  list-style: none;
+  display: none;
+  align-items: center;
+  gap: 0;
+  padding: 0 var(--space-100) var(--space-025);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-top: 1px solid var(--border);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &.is-visible {
+    display: flex;
+  }
+}
+
+/* No transition on sub-row show/hide — direct response to scroll position. */
+
+/* ── Section headings ── */
+
+/* Foundations — Display role: GT Sectra Medium 40px */
+.system-section-heading {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Tier labels (Components / Patterns / Views) — UI role: Pentameter uppercase */
+.system-tier-heading {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variation-settings: 'wght' 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ── Intro section (details/summary) ── */
+
+.system-intro__summary {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.system-intro__body {
+  margin-top: var(--space-100);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+
+  & p {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+}

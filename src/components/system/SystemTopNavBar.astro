@@ -1,0 +1,69 @@
+---
+// Top navigation bar — sticky horizontal bar, visible on narrow breakpoints (< 792px shell).
+// CSS hides this on wide breakpoints and shows SystemSidebarNav instead.
+---
+
+<div class="system-top-nav">
+  <!-- Primary row: back link · nav items · [search space] -->
+  <div class="system-top-nav__primary">
+    <a href="/" class="system-nav__back">
+      <!-- Phosphor arrow-left-light, 14×14 -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 256 256"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <line
+          x1="216" y1="128" x2="40" y2="128"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+        <polyline
+          points="112 56 40 128 112 200"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="16"
+        />
+      </svg>
+      alanlong.design
+    </a>
+
+    <ul class="system-top-nav__items" role="list">
+      <li><a href="#intro" class="system-nav__item" data-nav-item="intro">Intro</a></li>
+      <li><a href="#typography" class="system-nav__item" data-nav-item="typography">Typography</a></li>
+      <li><a href="#layout" class="system-nav__item" data-nav-item="layout">Layout</a></li>
+      <li><a href="#colour" class="system-nav__item" data-nav-item="colour">Colour</a></li>
+      <li><a href="#motion" class="system-nav__item" data-nav-item="motion">Motion</a></li>
+      <!-- Dot separator between foundations and entry tiers -->
+      <li class="system-top-nav__separator" aria-hidden="true">·</li>
+      <li><a href="#components" class="system-nav__item" data-nav-item="components">Components</a></li>
+      <li><a href="#patterns" class="system-nav__item" data-nav-item="patterns">Patterns</a></li>
+      <li><a href="#views" class="system-nav__item" data-nav-item="views">Views</a></li>
+    </ul>
+
+    <!-- Search icon — deferred until 15+ entries. Space reserved. -->
+    <div class="system-top-nav__search-space" aria-hidden="true"></div>
+  </div>
+
+  <!-- Sub-nav row — appears when scrolled into an entry-tier section.
+       Items are pre-rendered and filtered by JS via data-subnav-tier. -->
+  <ul class="system-top-nav__sub-row" role="list">
+    <!-- Components children -->
+    <li data-subnav-tier="components" hidden>
+      <a href="#button" class="system-nav__item" data-nav-item="button">Button</a>
+    </li>
+    <li data-subnav-tier="components" hidden>
+      <a href="#colour-clock" class="system-nav__item" data-nav-item="colour-clock">Colour Clock</a>
+    </li>
+    <!-- Patterns children — empty, populated in later dispatches -->
+    <!-- Views children — empty, populated in later dispatches -->
+  </ul>
+</div>

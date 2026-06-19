@@ -1,5 +1,47 @@
 ---
 import SystemLayout from '../layouts/SystemLayout.astro';
+import TypeSpecimen from '../components/system/TypeSpecimen.astro';
+import TokenReadout from '../components/system/TokenReadout.astro';
+import LiveDemo from '../components/system/LiveDemo.astro';
+
+const specimens = [
+  {
+    role: 'DISPLAY',
+    sample: 'The approach is functionalist.',
+    specs: 'GT Sectra Medium · 40px / 48px · -0.02em',
+    sampleStyle: 'font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; line-height: 1.2; letter-spacing: -0.02em;',
+  },
+  {
+    role: 'DATA',
+    sample: '16:42',
+    specs: 'Pentameter 500 · 24px / 24px · 0.02em',
+    sampleStyle: "font-family: var(--font-ui); font-size: 1.5rem; font-weight: 500; font-variation-settings: 'wght' 500; line-height: 1; letter-spacing: 0.02em;",
+  },
+  {
+    role: 'BODY',
+    sample: 'A portfolio is a conversation between two people.',
+    specs: 'GT Sectra Book · 16px / 24px',
+    sampleStyle: 'font-family: var(--font-display); font-size: 1rem; font-weight: 400; line-height: 1.5;',
+  },
+  {
+    role: 'BODY-SM',
+    sample: 'Secondary descriptions, overlay text, supporting paragraphs.',
+    specs: 'GT Sectra Book · 15px / 22.5px',
+    sampleStyle: 'font-family: var(--font-display); font-size: 0.9375rem; font-weight: 400; line-height: 1.5;',
+  },
+  {
+    role: 'UI',
+    sample: 'COMPONENTS',
+    specs: 'Pentameter 400 · 12px / 14.4px · 0.08em',
+    sampleStyle: "font-family: var(--font-ui); font-size: 0.75rem; font-weight: 400; font-variation-settings: 'wght' 400; line-height: 1.2; letter-spacing: 0.08em; text-transform: uppercase;",
+  },
+  {
+    role: 'META',
+    sample: 'GT Sectra Medium · 40px / 48px · -0.02em',
+    specs: 'Pentameter 300 · 11px / 13.2px',
+    sampleStyle: "font-family: var(--font-ui); font-size: 0.6875rem; font-weight: 300; font-variation-settings: 'wght' 300; line-height: 1.2;",
+  },
+];
 ---
 
 <SystemLayout
@@ -32,19 +74,176 @@ import SystemLayout from '../layouts/SystemLayout.astro';
   <!-- Foundations -->
 
   <section id="typography" data-section="typography">
-    <h2 class="system-section-heading">Typography</h2>
+    <div class="system-foundations-section">
+      <h2 class="system-section-heading">Typography</h2>
+      <div class="system-prose">
+        <p>
+          Two typefaces. GT Sectra is a broad-nib serif where the pen origin is
+          visible in the letterforms. It represents the complexity of humans.
+          Pentameter is a monospace with calligraphic movement: fixed widths,
+          lively forms. The built × natural tension lives inside this one
+          typeface. Sectra speaks for people, Pentameter speaks for the system.
+        </p>
+        <p>
+          The rule is simple. If you're reading sentences, it's Sectra. If you're
+          scanning the interface, it's Pentameter.
+        </p>
+        <p>
+          Six roles: display, data, body, body-sm, UI, meta. Each is rendered
+          here in its actual specs.
+        </p>
+        <p>
+          Body is 16px at 1.5 line-height. That gives 24px, which becomes the
+          grid cell. The entire layout system grows from this single typographic
+          decision.
+        </p>
+        <p>
+          Type does not respond to context. Colour shifts with time of day.
+          Typography stays fixed. It's the anchor.
+        </p>
+        <p>
+          Pentameter is a variable font (weight axis 100–900, 300–600 used).
+          Sectra is static weights: Book (400) and Medium (500). Bold (700) is
+          reserved for case study content only.
+        </p>
+      </div>
+      <div class="system-specimens">
+        {specimens.map((s) => (
+          <TypeSpecimen
+            role={s.role}
+            sample={s.sample}
+            specs={s.specs}
+            sampleStyle={s.sampleStyle}
+          />
+        ))}
+      </div>
+    </div>
   </section>
 
   <section id="layout" data-section="layout">
-    <h2 class="system-section-heading">Layout</h2>
+    <div class="system-foundations-section">
+      <h2 class="system-section-heading">Layout</h2>
+      <div class="system-prose">
+        <p>
+          The cell is 24px, derived from body line-height. The grid is 40 columns
+          of square cells at 960px. Every spacing token is a multiple or fraction
+          of the cell: space-025 (6px) through space-400 (96px).
+        </p>
+        <p>
+          The grid is not hidden infrastructure. It's discoverable. This is
+          visible construction in practice. In deliberate moments, the system
+          shows its own working: column widths, type measures, spatial values
+          surfaced on screen.
+        </p>
+        <p>
+          Spacing is measured, not generous. Proportions work because they were
+          calculated, not because there's a lot of empty space.
+        </p>
+        <p>
+          The cell is a CSS custom property. Every spacing token is a calc()
+          expression derived from it.
+        </p>
+      </div>
+      <LiveDemo label="Grid · 40 columns × 24px cell">
+        <p class="system-live-demo__placeholder">Grid overlay demo — coming soon</p>
+      </LiveDemo>
+    </div>
   </section>
 
   <section id="colour" data-section="colour">
-    <h2 class="system-section-heading">Colour</h2>
+    <div class="system-foundations-section">
+      <h2 class="system-section-heading">Colour</h2>
+      <div class="system-prose">
+        <p>
+          The colour creates a connection between Alan and the viewer. Both share
+          the same sky.
+        </p>
+        <p>
+          The palette is modelled on natural light to make that connection real.
+          One input (time, 0–24) generates every colour. Lightness dwells at day
+          and night, transitions quickly at dawn and dusk, the way the sky does.
+          Colour drains out during transition, the way it does at twilight. Two
+          hue families (warm and cool) switch invisibly through this achromatic
+          zone. Accent peaks at golden hour. Glint sweeps across borders at low
+          sun.
+        </p>
+        <p>
+          Three roles: ground, ink, accent. Ground holds everything. Ink is its
+          complement. Accent steers the eye.
+        </p>
+        <p>
+          The colour clock is the control. YOUR TIME shows the viewer's sky.
+          ALAN'S TIME shows Alan's. Drag it to any point in the day.
+        </p>
+        <p>
+          On /system, the clock overrides the page palette. Drag it to golden
+          hour and the entire page shifts — every ground, ink, and accent value
+          updates live. Scroll past the colour section and the page reverts to
+          your real time. This lets you verify the system works at every point
+          in the day without leaving the page.
+        </p>
+        <p>
+          OKLCH colour space. CSS custom properties. All derived from time,
+          nothing hardcoded. WCAG contrast maintained at every point on the
+          spectrum.
+        </p>
+        <p>
+          The token architecture has two layers, not three. Most design systems
+          have primitive tokens (static swatches), then semantic tokens mapped
+          from them. Here, there are no static swatches. A generation function
+          takes time as input and produces every colour through OKLCH derivation.
+          The math is the primitive — it lives in code, not in tokens. The
+          semantic tokens (ground, surface, ink, ink-secondary, accent, border)
+          are the first tokenised expression of colour. They describe roles, not
+          values. The palette moves, but the roles are stable. Component tokens
+          reference the semantic layer: a nav label uses {'{'}ink-secondary{'}'}, a
+          section heading uses {'{'}ink{'}'}. Two layers of tokens. The generation
+          function replaces the third.
+        </p>
+      </div>
+      <div class="system-token-readouts">
+        <TokenReadout token="ground" label="GROUND" />
+        <TokenReadout token="ink" label="INK" />
+        <TokenReadout token="accent" label="ACCENT" />
+      </div>
+      <LiveDemo label="Colour clock">
+        <p class="system-live-demo__placeholder">Colour clock demo — coming soon</p>
+      </LiveDemo>
+    </div>
   </section>
 
   <section id="motion" data-section="motion">
-    <h2 class="system-section-heading">Motion</h2>
+    <div class="system-foundations-section">
+      <h2 class="system-section-heading">Motion</h2>
+      <div class="system-prose">
+        <p>
+          Motion creates the sense that content belongs where it lands. That's
+          why it's here.
+        </p>
+        <p>
+          Composition, not animation. Content finds its place on the grid as the
+          viewer scrolls. The grid is already there; the content arrives and
+          settles. Long deceleration: fast at the start because it knows where
+          it's going, slow at the end because it's precise about where it lands.
+          Not bouncing, not snapping, not springing. Settling, because it belongs
+          there.
+        </p>
+        <p>Pace is slow. Content is being told to you, not thrown at you.</p>
+        <p>
+          One easing curve: cubic-bezier(0.05, 0.7, 0.1, 1.0). Applied to
+          everything. prefers-reduced-motion removes scroll-driven composition.
+          Everything is simply present. The page works perfectly static because
+          the structure holds without motion.
+        </p>
+        <p>
+          This section demonstrates itself. Trigger the animation and watch the
+          easing in action.
+        </p>
+      </div>
+      <LiveDemo label="Scroll composition · cubic-bezier(0.05, 0.7, 0.1, 1.0)">
+        <p class="system-live-demo__placeholder">Easing demo — coming soon</p>
+      </LiveDemo>
+    </div>
   </section>
 
   <!-- Entry tiers -->

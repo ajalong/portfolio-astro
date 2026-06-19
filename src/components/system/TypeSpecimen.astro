@@ -1,0 +1,16 @@
+---
+interface Props {
+  role: string;
+  sample: string;
+  specs: string;
+  sampleStyle: string;
+}
+
+const { role, sample, specs, sampleStyle } = Astro.props;
+---
+
+<div class="system-type-specimen">
+  <span class="system-type-specimen__label">{role}</span>
+  <span class="system-type-specimen__sample" style={sampleStyle}>{sample}</span>
+  <span class="system-type-specimen__specs">{specs}</span>
+</div>

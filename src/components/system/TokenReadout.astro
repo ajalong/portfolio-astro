@@ -1,0 +1,18 @@
+---
+interface Props {
+  token: string;
+  label: string;
+}
+
+const { token, label } = Astro.props;
+---
+
+<div class="system-token-readout" data-token-readout={token}>
+  <span class="system-token-readout__swatch" style={`background: var(--${token})`}></span>
+  <span class="system-token-readout__label">{label}</span>
+  <span class="system-token-readout__value"></span>
+</div>
+
+<script>
+  import '../../scripts/system-token-readout';
+</script>

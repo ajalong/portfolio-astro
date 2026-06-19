@@ -329,3 +329,120 @@ body.system-page * {
     color: var(--ink);
   }
 }
+
+/* ── Foundations section layout ── */
+
+.system-foundations-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+/* ── Prose block — Body-sm role ── */
+
+.system-prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-100);
+}
+
+.system-prose p {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* ── Type specimens ── */
+
+.system-specimens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-200);
+}
+
+.system-type-specimen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-025);
+}
+
+.system-type-specimen__label,
+.system-type-specimen__specs {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+  line-height: 1.2;
+  color: var(--ink-secondary);
+}
+
+.system-type-specimen__label {
+  text-transform: uppercase;
+}
+
+/* ── Token readouts ── */
+
+.system-token-readouts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-025);
+}
+
+.system-token-readout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-050);
+  background: var(--surface);
+  padding: var(--space-050) var(--space-100);
+}
+
+.system-token-readout__swatch {
+  width: var(--space-100);
+  height: var(--space-100);
+  flex-shrink: 0;
+  outline: 1px solid var(--border);
+}
+
+.system-token-readout__label {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-variation-settings: 'wght' 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.system-token-readout__value {
+  font-family: var(--font-ui);
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-variation-settings: 'wght' 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+/* ── Live demo container ── */
+
+.system-live-demo {
+  background: var(--surface);
+  padding: var(--space-200);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-050);
+}
+
+.system-live-demo__label,
+.system-live-demo__placeholder {
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 300;
+  font-variation-settings: 'wght' 300;
+  line-height: 1.2;
+  color: var(--ink-secondary);
+}

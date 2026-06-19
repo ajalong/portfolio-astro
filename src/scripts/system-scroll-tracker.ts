@@ -1,16 +1,25 @@
 const ENTRY_TIERS = new Set(['components', 'patterns', 'views']);
 
 function setActive(sectionId: string): void {
+  // Determine if this is an entry with a parent tier
+  const sectionEl = document.querySelector<HTMLElement>(`[data-section="${sectionId}"]`);
+  const tier = sectionEl?.dataset.tier ?? null;
+  const isEntry = tier !== null && ENTRY_TIERS.has(tier);
+  // Which tier to expand: parent tier if this is an entry, the section itself if it's a tier
+  const activeTierId = isEntry ? tier : (ENTRY_TIERS.has(sectionId) ? sectionId : null);
+
   // Update nav items in both sidebar and top bar
   document.querySelectorAll<HTMLElement>('[data-nav-item]').forEach((item) => {
-    const isActive = item.dataset.navItem === sectionId;
+    const navId = item.dataset.navItem;
+    // Active if: exact match, or matches parent tier while an entry is active
+    const isActive = navId === sectionId || (isEntry && navId === tier);
     item.classList.toggle('is-active', isActive);
-    item.setAttribute('aria-current', isActive ? 'location' : 'false');
+    item.setAttribute('aria-current', navId === sectionId ? 'location' : 'false');
   });
 
   // Sidebar sub-nav: expand the active entry tier, collapse all others
   document.querySelectorAll<HTMLElement>('[data-subnav]').forEach((subnav) => {
-    const expand = subnav.dataset.subnav === sectionId && ENTRY_TIERS.has(sectionId);
+    const expand = activeTierId !== null && subnav.dataset.subnav === activeTierId;
     subnav.toggleAttribute('hidden', !expand);
     subnav.classList.toggle('is-expanded', expand);
   });
@@ -18,10 +27,10 @@ function setActive(sectionId: string): void {
   // Top nav sub-row: show when in an entry tier, filter items by tier
   const subRow = document.querySelector<HTMLElement>('.system-top-nav__sub-row');
   if (subRow) {
-    const isEntryTier = ENTRY_TIERS.has(sectionId);
-    subRow.classList.toggle('is-visible', isEntryTier);
+    const showSubRow = activeTierId !== null;
+    subRow.classList.toggle('is-visible', showSubRow);
     subRow.querySelectorAll<HTMLElement>('[data-subnav-tier]').forEach((item) => {
-      item.toggleAttribute('hidden', !(isEntryTier && item.dataset.subnavTier === sectionId));
+      item.toggleAttribute('hidden', !(showSubRow && item.dataset.subnavTier === activeTierId));
     });
   }
 }

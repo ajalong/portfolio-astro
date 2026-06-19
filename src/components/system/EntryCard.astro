@@ -1,0 +1,35 @@
+---
+import FoundationsBlock from './FoundationsBlock.astro';
+
+interface Props {
+  id: string;
+  name: string;
+  why: string;
+  usedIn: string;
+  foundations: Array<{ label: string; value: string }>;
+  tier?: string;
+  forBehaviour?: string;
+}
+
+const { id, name, why, usedIn, foundations, tier = 'components', forBehaviour } = Astro.props;
+---
+
+<section data-section={id} data-tier={tier} class="system-entry-card">
+  <h3 id={id} class="system-entry-card__heading">{name}</h3>
+  <p class="system-entry-card__why">{why}</p>
+  <div class="system-entry-card__render">
+    <div class="system-entry-card__render-zone system-entry-card__render-zone--ground">
+      <slot>
+        <p class="system-live-demo__placeholder">Live component render — not yet built</p>
+      </slot>
+    </div>
+    <div class="system-entry-card__render-zone system-entry-card__render-zone--surface">
+      <p class="system-live-demo__placeholder">Live component render — not yet built</p>
+    </div>
+  </div>
+  <FoundationsBlock items={foundations} />
+  <p class="system-entry-card__used-in">{usedIn}</p>
+  {forBehaviour && (
+    <p class="system-entry-card__for-behaviour">{forBehaviour}</p>
+  )}
+</section>

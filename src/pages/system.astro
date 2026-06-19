@@ -3,6 +3,7 @@ import SystemLayout from '../layouts/SystemLayout.astro';
 import TypeSpecimen from '../components/system/TypeSpecimen.astro';
 import TokenReadout from '../components/system/TokenReadout.astro';
 import LiveDemo from '../components/system/LiveDemo.astro';
+import EntryCard from '../components/system/EntryCard.astro';
 
 const specimens = [
   {
@@ -248,9 +249,36 @@ const specimens = [
 
   <!-- Entry tiers -->
 
-  <section id="components" data-section="components">
-    <h2 class="system-tier-heading">Components</h2>
-  </section>
+  <div class="system-tier-group">
+    <section id="components" data-section="components">
+      <h2 class="system-tier-heading">Components</h2>
+    </section>
+    <div class="system-entries">
+      <EntryCard
+        id="button"
+        name="Button"
+        why="The primary interactive affordance. Drives navigation and actions across the site."
+        usedIn="Used in: Hero, Spotlight"
+        forBehaviour="Accent colour adapts to company brand on /for/ routes."
+        foundations={[
+          { label: 'Typography', value: 'ui' },
+          { label: 'Colour', value: 'ink, ground, accent' },
+          { label: 'Spacing', value: 'space-025, space-050' },
+        ]}
+      />
+      <EntryCard
+        id="colour-clock"
+        name="Colour Clock"
+        why="The connection between viewer and maker. Time of day generates every colour on the page."
+        usedIn="Used in: Hero, /system Colour section"
+        foundations={[
+          { label: 'Typography', value: 'data, meta' },
+          { label: 'Colour', value: 'ground, ink, accent, ink-secondary' },
+          { label: 'Motion', value: '--ease' },
+        ]}
+      />
+    </div>
+  </div>
 
   <section id="patterns" data-section="patterns">
     <h2 class="system-tier-heading">Patterns</h2>

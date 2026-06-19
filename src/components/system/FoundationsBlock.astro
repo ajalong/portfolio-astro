@@ -1,0 +1,17 @@
+---
+interface Props {
+  items: Array<{ label: string; value: string }>;
+}
+
+const { items } = Astro.props;
+---
+
+<div class="system-foundations-block">
+  <p class="system-foundations-block__heading">Foundations</p>
+  {items.map((item) => (
+    <div class="system-foundations-block__row">
+      <span class="system-foundations-block__label">{item.label}</span>
+      <span class="system-foundations-block__value">{item.value}</span>
+    </div>
+  ))}
+</div>
